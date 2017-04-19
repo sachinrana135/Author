@@ -1,0 +1,40 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.alfanse.author.Fragments.WriteQuoteFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <com.alfanse.author.CustomViews.SquareFrameLayout
+                android:id="@+id/canvas_write_quote_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </com.alfanse.author.CustomViews.SquareFrameLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/option_container_write_quote_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorAccent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/bottom_nav_item_home_home"
+        android:icon="@drawable/ic_home_white_24dp"
+        android:title="@string/menu_item_home_bottom_nav_home" />
+
+    <item
+        android:id="@+id/bottom_nav_item_quotes_home"
+        android:icon="@drawable/ic_list_white_24dp"
+        android:title="@string/menu_item_quotes_bottom_nav_home" />
+
+    <item
+        android:id="@+id/bottom_nav_item_new_quote_home"
+        android:icon="@drawable/ic_edit_white_24dp"
+        android:title="@string/menu_item_write_quote_bottom_nav_home" />
+    <item
+        android:id="@+id/bottom_nav_item_account_home"
+        android:icon="@drawable/ic_account_circle_white_24dp"
+        android:title="@string/menu_item_account_bottom_nav_home" />
+
+</menu>

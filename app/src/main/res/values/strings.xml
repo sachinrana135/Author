@@ -1,3 +1,29 @@
+<!--naming convention - All resource names follow a simple convention i.e what_where_description_size -->
+
 <resources>
     <string name="app_name">Author</string>
+
+    <!-- Menu -->
+    <string name="menu_item_home_bottom_nav_home">Home</string>
+    <string name="menu_item_quotes_bottom_nav_home">Post</string>
+    <string name="menu_item_write_quote_bottom_nav_home">Write</string>
+    <string name="menu_item_account_bottom_nav_home">Account</string>
+
+    <!-- text -->
+
+    <string name="text_default_quote_fragment_write_quote_fragment">Double tap to edit</string>
+
+    <!-- Options-->
+
+    <string name="option_item_colorize_fragment_canvas_options">BG color</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_home_fragment">Hello home fragment</string>
+    <string name="hello_follow_quote_fragment">Hello follow quote fragment</string>
+    <string name="hello_write_quote_fragment">Hello write fragment</string>
+    <string name="hello_account_fragment">Hello account fragment</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>
