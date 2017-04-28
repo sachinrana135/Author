@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.alfanse.author.CustomViews.ComponentImageView;
 import com.alfanse.author.CustomViews.ComponentTextView;
 import com.alfanse.author.CustomViews.SquareFrameLayout;
 import com.alfanse.author.R;
@@ -86,7 +85,12 @@ public class ComponentTextViewOptionsFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mListener = (OnFragmentInteractionListener) getParentFragment();
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
 
         mContext = context;
         mActivity = getActivity();
@@ -98,6 +102,13 @@ public class ComponentTextViewOptionsFragment extends Fragment {
         mListener = null;
     }
 
+    public void setQuoteCanvas(SquareFrameLayout quoteCanvas) {
+        mCanvas = quoteCanvas;
+    }
+
+    public void setComponentTextView(ComponentTextView componentTextView) {
+        mComponentTextView = componentTextView;
+    }
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -111,12 +122,5 @@ public class ComponentTextViewOptionsFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
-    }
-
-    public void setQuoteCanvas(SquareFrameLayout quoteCanvas) {
-        mCanvas = quoteCanvas;
-    }
-    public void setComponentTextView(ComponentTextView componentTextView) {
-        mComponentTextView = componentTextView;
     }
 }

@@ -86,7 +86,12 @@ public class ComponentImageViewOptionsFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mListener = (OnFragmentInteractionListener) getParentFragment();
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
 
         mContext = context;
         mActivity = getActivity();
@@ -98,6 +103,13 @@ public class ComponentImageViewOptionsFragment extends Fragment {
         mListener = null;
     }
 
+    public void setQuoteCanvas(SquareFrameLayout quoteCanvas) {
+        mCanvas = quoteCanvas;
+    }
+
+    public void setComponentTextView(ComponentImageView componentImageView) {
+        mComponentImageView = componentImageView;
+    }
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -111,12 +123,5 @@ public class ComponentImageViewOptionsFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
-    }
-
-    public void setQuoteCanvas(SquareFrameLayout quoteCanvas) {
-        mCanvas = quoteCanvas;
-    }
-    public void setComponentTextView(ComponentImageView componentImageView) {
-         mComponentImageView = componentImageView;
     }
 }

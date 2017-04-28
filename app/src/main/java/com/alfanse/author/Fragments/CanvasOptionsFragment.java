@@ -1,29 +1,19 @@
 package com.alfanse.author.Fragments;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.alfanse.author.CustomViews.ComponentImageView;
 import com.alfanse.author.CustomViews.ComponentTextView;
@@ -87,13 +77,14 @@ public class CanvasOptionsFragment extends Fragment {
 
                 FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams((int) (mCanvas.getWidth() * 0.7), FrameLayout.LayoutParams.WRAP_CONTENT);
 
-                layoutParams.gravity = Gravity.LEFT;
+                layoutParams.gravity = Gravity.START;
 
                 mCanvas.addView(textView,layoutParams);
 
                 if (mListener != null) {
                     mListener.onAddComponentTextView(textView);
                 }
+
             }
         });
 
@@ -114,7 +105,6 @@ public class CanvasOptionsFragment extends Fragment {
                 Bitmap bitmap = ((BitmapDrawable) mDrawable).getBitmap();
 
                 try {
-                    Drawable drawable = mDrawable;
 
                     int imageWidth = bitmap.getWidth();
                     int imageHeight = bitmap.getHeight();
@@ -124,9 +114,9 @@ public class CanvasOptionsFragment extends Fragment {
 
                     Double ratio = ((double) imageWidth) /  ((double) imageHeight );
 
-                    int final_width = 0;
+                    int final_width;
 
-                    int final_height = 0;
+                    int final_height;
 
                     final_height   =  (int) (mCanvas.getHeight() * 0.7);
 
@@ -155,7 +145,13 @@ public class CanvasOptionsFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        mListener = (OnFragmentInteractionListener) getParentFragment();
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+
         mContext = context;
         mActivity = getActivity();
     }
@@ -164,6 +160,10 @@ public class CanvasOptionsFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    public void setQuoteCanvas(SquareFrameLayout quoteCanvas) {
+        mCanvas = quoteCanvas;
     }
 
     /**
@@ -180,9 +180,5 @@ public class CanvasOptionsFragment extends Fragment {
         // TODO: Update argument type and name
         void onAddComponentTextView(ComponentTextView componentTextView);
         void onAddComponentImageView(ComponentImageView componentImageView);
-    }
-
-    public void setQuoteCanvas(SquareFrameLayout quoteCanvas) {
-        mCanvas = quoteCanvas;
     }
 }
