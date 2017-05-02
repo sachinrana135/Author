@@ -17,7 +17,8 @@ import butterknife.ButterKnife;
 public class HomeActivity extends AppCompatActivity {
 
     @BindView(R.id.fragment_container_home) FrameLayout fragmentContainer;
-    @BindView(R.id.bottom_nav_home) BottomNavigationView bottom_nav;
+    @BindView(R.id.bottom_nav_home)
+    BottomNavigationView bottomNav;
     private Activity mActivity;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -67,7 +68,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void initListener() {
-        bottom_nav.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        bottomNav.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
 }

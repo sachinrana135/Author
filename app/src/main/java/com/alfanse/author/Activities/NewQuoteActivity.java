@@ -41,10 +41,11 @@ public class NewQuoteActivity extends AppCompatActivity implements
     private CanvasOptionsFragment mCanvasOptionsFragment;
     private ComponentImageViewOptionsFragment mComponentImageViewOptionsFragment;
     private ComponentTextViewOptionsFragment mComponentTextViewOptionsFragment;
-    private android.support.v4.app.Fragment activeOptionFragment = null;
+    private android.support.v4.app.Fragment mActiveOptionFragment = null;
 
     private ComponentTextView mActiveComponentTextView;
     private ComponentImageView mActiveComponentImageView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +56,10 @@ public class NewQuoteActivity extends AppCompatActivity implements
         mContext = getApplicationContext();
         mFragmentManager = getSupportFragmentManager();
 
+
         mQuoteCanvas.setOnTouchListener(new CanvasTouchListener());
-        if (activeOptionFragment == null) {
-            activeOptionFragment = new CanvasOptionsFragment();
+        if (mActiveOptionFragment == null) {
+            mActiveOptionFragment = new CanvasOptionsFragment();
         }
 
         setCanvasBackground();
@@ -124,7 +126,7 @@ public class NewQuoteActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onAddComponentTextView(ComponentTextView componentTextView) {
+    public void onComponentTextViewAdded(ComponentTextView componentTextView) {
 
         componentTextView.setOnTouchListener(new componentTextViewTouchListener());
         mActiveComponentTextView = componentTextView;
@@ -132,7 +134,7 @@ public class NewQuoteActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onAddComponentImageView(ComponentImageView componentImageView) {
+    public void onComponentImageViewAdded(ComponentImageView componentImageView) {
         componentImageView.setOnTouchListener(new componentImageViewTouchListener());
         mActiveComponentImageView = componentImageView;
         loadComponentImageViewOptionsFragment();
@@ -163,4 +165,5 @@ public class NewQuoteActivity extends AppCompatActivity implements
             return false;
         }
     }
+
 }

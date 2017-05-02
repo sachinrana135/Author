@@ -8,6 +8,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,13 +17,22 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.alfanse.author.Adapters.CanvasThemesAdapter;
 import com.alfanse.author.CustomViews.ComponentImageView;
 import com.alfanse.author.CustomViews.ComponentTextView;
 import com.alfanse.author.CustomViews.SquareFrameLayout;
+import com.alfanse.author.Models.CanvasTheme;
 import com.alfanse.author.R;
+import com.alfanse.author.Utilities.Constants;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,16 +46,43 @@ import butterknife.ButterKnife;
 public class CanvasOptionsFragment extends Fragment {
 
     @BindView(R.id.image_colorize_fragment_canvas_options) ImageView optionColorize;
+    @BindView(R.id.image_gallery_fragment_canvas_options)
+    ImageView optionGallery;
     @BindView(R.id.image_add_photo_fragment_canvas_options) ImageView optionAddImage;
     @BindView(R.id.image_add_text_fragment_canvas_options) ImageView optionAddText;
     @BindView(R.id.image_add_sticker_fragment_canvas_options) ImageView optionAddSticker;
+    @BindView(R.id.rv_canvas_themes_fragment_canvas_options)
+    RecyclerView recyclerViewCanvasThemes;
 
     private Context mContext;
     private Activity mActivity;
     private SquareFrameLayout mCanvas;
+    private CanvasThemesAdapter mCanvasThemesAdapter;
+    private FirebaseDatabase mDatabase;
+    private DatabaseReference mCanvasThemesRef;
+    private ArrayList<CanvasTheme> mListCanvasThemes = new ArrayList<CanvasTheme>();
+    // Read from the database
+    ValueEventListener CanvasThemesValueEventListener = new ValueEventListener() {
 
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+
+            mListCanvasThemes.clear();
+            for (DataSnapshot canvasThemesSnapshot : dataSnapshot.getChildren()) {
+                CanvasTheme canvasTheme = canvasThemesSnapshot.getValue(CanvasTheme.class);
+                mListCanvasThemes.add(canvasTheme);
+            }
+            mCanvasThemesAdapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    };
     private OnFragmentInteractionListener mListener;
     private ComponentTextView mActiveComponentTextView;
+    private LinearLayoutManager mLinearLayoutManager;
 
     public CanvasOptionsFragment() {
         // Required empty public constructor
@@ -53,6 +91,10 @@ public class CanvasOptionsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mDatabase = FirebaseDatabase.getInstance();
+        mCanvasThemesRef = mDatabase.getReference(Constants.CANVAS_THEME);
+        mCanvasThemesRef.addValueEventListener(CanvasThemesValueEventListener);
+        mCanvasThemesAdapter = new CanvasThemesAdapter(mContext, mListCanvasThemes);
     }
 
     @Override
@@ -61,13 +103,28 @@ public class CanvasOptionsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_canvas_options, container, false);
         ButterKnife.bind(this,view);
-
+        mLinearLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
+        recyclerViewCanvasThemes.setLayoutManager(mLinearLayoutManager);
+        recyclerViewCanvasThemes.setAdapter(mCanvasThemesAdapter);
         initOptionItemClickListener();
-
         return view;
     }
 
     private void initOptionItemClickListener() {
+
+        optionColorize.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        optionGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
         optionAddText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,7 +139,7 @@ public class CanvasOptionsFragment extends Fragment {
                 mCanvas.addView(textView,layoutParams);
 
                 if (mListener != null) {
-                    mListener.onAddComponentTextView(textView);
+                    mListener.onComponentTextViewAdded(textView);
                 }
 
             }
@@ -129,12 +186,19 @@ public class CanvasOptionsFragment extends Fragment {
                     mCanvas.addView(imageView,layoutParams);
 
                     if (mListener != null) {
-                        mListener.onAddComponentImageView(imageView);
+                        mListener.onComponentImageViewAdded(imageView);
                     }
 
                 } catch (Exception e) {
 
                 }
+
+            }
+        });
+
+        optionAddSticker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
             }
         });
@@ -178,7 +242,8 @@ public class CanvasOptionsFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onAddComponentTextView(ComponentTextView componentTextView);
-        void onAddComponentImageView(ComponentImageView componentImageView);
+        void onComponentTextViewAdded(ComponentTextView componentTextView);
+
+        void onComponentImageViewAdded(ComponentImageView componentImageView);
     }
 }

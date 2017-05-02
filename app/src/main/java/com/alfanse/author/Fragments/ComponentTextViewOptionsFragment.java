@@ -4,14 +4,21 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.alfanse.author.CustomViews.ComponentTextView;
 import com.alfanse.author.CustomViews.SquareFrameLayout;
 import com.alfanse.author.R;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -22,11 +29,19 @@ import com.alfanse.author.R;
  * create an instance of this fragment.
  */
 public class ComponentTextViewOptionsFragment extends Fragment {
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    @BindView(R.id.bottom_nav_fragment_component_textview_options)
+    BottomNavigationView bottomNav;
+    @BindView(R.id.layout_text_format_fragment_component_textview_options)
+    LinearLayout layoutTextFormat;
+    @BindView(R.id.layout_text_size_fragment_component_textview_options)
+    LinearLayout layoutTextSize;
+    @BindView(R.id.layout_font_family_fragment_component_textview_options)
+    LinearLayout layoutFontFamily;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -36,6 +51,40 @@ public class ComponentTextViewOptionsFragment extends Fragment {
     private ComponentTextView mComponentTextView;
     private Context mContext;
     private Activity mActivity;
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+            switch (item.getItemId()) {
+
+                case R.id.bottom_nav_item_format_text_fragment_component_textview_options:
+
+                    layoutTextSize.setVisibility(View.GONE);
+                    layoutFontFamily.setVisibility(View.GONE);
+                    layoutTextFormat.setVisibility(View.VISIBLE);
+
+                    break;
+                case R.id.bottom_nav_item_text_size_fragment_component_textview_options:
+
+                    layoutTextSize.setVisibility(View.VISIBLE);
+                    layoutFontFamily.setVisibility(View.GONE);
+                    layoutTextFormat.setVisibility(View.GONE);
+
+                    break;
+                case R.id.bottom_nav_item_font_family_fragment_component_textview_options:
+
+                    layoutTextSize.setVisibility(View.GONE);
+                    layoutFontFamily.setVisibility(View.VISIBLE);
+                    layoutTextFormat.setVisibility(View.GONE);
+
+                    break;
+            }
+            return true;
+        }
+
+    };
 
     public ComponentTextViewOptionsFragment() {
         // Required empty public constructor
@@ -72,7 +121,12 @@ public class ComponentTextViewOptionsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_component_text_view_options, container, false);
+        View view = inflater.inflate(R.layout.fragment_component_text_view_options, container, false);
+        ButterKnife.bind(this, view);
+
+        bottomNav.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -109,6 +163,7 @@ public class ComponentTextViewOptionsFragment extends Fragment {
     public void setComponentTextView(ComponentTextView componentTextView) {
         mComponentTextView = componentTextView;
     }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated

@@ -19,10 +19,10 @@ import com.alfanse.author.Utilities.CommonMethod;
 
 public class ComponentView extends FrameLayout {
 
-    private Context mContext;
-    private SquareFrameLayout mCanvas;
     protected ImageView mImgResize;
     protected ImageView mImgRemove;
+    private Context mContext;
+    private SquareFrameLayout mCanvas;
     private boolean mIsResizable;
     private boolean mIsScalable;
     private float dX;
@@ -32,6 +32,10 @@ public class ComponentView extends FrameLayout {
     private double mRatio;
     private int mResizeStartX;
     private int mResizeStartY;
+    private int mMinimumWidth;
+    private int mMaximumWidth;
+    private int mMinimumHeight;
+    private int mMaximumHeight;
 
     public ComponentView(@NonNull Context context, @NonNull SquareFrameLayout canvas) {
         super(context);
@@ -41,6 +45,13 @@ public class ComponentView extends FrameLayout {
 
         mImgRemove = new ImageView(mContext);
         mImgResize = new ImageView(mContext);
+
+        Drawable drawableRemove = CommonMethod.getInstance(mContext).getDrawable(R.drawable.ic_resize_grey_24dp);
+        mMinimumWidth = drawableRemove.getMinimumWidth() * 2;
+        mMinimumHeight = drawableRemove.getMinimumHeight() * 2;
+
+        mMaximumWidth = mCanvas.getWidth();
+        mMaximumHeight = mCanvas.getHeight();
 
         drawControlButtons();
         initControlButtonListener();
@@ -81,11 +92,7 @@ public class ComponentView extends FrameLayout {
         mImgResize.setOnTouchListener(new View.OnTouchListener() {
 
             public boolean onTouch(View v, MotionEvent ev) {
-                if (ComponentView.this.isResizable()) {
-                    ResizeTouchEvent(ev);
-                } else if (ComponentView.this.isScalable()) {
-                    ResizeTouchEvent(ev);
-                }
+                ResizeTouchEvent(ev);
                 return true;
             }
         });
@@ -204,17 +211,47 @@ public class ComponentView extends FrameLayout {
 
                 if (isResizable()) {
 
-                    ComponentView.this.getLayoutParams().width = mOriginalWidth + dX;
+                    int newWidth = mOriginalWidth + dX;
 
-                    ComponentView.this.getLayoutParams().height = mOriginalHeight + dY;
+                    if (newWidth <= mMinimumWidth) {
+                        newWidth = mMinimumWidth;
+                    } else if (newWidth >= mMaximumWidth) {
+                        newWidth = mMaximumWidth;
+                    }
+
+                    int newHeight = mOriginalHeight + dY;
+
+                    if (newHeight <= mMinimumHeight) {
+                        newHeight = mMinimumHeight;
+                    } else if (newHeight >= mMaximumHeight) {
+                        newHeight = mMaximumHeight;
+                    }
+
+                    ComponentView.this.getLayoutParams().width = newWidth;
+                    ComponentView.this.getLayoutParams().height = newHeight;
 
                 } else if (isScalable()) {
 
                     dX = (int) (dY * mRatio);
 
-                    ComponentView.this.getLayoutParams().width = mOriginalWidth + dX;
+                    int newWidth = mOriginalWidth + dX;
 
-                    ComponentView.this.getLayoutParams().height = mOriginalHeight + dY;
+                    if (newWidth <= mMinimumWidth) {
+                        newWidth = mMinimumWidth;
+                    } else if (newWidth >= mMaximumWidth) {
+                        newWidth = mMaximumWidth;
+                    }
+
+                    int newHeight = mOriginalHeight + dY;
+
+                    if (newHeight <= mMinimumHeight) {
+                        newHeight = mMinimumHeight;
+                    } else if (newHeight >= mMaximumHeight) {
+                        newHeight = mMaximumHeight;
+                    }
+
+                    ComponentView.this.getLayoutParams().width = newWidth;
+                    ComponentView.this.getLayoutParams().height = newHeight;
                 }
 
                 ComponentView.this.requestLayout();
