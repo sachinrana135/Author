@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -12,10 +13,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.alfanse.author.CustomViews.ComponentTextView;
 import com.alfanse.author.CustomViews.SquareFrameLayout;
 import com.alfanse.author.R;
+import com.jrummyapps.android.colorpicker.ColorPickerDialogListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,15 +28,12 @@ import butterknife.ButterKnife;
  * Activities that contain this fragment must implement the
  * {@link ComponentTextViewOptionsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link ComponentTextViewOptionsFragment#newInstance} factory method to
- * create an instance of this fragment.
  */
-public class ComponentTextViewOptionsFragment extends Fragment {
+public class ComponentTextViewOptionsFragment extends Fragment implements ColorPickerDialogListener {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+
+    public static final int COMPONENT_TEXTVIEW_OPTIONS_COLOR_PICKER_DIALOG_ID = 101;
+
     @BindView(R.id.bottom_nav_fragment_component_textview_options)
     BottomNavigationView bottomNav;
     @BindView(R.id.layout_text_format_fragment_component_textview_options)
@@ -42,9 +42,6 @@ public class ComponentTextViewOptionsFragment extends Fragment {
     LinearLayout layoutTextSize;
     @BindView(R.id.layout_font_family_fragment_component_textview_options)
     LinearLayout layoutFontFamily;
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private OnFragmentInteractionListener mListener;
     private SquareFrameLayout mCanvas;
@@ -90,38 +87,17 @@ public class ComponentTextViewOptionsFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ComponentTextViewOptionsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ComponentTextViewOptionsFragment newInstance(String param1, String param2) {
-        ComponentTextViewOptionsFragment fragment = new ComponentTextViewOptionsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_component_text_view_options, container, false);
+        View view = inflater.inflate(R.layout.fragment_component_textview_options, container, false);
         ButterKnife.bind(this, view);
 
         bottomNav.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -132,7 +108,7 @@ public class ComponentTextViewOptionsFragment extends Fragment {
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+            mListener.onFragmentBackPressed();
         }
     }
 
@@ -164,6 +140,18 @@ public class ComponentTextViewOptionsFragment extends Fragment {
         mComponentTextView = componentTextView;
     }
 
+    @Override
+    public void onColorSelected(int dialogId, @ColorInt int color) {
+
+        Toast.makeText(mActivity, "Selected Color: #" + Integer.toHexString(color), Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void onDialogDismissed(int dialogId) {
+
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -176,6 +164,6 @@ public class ComponentTextViewOptionsFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onFragmentBackPressed();
     }
 }

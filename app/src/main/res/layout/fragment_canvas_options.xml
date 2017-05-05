@@ -21,6 +21,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:padding="@dimen/spacing_xsmall">
@@ -43,7 +45,10 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center">
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:padding="@dimen/spacing_xsmall">
 
                     <ImageView
                         android:id="@+id/image_gallery_fragment_canvas_options"
@@ -57,6 +62,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
                     android:gravity="center"
                     android:padding="@dimen/spacing_xsmall">
 
@@ -72,6 +79,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
                     android:gravity="center"
                     android:padding="@dimen/spacing_xsmall">
 
@@ -87,6 +96,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
                     android:gravity="center"
                     android:padding="@dimen/spacing_xsmall">
 

@@ -234,6 +234,14 @@ public class ComponentView extends FrameLayout {
 
                     dX = (int) (dY * mRatio);
 
+                    if (mRatio > 1) { // Width greater than height
+                        mMaximumHeight = (int) (mMaximumWidth / mRatio);
+                        mMinimumHeight = (int) (mMinimumWidth / mRatio);
+                    } else if (mRatio < 1) { // height greater than width
+                        mMaximumWidth = (int) (mMaximumHeight * mRatio);
+                        mMinimumWidth = (int) (mMinimumHeight * mRatio);
+                    }
+
                     int newWidth = mOriginalWidth + dX;
 
                     if (newWidth <= mMinimumWidth) {

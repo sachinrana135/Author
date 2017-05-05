@@ -8,6 +8,7 @@
     <string name="menu_item_quotes_bottom_nav_home">Post</string>
     <string name="menu_item_write_quote_bottom_nav_home">Write</string>
     <string name="menu_item_account_bottom_nav_home">Account</string>
+    <string name="menu_item_back_fragment_component_textview_options">Back</string>
     <string name="menu_item_format_text_fragment_component_textview_options">Format</string>
     <string name="menu_item_text_size_fragment_component_textview_options">Text Size</string>
     <string name="menu_item_font_family_fragment_component_textview_options">Font Family</string>
@@ -21,6 +22,8 @@
     <string name="option_item_colorize_fragment_canvas_options">BG color</string>
     <string name="option_item_copy">Duplicate</string>
     <string name="option_item_bring_to_front">Bring To Front</string>
+    <string name="option_item_color_picker">Font Color</string>
+    <string name="option_item_back">Back</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_home_fragment">Hello home fragment</string>
