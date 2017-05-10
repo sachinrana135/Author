@@ -24,6 +24,10 @@
     <string name="option_item_bring_to_front">Bring To Front</string>
     <string name="option_item_color_picker">Font Color</string>
     <string name="option_item_back">Back</string>
+    <string name="option_item_canvas_color_picker">BG Color</string>
+    <string name="option_item_canvas_image">BG Image</string>
+    <string name="option_item_add_image">Add Image</string>
+    <string name="option_item_add_text">Add Text</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_home_fragment">Hello home fragment</string>

@@ -19,10 +19,12 @@ import com.alfanse.author.Utilities.CommonMethod;
 
 public class ComponentView extends FrameLayout {
 
+    public Drawable drawableRemove;
     protected ImageView mImgResize;
     protected ImageView mImgRemove;
+    int buffer = 15;
     private Context mContext;
-    private SquareFrameLayout mCanvas;
+    private QuoteCanvas mCanvas;
     private boolean mIsResizable;
     private boolean mIsScalable;
     private float dX;
@@ -36,26 +38,29 @@ public class ComponentView extends FrameLayout {
     private int mMaximumWidth;
     private int mMinimumHeight;
     private int mMaximumHeight;
+    private onComponentViewInteractionListener mListener;
 
-    public ComponentView(@NonNull Context context, @NonNull SquareFrameLayout canvas) {
+    public ComponentView(@NonNull Context context, @NonNull QuoteCanvas canvas) {
         super(context);
 
         mContext = context;
         mCanvas = canvas;
 
+        mListener = (onComponentViewInteractionListener) mContext;
+
         mImgRemove = new ImageView(mContext);
         mImgResize = new ImageView(mContext);
 
-        Drawable drawableRemove = CommonMethod.getInstance(mContext).getDrawable(R.drawable.ic_resize_grey_24dp);
-        mMinimumWidth = drawableRemove.getMinimumWidth() * 2;
-        mMinimumHeight = drawableRemove.getMinimumHeight() * 2;
+        drawableRemove = CommonMethod.getInstance(mContext).getDrawable(R.drawable.ic_resize_grey_24dp);
 
-        mMaximumWidth = mCanvas.getWidth();
-        mMaximumHeight = mCanvas.getHeight();
+        mMinimumWidth = getMinimumWidth();
+        mMinimumHeight = getMinimumHeight();
+        mMaximumWidth = getMaximumWidth();
+        mMaximumHeight = getMaximumHeight();
 
         drawControlButtons();
         initControlButtonListener();
-        this.setStateFocused(true);
+        this.setStateFocused(false);
     }
 
     private void drawControlButtons() {
@@ -86,6 +91,10 @@ public class ComponentView extends FrameLayout {
             @Override
             public void onClick(View v) {
                 mCanvas.removeView(ComponentView.this);
+                if (mListener != null) {
+                    mListener.onRemoveButtonClick();
+                }
+
             }
         });
 
@@ -289,6 +298,26 @@ public class ComponentView extends FrameLayout {
         } else {
             this.setForeground(null);
         }
+    }
+
+    public int getMinimumWidth() {
+        return (drawableRemove.getMinimumWidth() * 2) + buffer;
+    }
+
+    public int getMinimumHeight() {
+        return (drawableRemove.getMinimumHeight() * 2) + buffer;
+    }
+
+    public int getMaximumWidth() {
+        return mCanvas.getWidth();
+    }
+
+    public int getMaximumHeight() {
+        return mCanvas.getHeight();
+    }
+
+    public interface onComponentViewInteractionListener {
+        void onRemoveButtonClick();
     }
 
 }

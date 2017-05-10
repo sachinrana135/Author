@@ -6,4 +6,7 @@
     <color name="colorOptionsBackground">#212121</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBlack">#000000</color>
+    <color name="colorComponentViewStateFocused">#3F000000</color>
+    <color name="colorComponentViewStroke">#3F000000</color>
+    <color name="colorComponentViewActionButton">#3F000000</color>
 </resources>

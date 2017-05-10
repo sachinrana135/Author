@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.alfanse.author.CustomViews.ComponentImageView;
-import com.alfanse.author.CustomViews.SquareFrameLayout;
+import com.alfanse.author.CustomViews.QuoteCanvas;
 import com.alfanse.author.R;
 
 /**
@@ -23,7 +23,7 @@ public class ComponentImageViewOptionsFragment extends Fragment {
 
     private Context mContext;
     private Activity mActivity;
-    private SquareFrameLayout mCanvas;
+    private QuoteCanvas mCanvas;
 
     private OnFragmentInteractionListener mListener;
     private ComponentImageView mComponentImageView;
@@ -71,11 +71,11 @@ public class ComponentImageViewOptionsFragment extends Fragment {
         mListener = null;
     }
 
-    public void setQuoteCanvas(SquareFrameLayout quoteCanvas) {
+    public void setQuoteCanvas(QuoteCanvas quoteCanvas) {
         mCanvas = quoteCanvas;
     }
 
-    public void setComponentTextView(ComponentImageView componentImageView) {
+    public void setComponentImageView(ComponentImageView componentImageView) {
         mComponentImageView = componentImageView;
     }
     /**

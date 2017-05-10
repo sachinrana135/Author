@@ -14,8 +14,7 @@
         <LinearLayout
             android:id="@+id/layout_canvas_options_fragment_canvas_options"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="30"
+            android:layout_height="wrap_content"
             android:gravity="center">
 
             <LinearLayout
@@ -28,10 +27,15 @@
                 android:padding="@dimen/spacing_xsmall">
 
                 <LinearLayout
+                    android:id="@+id/layout_colorize_fragment_canvas_options"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center">
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_xsmall">
 
                     <ImageView
                         android:id="@+id/image_colorize_fragment_canvas_options"
@@ -39,15 +43,24 @@
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_colorize_white_24dp" />
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/option_item_canvas_color_picker"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/font_xsmall" />
+
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/layout_gallery_fragment_canvas_options"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:clickable="true"
                     android:gravity="center"
+                    android:orientation="vertical"
                     android:padding="@dimen/spacing_xsmall">
 
                     <ImageView
@@ -56,15 +69,24 @@
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_gallery_white_24dp" />
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/option_item_canvas_image"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/font_xsmall" />
+
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/layout_add_photo_fragment_canvas_options"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:clickable="true"
                     android:gravity="center"
+                    android:orientation="vertical"
                     android:padding="@dimen/spacing_xsmall">
 
                     <ImageView
@@ -73,15 +95,24 @@
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_add_photo_white_24dp" />
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/option_item_add_image"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/font_xsmall" />
+
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/layout_add_text_fragment_canvas_options"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:clickable="true"
                     android:gravity="center"
+                    android:orientation="vertical"
                     android:padding="@dimen/spacing_xsmall">
 
                     <ImageView
@@ -90,24 +121,15 @@
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_add_text" />
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:clickable="true"
-                    android:gravity="center"
-                    android:padding="@dimen/spacing_xsmall">
-
-                    <ImageView
-                        android:id="@+id/image_add_sticker_fragment_canvas_options"
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_insert_sticker_white_24dp" />
+                        android:text="@string/option_item_add_text"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/font_xsmall" />
 
                 </LinearLayout>
+
             </LinearLayout>
 
         </LinearLayout>
@@ -120,8 +142,7 @@
         <LinearLayout
             android:id="@+id/layout_canvas_themes_fragment_canvas_options"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="70"
+            android:layout_height="wrap_content"
             android:gravity="center">
 
             <android.support.v7.widget.RecyclerView

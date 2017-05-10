@@ -1,0 +1,148 @@
+{
+  "fonts": [
+    {
+      "fontName": "Dreamwalker",
+      "fileName": "Dreamwalker.ttf"
+    },
+    {
+      "fontName": "Mild-Life-Outline",
+      "fileName": "Mild-Life-Outline.ttf"
+    },
+    {
+      "fontName": "Mild-Life-Textured",
+      "fileName": "Mild-Life-Textured.otf"
+    },
+    {
+      "fontName": "Mild-Life",
+      "fileName": "Mild-Life.ttf"
+    },
+    {
+      "fontName": "Semplicita-Ombra",
+      "fileName": "Semplicita-Ombra.otf"
+    },
+    {
+      "fontName": "TrajanPro",
+      "fileName": "TrajanPro.ttf"
+    },
+    {
+      "fontName": "AcademyKiller",
+      "fileName": "AcademyKiller.ttf"
+    },
+    {
+      "fontName": "Surfing-Capital",
+      "fileName": "Surfing-Capital.ttf"
+    },
+    {
+      "fontName": "AgencyFB",
+      "fileName": "AgencyFB.ttf"
+    },
+    {
+      "fontName": "Alien-Playlist",
+      "fileName": "Alien-Playlist.ttf"
+    },
+    {
+      "fontName": "Billy-Ohio",
+      "fileName": "Billy-Ohio.ttf"
+    },
+    {
+      "fontName": "Bodoni",
+      "fileName": "Bodoni.ttf"
+    },
+    {
+      "fontName": "ClarendonBT",
+      "fileName": "ClarendonBT.ttf"
+    },
+    {
+      "fontName": "Comme",
+      "fileName": "Comme.ttf"
+    },
+    {
+      "fontName": "Cormorant",
+      "fileName": "Cormorant.otf"
+    },
+    {
+      "fontName": "CormorantSC",
+      "fileName": "CormorantSC.otf"
+    },
+    {
+      "fontName": "CormorantUnicase",
+      "fileName": "CormorantUnicase.otf"
+    },
+    {
+      "fontName": "CormorantUpright",
+      "fileName": "CormorantUpright.otf"
+    },
+    {
+      "fontName": "DensiaSans",
+      "fileName": "DensiaSans.otf"
+    },
+    {
+      "fontName": "ForeverBrush",
+      "fileName": "ForeverBrush.otf"
+    },
+    {
+      "fontName": "Gidole",
+      "fileName": "Gidole.otf"
+    },
+    {
+      "fontName": "GlacialIndifference",
+      "fileName": "GlacialIndifference.otf"
+    },
+    {
+      "fontName": "Helvetica",
+      "fileName": "Helvetica.ttf"
+    },
+    {
+      "fontName": "JosefinSans",
+      "fileName": "JosefinSans.ttf"
+    },
+    {
+      "fontName": "LeagueSpartan-Bold",
+      "fileName": "LeagueSpartan-Bold.otf"
+    },
+    {
+      "fontName": "Luna",
+      "fileName": "Luna.ttf"
+    },
+    {
+      "fontName": "Magra",
+      "fileName": "Magra.ttf"
+    },
+    {
+      "fontName": "Midse",
+      "fileName": "Midse.ttf"
+    },
+    {
+      "fontName": "MyEthereal",
+      "fileName": "MyEthereal.otf"
+    },
+    {
+      "fontName": "NobleNotes",
+      "fileName": "NobleNotes.ttf"
+    },
+    {
+      "fontName": "RNS-Camelia",
+      "fileName": "RNS-Camelia.otf"
+    },
+    {
+      "fontName": "RofiTaste",
+      "fileName": "RofiTaste.otf"
+    },
+    {
+      "fontName": "Semplicita-Light",
+      "fileName": "Semplicita-Light.otf"
+    },
+    {
+      "fontName": "Sen",
+      "fileName": "Sen.otf"
+    },
+    {
+      "fontName": "Shorelines-Script",
+      "fileName": "Shorelines-Script.otf"
+    },
+    {
+      "fontName": "Time-Burner",
+      "fileName": "Time-Burner.ttf"
+    }
+  ]
+}

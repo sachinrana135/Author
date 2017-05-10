@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import com.alfanse.author.Models.CanvasTheme;
 import com.alfanse.author.R;
+import com.alfanse.author.Utilities.CommonMethod;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -22,16 +23,16 @@ import butterknife.ButterKnife;
 
 public class CanvasThemesAdapter extends RecyclerView.Adapter<CanvasThemesAdapter.CanvasThemeViewHolder> {
 
+    private final OnItemClickListener listener;
     private Context mContext;
     private ArrayList<CanvasTheme> mListCanvasThemes;
 
-    public CanvasThemesAdapter() {
-
-    }
-
-    public CanvasThemesAdapter(Context context, ArrayList<CanvasTheme> listCanvasThemes) {
+    public CanvasThemesAdapter(Context context, ArrayList<CanvasTheme> listCanvasThemes, OnItemClickListener listener) {
         mContext = context;
         mListCanvasThemes = listCanvasThemes;
+        this.listener = listener;
+
+
     }
 
     @Override
@@ -44,13 +45,8 @@ public class CanvasThemesAdapter extends RecyclerView.Adapter<CanvasThemesAdapte
 
     @Override
     public void onBindViewHolder(CanvasThemeViewHolder holder, int position) {
-        CanvasTheme canvasTheme = mListCanvasThemes.get(position);
-        Picasso.with(mContext)
-                .load(canvasTheme.getImageUrl())
-                .fit()
-                .into(holder.canvasThemeImage);
+        holder.bind(mListCanvasThemes.get(position), listener);
     }
-
     @Override
     public long getItemId(int position) {
         return position;
@@ -61,6 +57,10 @@ public class CanvasThemesAdapter extends RecyclerView.Adapter<CanvasThemesAdapte
         return mListCanvasThemes.size();
     }
 
+    public interface OnItemClickListener {
+        void onItemClick(CanvasTheme canvasTheme);
+    }
+
     public class CanvasThemeViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.canvas_theme_image_item_canvas_image)
@@ -69,6 +69,22 @@ public class CanvasThemesAdapter extends RecyclerView.Adapter<CanvasThemesAdapte
         public CanvasThemeViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
+        }
+
+        public void bind(final CanvasTheme canvasTheme, final OnItemClickListener listener) {
+
+            Picasso.with(mContext)
+                    .load(canvasTheme.getImageUrl())
+                    .fit()
+                    .error(CommonMethod.getInstance(mContext).getDrawable(R.drawable.ic_gallery_grey_24dp))
+                    .into(canvasThemeImage);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onItemClick(canvasTheme);
+                }
+            });
         }
     }
 }
