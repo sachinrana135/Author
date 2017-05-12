@@ -1,6 +1,7 @@
 package com.alfanse.author.CustomViews;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
@@ -8,8 +9,10 @@ import android.view.Gravity;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.alfanse.author.Models.CanvasTheme;
 import com.alfanse.author.R;
 import com.alfanse.author.Utilities.CommonMethod;
+import com.alfanse.author.Utilities.FontHelper;
 
 /**
  * Created by Velocity-1601 on 4/18/2017.
@@ -24,6 +27,7 @@ public class ComponentTextView extends ComponentView {
     private Typeface mTypeface = null;
     private int mStyle = 0;
     private int mGravity;
+    private int mViewDistancePercentage = 10;
 
     public ComponentTextView(@NonNull Context context, @NonNull QuoteCanvas canvas) {
         super(context, canvas);
@@ -56,6 +60,32 @@ public class ComponentTextView extends ComponentView {
 
         super.mImgRemove.bringToFront();
         super.mImgResize.bringToFront();
+    }
+
+    public void setTheme(CanvasTheme canvasTheme) {
+        try {
+            this.setTextSize(Float.parseFloat(canvasTheme.getTextSize()));
+            this.setTextColor(Color.parseColor(canvasTheme.getTextColor()));
+            this.setTextLocationX(Float.parseFloat(canvasTheme.getTextLocationX()));
+            this.setTextLocationY(Float.parseFloat(canvasTheme.getTextLocationY()));
+            this.setTypeface(FontHelper.getInstance(mContext).getFontsHashMap().get(canvasTheme.getTextFontFamily()).getFontTypeface());
+            this.setTextStyle(Integer.parseInt(canvasTheme.getTextStyle()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void copyTheme(ComponentTextView source) {
+        this.setTextSize(source.getTextSize());
+        this.setTextColor(source.getTextColor());
+        this.setTypeface(source.getTypeface());
+        this.setTextStyle(source.getTextStyle());
+        this.setTextLocationX(source.getTextLocationX() + mViewDistancePercentage);
+        this.setTextLocationY(source.getTextLocationY() + mViewDistancePercentage);
+        this.setAlignment(source.getAlignment());
+        if (this.hasTextUnderline()) {
+            this.setTextUnderline();
+        }
     }
 
     public Float getTextSize() {
@@ -94,7 +124,7 @@ public class ComponentTextView extends ComponentView {
     }
 
     public Float getTextLocationX() {
-        return this.getX();
+        return (this.getX() / mCanvas.getWidth()) * 100;
     }
 
     public void setTextLocationX(Float textLocationX) {
@@ -102,7 +132,7 @@ public class ComponentTextView extends ComponentView {
     }
 
     public Float getTextLocationY() {
-        return this.getY();
+        return (this.getY() / mCanvas.getHeight()) * 100;
     }
 
     public void setTextLocationY(Float textLocationY) {

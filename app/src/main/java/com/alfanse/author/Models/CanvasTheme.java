@@ -1,5 +1,7 @@
 package com.alfanse.author.Models;
 
+import com.alfanse.author.Utilities.Constants;
+
 /**
  * Created by Velocity-1601 on 4/28/2017.
  */
@@ -11,10 +13,25 @@ public class CanvasTheme {
     private String textFontFamily;
     private String textColor;
     private String textStyle;
-    private String textLocationX;
-    private String textLocationY;
+    private String textLocationX; // value in percentage
+    private String textLocationY; // value in percentage
 
     public CanvasTheme() {
+    }
+
+    public static CanvasTheme getDefaultTheme() {
+
+        CanvasTheme canvasTheme = new CanvasTheme();
+
+        canvasTheme.setTextFontFamily(Constants.DEFAULT_COMPONENT_TEXTVIEW_FONT);
+        canvasTheme.setTextStyle(Constants.DEFAULT_COMPONENT_TEXTVIEW_STYLE);
+        canvasTheme.setTextColor(Constants.DEFAULT_COMPONENT_TEXTVIEW_COLOR);
+        canvasTheme.setTextSize(Constants.DEFAULT_COMPONENT_TEXTVIEW_SIZE);
+        canvasTheme.setTextStyle(Constants.DEFAULT_COMPONENT_TEXTVIEW_STYLE);
+        canvasTheme.setTextLocationX(Constants.DEFAULT_COMPONENT_TEXTVIEW_LOCATION_X);
+        canvasTheme.setTextLocationY(Constants.DEFAULT_COMPONENT_TEXTVIEW_LOCATION_Y);
+        return canvasTheme;
+
     }
 
     public String getImageUrl() {

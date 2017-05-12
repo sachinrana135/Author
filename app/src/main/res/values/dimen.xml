@@ -20,4 +20,6 @@
     <dimen name="spacing_xsmall">4dp</dimen>
     <dimen name="spacing_xxsmall">2dp</dimen>
 
+    <dimen name="dialog_icon_size">70dp</dimen>
+
 </resources>

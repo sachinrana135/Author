@@ -1,6 +1,7 @@
 package com.alfanse.author.CustomViews;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.widget.FrameLayout;
@@ -39,5 +40,13 @@ public class ComponentImageView extends ComponentView {
 
         super.mImgRemove.bringToFront();
         super.mImgResize.bringToFront();
+    }
+
+    public Drawable getDrawable() {
+        return mImageView.getDrawable();
+    }
+
+    public void setDrawable(Drawable drawable) {
+        mImageView.setImageDrawable(drawable);
     }
 }

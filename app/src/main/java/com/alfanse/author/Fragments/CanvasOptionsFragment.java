@@ -5,8 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,7 +27,6 @@ import com.alfanse.author.CustomViews.QuoteCanvas;
 import com.alfanse.author.Models.CanvasTheme;
 import com.alfanse.author.R;
 import com.alfanse.author.Utilities.Constants;
-import com.alfanse.author.Utilities.FontHelper;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -120,12 +117,7 @@ public class CanvasOptionsFragment extends Fragment implements ColorPickerDialog
 
                 if (mCanvas.findViewWithTag(Constants.TAG_DEFAULT_CANVASE_TEXT_VIEW) != null) {
                     ComponentTextView componentTextView = (ComponentTextView) mCanvas.findViewWithTag(Constants.TAG_DEFAULT_CANVASE_TEXT_VIEW);
-                    componentTextView.setTypeface(FontHelper.getInstance(mContext).getFontsHashMap().get(canvasTheme.getTextFontFamily()).getFontTypeface());
-                    componentTextView.setTextStyle(Integer.parseInt(canvasTheme.getTextStyle()));
-                    componentTextView.setTextSize(Float.parseFloat(canvasTheme.getTextSize()));
-                    componentTextView.setTextColor(Color.parseColor(canvasTheme.getTextColor()));
-                    componentTextView.setTextLocationX(Float.parseFloat(canvasTheme.getTextLocationX()));
-                    componentTextView.setTextLocationY(Float.parseFloat(canvasTheme.getTextLocationY()));
+                    componentTextView.setTheme(canvasTheme);
                 }
             }
         });
@@ -320,11 +312,7 @@ public class CanvasOptionsFragment extends Fragment implements ColorPickerDialog
     private void addComponentTextView() {
 
         ComponentTextView textView = new ComponentTextView(mActivity, mCanvas);
-
-        textView.setTextStyle(Typeface.BOLD);
-        textView.setTextSize(getResources().getDimension(R.dimen.font_small));
-        textView.setTextLocationX((float) 20);
-        textView.setTextLocationY((float) 20);
+        textView.setTheme(CanvasTheme.getDefaultTheme());
 
         textView.setMinimumHeight(textView.getMinimumHeight());
 

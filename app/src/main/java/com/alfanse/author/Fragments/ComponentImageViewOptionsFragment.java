@@ -2,16 +2,21 @@ package com.alfanse.author.Fragments;
 
 import android.app.Activity;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import com.alfanse.author.CustomViews.ComponentImageView;
 import com.alfanse.author.CustomViews.QuoteCanvas;
 import com.alfanse.author.R;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,9 +26,17 @@ import com.alfanse.author.R;
  */
 public class ComponentImageViewOptionsFragment extends Fragment {
 
+    @BindView(R.id.layout_back_fragment_component_imageview_options)
+    LinearLayout optionBack;
+    @BindView(R.id.layout_copy_fragment_component_imageview_options)
+    LinearLayout optionCopy;
+    @BindView(R.id.layout_bring_to_front_fragment_component_imageview_options)
+    LinearLayout optionBringToFront;
+
     private Context mContext;
     private Activity mActivity;
     private QuoteCanvas mCanvas;
+    private Unbinder unbinder;
 
     private OnFragmentInteractionListener mListener;
     private ComponentImageView mComponentImageView;
@@ -41,15 +54,49 @@ public class ComponentImageViewOptionsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_component_imageview_options, container, false);
+        View view = inflater.inflate(R.layout.fragment_component_imageview_options, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        initOptionItemClickListener();
+        return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentBackPressed();
-        }
+    private void initOptionItemClickListener() {
+
+        optionBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener != null) {
+                    mListener.onFragmentBackPressed();
+                }
+            }
+        });
+
+        optionCopy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ComponentImageView componentImageView = new ComponentImageView(mContext, mCanvas, null);
+
+                componentImageView.setDrawable(mComponentImageView.getDrawable());
+
+                FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+
+                mCanvas.addView(componentImageView, layoutParams);
+
+                if (mListener != null) {
+                    mListener.onComponentImageViewAdded(componentImageView);
+                }
+            }
+        });
+
+        optionBringToFront.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCanvas.bringChildToFront(mComponentImageView);
+            }
+        });
     }
+
 
     @Override
     public void onAttach(Context context) {
@@ -69,6 +116,7 @@ public class ComponentImageViewOptionsFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        unbinder.unbind();
     }
 
     public void setQuoteCanvas(QuoteCanvas quoteCanvas) {
@@ -90,6 +138,7 @@ public class ComponentImageViewOptionsFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
+        void onComponentImageViewAdded(ComponentImageView componentImageView);
         void onFragmentBackPressed();
     }
 }

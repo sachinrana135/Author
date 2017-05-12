@@ -3,6 +3,10 @@
 <resources>
     <string name="app_name">Author</string>
 
+    <!-- Activity Title -->
+    <string name="title_new_quote">New Quote</string>
+
+
     <!-- Menu -->
     <string name="menu_item_home_bottom_nav_home">Home</string>
     <string name="menu_item_quotes_bottom_nav_home">Post</string>
@@ -29,14 +33,12 @@
     <string name="option_item_add_image">Add Image</string>
     <string name="option_item_add_text">Add Text</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_home_fragment">Hello home fragment</string>
-    <string name="hello_follow_quote_fragment">Hello follow quote fragment</string>
-    <string name="hello_write_quote_fragment">Hello write fragment</string>
-    <string name="hello_account_fragment">Hello account fragment</string>
+    <!-- Action buttons -->
+    <string name="action_ok">Ok</string>
+    <string name="action_cancel">Cancel</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- messages-->
+    <string name="msg_exit_confirm">Are you sure? All changes will be lost.</string>
 
     <!-- error messages -->
     <string name="error_bad_network">Cannot connect to Internet...Please check your connection!</string>

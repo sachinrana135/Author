@@ -8,5 +8,8 @@
     <color name="colorBlack">#000000</color>
     <color name="colorComponentViewStateFocused">#3F000000</color>
     <color name="colorComponentViewStroke">#3F000000</color>
-    <color name="colorComponentViewActionButton">#3F000000</color>
+    <color name="colorComponentViewActionButton">#9e9e9e</color>
+    <color name="colorError">#d9534f</color>
+    <color name="colorSuccess">#5cb85c</color>
+    <color name="colorWarning">#f0ad4e</color>
 </resources>

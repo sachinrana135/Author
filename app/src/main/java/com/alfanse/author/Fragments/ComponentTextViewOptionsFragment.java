@@ -85,7 +85,6 @@ public class ComponentTextViewOptionsFragment extends Fragment implements ColorP
     private Context mContext;
     private Activity mActivity;
     private Unbinder unbinder;
-    private int mViewDistance = 30;
     private FontsAdapter mFontsAdapter;
     private ArrayList<Font> mListFonts = new ArrayList<Font>();
     private LinearLayoutManager mLinearLayoutManager;
@@ -236,16 +235,10 @@ public class ComponentTextViewOptionsFragment extends Fragment implements ColorP
             public void onClick(View v) {
 
                 ComponentTextView componentTextView = new ComponentTextView(mContext, mCanvas);
-                componentTextView.setTextSize(mComponentTextView.getTextSize());
-                componentTextView.setTextColor(mComponentTextView.getTextColor());
-                componentTextView.setTypeface(mComponentTextView.getTypeface());
-                componentTextView.setTextStyle(mComponentTextView.getTextStyle());
-                componentTextView.setTextLocationX(mComponentTextView.getTextLocationX() + mViewDistance);
-                componentTextView.setTextLocationY(mComponentTextView.getTextLocationY() + mViewDistance);
-                componentTextView.setAlignment(mComponentTextView.getAlignment());
-                if (mComponentTextView.hasTextUnderline()) {
-                    componentTextView.setTextUnderline();
-                }
+
+                componentTextView.copyTheme(mComponentTextView);
+
+                componentTextView.setMinimumHeight(componentTextView.getMinimumHeight());
 
                 FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams((int) (mCanvas.getWidth() * .7), FrameLayout.LayoutParams.WRAP_CONTENT);
 
@@ -287,6 +280,7 @@ public class ComponentTextViewOptionsFragment extends Fragment implements ColorP
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        mListener = null;
         unbinder.unbind();
     }
 

@@ -2,12 +2,14 @@ package com.alfanse.author.Activities;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Typeface;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -15,6 +17,7 @@ import android.widget.FrameLayout;
 import com.alfanse.author.CustomViews.ComponentImageView;
 import com.alfanse.author.CustomViews.ComponentTextView;
 import com.alfanse.author.CustomViews.ComponentView;
+import com.alfanse.author.CustomViews.DialogBuilder;
 import com.alfanse.author.CustomViews.QuoteCanvas;
 import com.alfanse.author.Fragments.CanvasOptionsFragment;
 import com.alfanse.author.Fragments.ComponentImageViewOptionsFragment;
@@ -46,6 +49,8 @@ public class NewQuoteActivity extends AppCompatActivity implements
         ColorPickerDialogListener,
         ComponentView.onComponentViewInteractionListener {
 
+    @BindView(R.id.toolbar_new_quote)
+    Toolbar mToolbar;
     @BindView(R.id.SquareFrameLayoutWriteQuoteCanvas)
     QuoteCanvas mQuoteCanvas;
 
@@ -87,11 +92,20 @@ public class NewQuoteActivity extends AppCompatActivity implements
         }
     };
 
+    private Runnable fontsLoaderTask = new Runnable() {
+        @Override
+        public void run() {
+            FontHelper.getInstance(mContext);
+        }
+    };
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_quote);
         ButterKnife.bind(this);
+        initToolbar();
 
         mContext = getApplicationContext();
         mActivity = NewQuoteActivity.this;
@@ -103,6 +117,7 @@ public class NewQuoteActivity extends AppCompatActivity implements
 
         CommonView.getInstance(mContext).showTransparentProgressDialog(mActivity);
         mCanvasThemesRef.addListenerForSingleValueEvent(CanvasThemesValueEventListener);
+        fontsLoaderTask.run();
 
         mQuoteCanvas.setOnTouchListener(new CanvasTouchListener());
         if (mActiveOptionFragment == null) {
@@ -110,6 +125,13 @@ public class NewQuoteActivity extends AppCompatActivity implements
         }
 
         loadCanvasOptionsFragment();
+    }
+
+    private void initToolbar() {
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle(getString(R.string.title_new_quote));
     }
 
     private void loadCanvasOptionsFragment() {
@@ -126,7 +148,25 @@ public class NewQuoteActivity extends AppCompatActivity implements
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        DialogBuilder builder = new DialogBuilder(mActivity);
+        // Add the buttons
+        builder.setPositiveButton(R.string.action_ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                finish();
+            }
+        });
+        builder.setNegativeButton(R.string.action_cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+            }
+        });
+        // Set other dialog properties
+        builder.setMessage(R.string.msg_exit_confirm);
+        builder.setDialogType(DialogBuilder.WARNING);
+
+        // Create the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     public void loadComponentImageViewOptionsFragment() {
@@ -210,23 +250,9 @@ public class NewQuoteActivity extends AppCompatActivity implements
         ComponentTextView textView = new ComponentTextView(mActivity, mQuoteCanvas);
 
         if (canvasTheme != null) {
-
-            try {
-                textView.setTypeface(FontHelper.getInstance(mContext).getFontsHashMap().get(canvasTheme.getTextFontFamily()).getFontTypeface());
-            } catch (Exception e) {
-
-            }
-
-            textView.setTextStyle(Integer.parseInt(canvasTheme.getTextStyle()));
-            textView.setTextSize(Float.parseFloat(canvasTheme.getTextSize()));
-            textView.setTextColor(Color.parseColor(canvasTheme.getTextColor()));
-            textView.setTextLocationX(Float.parseFloat(canvasTheme.getTextLocationX()));
-            textView.setTextLocationY(Float.parseFloat(canvasTheme.getTextLocationY()));
+            textView.setTheme(canvasTheme);
         } else {
-            textView.setTextStyle(Typeface.BOLD);
-            textView.setTextSize(getResources().getDimension(R.dimen.font_small));
-            textView.setTextLocationX((float) 20);
-            textView.setTextLocationY((float) 20);
+            textView.setTheme(CanvasTheme.getDefaultTheme());
         }
 
         textView.setTag(Constants.TAG_DEFAULT_CANVASE_TEXT_VIEW);
@@ -239,6 +265,15 @@ public class NewQuoteActivity extends AppCompatActivity implements
 
         onComponentTextViewAdded(textView);
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+
+        if (menuItem.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(menuItem);
     }
 
     private class CanvasTouchListener implements View.OnTouchListener {

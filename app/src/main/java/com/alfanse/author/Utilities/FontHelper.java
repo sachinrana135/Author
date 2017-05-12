@@ -52,6 +52,7 @@ public class FontHelper {
         }
         for (int i = 0; i < jsonFontsArray.length(); i++) {
             try {
+
                 JSONObject jsonFontObject = jsonFontsArray.getJSONObject(i);
 
                 Font font = new Font();
