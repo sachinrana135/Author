@@ -32,6 +32,12 @@ public class CommonMethod {
         return sInstance;
     }
 
+    public static String getTimeStamp() {
+        Long tsLong = System.currentTimeMillis() / 1000;
+        String ts = tsLong.toString();
+        return ts;
+    }
+
     public Drawable getDrawable(int id) {
         final int version = Build.VERSION.SDK_INT;
         if (version >= Build.VERSION_CODES.LOLLIPOP) {

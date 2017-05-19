@@ -10,39 +10,29 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/header_layout_dialog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
             android:gravity="center"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:padding="@dimen/spacing_normal">
 
             <ImageView
-                android:id="@+id/icon_layout_dialog"
                 android:layout_width="@dimen/dialog_icon_size"
                 android:layout_height="@dimen/dialog_icon_size"
-                android:src="@drawable/ic_info_white_24dp" />
-
-            <TextView
-                android:id="@+id/title_layout_dialog"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_small"
-                android:textColor="@color/colorWhite"
-                android:textSize="@dimen/font_large"
-                android:visibility="gone" />
+                android:src="@drawable/ic_edit_white_24dp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/spacing_normal">
+            android:padding="@dimen/spacing_small">
 
-            <TextView
-                android:id="@+id/message_layout_dialog"
+            <EditText
+                android:id="@+id/edit_text_layout_edit_text_dialog"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:minLines="6" />
         </LinearLayout>
 
     </LinearLayout>

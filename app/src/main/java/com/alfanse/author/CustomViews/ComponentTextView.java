@@ -88,6 +88,14 @@ public class ComponentTextView extends ComponentView {
         }
     }
 
+    public String getText() {
+        return mTextView.getText().toString();
+    }
+
+    public void setText(String text) {
+        mTextView.setText(text);// Set value in sp unit
+    }
+
     public Float getTextSize() {
         Float sizeInPx = mTextView.getTextSize(); // return value in px unit
         return CommonMethod.getInstance(mContext).pixelToSp(sizeInPx);

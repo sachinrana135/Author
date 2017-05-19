@@ -2,7 +2,7 @@
 <resources>
 
     <!-- font sizes -->
-    <dimen name="font_xxlarge">25sp</dimen>
+    <dimen name="font_xxlarge">30sp</dimen>
     <dimen name="font_xlarge">22sp</dimen>
     <dimen name="font_large">18sp</dimen>
     <dimen name="font_normal">15sp</dimen>
@@ -20,6 +20,7 @@
     <dimen name="spacing_xsmall">4dp</dimen>
     <dimen name="spacing_xxsmall">2dp</dimen>
 
-    <dimen name="dialog_icon_size">70dp</dimen>
+    <dimen name="dialog_icon_size">50dp</dimen>
+    <dimen name="social_login_button_height">40dp</dimen>
 
 </resources>

@@ -225,7 +225,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/option_item_color_picker"
+                        android:text="@string/option_item_font_color_picker"
                         android:textColor="@color/colorWhite"
                         android:textSize="@dimen/font_xsmall" />
 

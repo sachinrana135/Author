@@ -1,6 +1,7 @@
 package com.alfanse.author.Activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,6 +20,7 @@ public class HomeActivity extends AppCompatActivity {
     @BindView(R.id.fragment_container_home) FrameLayout fragmentContainer;
     @BindView(R.id.bottom_nav_home)
     BottomNavigationView bottomNav;
+    private Context mContext;
     private Activity mActivity;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -43,6 +45,8 @@ public class HomeActivity extends AppCompatActivity {
 
                     break;
                 case R.id.bottom_nav_item_account_home:
+                    Intent loginIntent = new Intent(mActivity, SignInActivity.class);
+                    startActivity(loginIntent);
                     break;
             }
             return true;
@@ -56,6 +60,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
 
+        mContext = getApplicationContext();
         mActivity = HomeActivity.this;
 
         initToolbar();

@@ -130,6 +130,32 @@
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/layout_add_box_fragment_canvas_options"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_xsmall">
+
+                    <ImageView
+                        android:id="@+id/image_add_box_fragment_canvas_options"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_add_box_white_24dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/option_item_add_box"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/font_xsmall" />
+
+                </LinearLayout>
+
             </LinearLayout>
 
         </LinearLayout>

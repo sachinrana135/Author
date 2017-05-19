@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    tools:context="com.alfanse.author.Activities.SignInActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:padding="@dimen/spacing_small">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_normal"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <View
+                            style="@style/HorizontalDivider"
+                            android:layout_width="0dp"
+                            android:layout_marginLeft="@dimen/spacing_small"
+                            android:layout_marginRight="@dimen/spacing_small"
+                            android:layout_weight="10" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_social_login_sign_in"
+                            android:textColor="@color/colorWhite" />
+
+                        <View
+                            style="@style/HorizontalDivider"
+                            android:layout_width="0dp"
+                            android:layout_marginLeft="@dimen/spacing_small"
+                            android:layout_marginRight="@dimen/spacing_small"
+                            android:layout_weight="10" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <com.google.android.gms.common.SignInButton
+                            android:id="@+id/button_sdk_google_login_sign_in"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+
+                        <com.facebook.login.widget.LoginButton
+                            android:id="@+id/button_sdk_facebook_login_sign_in"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <com.twitter.sdk.android.core.identity.TwitterLoginButton
+                            android:id="@+id/button_sdk_twitter_login_sign_in"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <Button
+                            android:id="@+id/button_google_login_sign_in"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_normal"
+                            android:background="@color/colorWhite"
+                            android:drawableLeft="@drawable/ic_google"
+                            android:padding="@dimen/spacing_small"
+                            android:text="@string/button_login_google"
+                            android:textColor="@color/colorGoogle" />
+
+                        <Button
+                            android:id="@+id/button_facebook_login_sign_in"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_normal"
+                            android:background="@color/colorFacebook"
+                            android:drawableLeft="@drawable/ic_facebook"
+                            android:padding="@dimen/spacing_small"
+                            android:text="@string/button_login_facebook"
+                            android:textColor="@color/colorWhite" />
+
+                        <Button
+                            android:id="@+id/button_twitter_login_sign_in"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_normal"
+                            android:background="@color/colorTwitter"
+                            android:drawableLeft="@drawable/ic_twitter"
+                            android:padding="@dimen/spacing_small"
+                            android:text="@string/button_login_twitter"
+                            android:textColor="@color/colorWhite" />
+
+
+                    </LinearLayout>
+
+
+                </LinearLayout> <!-- Social Login -->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_large"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_normal"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <View
+                            style="@style/HorizontalDivider"
+                            android:layout_width="0dp"
+                            android:layout_marginLeft="@dimen/spacing_small"
+                            android:layout_marginRight="@dimen/spacing_small"
+                            android:layout_weight="10" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_email_login_sign_in"
+                            android:textColor="@color/colorWhite" />
+
+                        <View
+                            style="@style/HorizontalDivider"
+                            android:layout_width="0dp"
+                            android:layout_marginLeft="@dimen/spacing_small"
+                            android:layout_marginRight="@dimen/spacing_small"
+                            android:layout_weight="10" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <EditText
+                                android:id="@+id/edit_text_user_email_sign_in"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:ems="10"
+                                android:hint="@string/hint_email"
+                                android:inputType="textEmailAddress" />
+
+                        </android.support.design.widget.TextInputLayout>
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <EditText
+                                android:id="@+id/edit_text_user_password_sign_in"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:ems="10"
+                                android:hint="@string/hint_password"
+                                android:inputType="textPassword" />
+
+                        </android.support.design.widget.TextInputLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/text_forgot_password_sign_in"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="5"
+                                android:text="@string/text_forgot_password_sign_in"
+                                android:textSize="@dimen/font_small" />
+
+                            <Button
+                                android:id="@+id/button_login_sign_in"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="10"
+                                android:background="@color/colorWhite"
+                                android:text="@string/button_login" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_large"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/text_no_account_sign_in"
+                                android:textColor="@color/colorWhite"
+                                android:textSize="@dimen/font_normal" />
+
+                            <TextView
+                                android:id="@+id/text_sign_up_sign_in"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/spacing_small"
+                                android:text="@string/text_sign_up_sign_in"
+                                android:textColor="@color/colorAccent"
+                                android:textSize="@dimen/font_large"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+
+                </LinearLayout> <!-- Via Email Login -->
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+
+    </ScrollView>
+
+</RelativeLayout>

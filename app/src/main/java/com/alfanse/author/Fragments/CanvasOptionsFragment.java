@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.alfanse.author.Adapters.CanvasThemesAdapter;
+import com.alfanse.author.CustomViews.ComponentBoxView;
 import com.alfanse.author.CustomViews.ComponentImageView;
 import com.alfanse.author.CustomViews.ComponentTextView;
 import com.alfanse.author.CustomViews.QuoteCanvas;
@@ -64,6 +65,8 @@ public class CanvasOptionsFragment extends Fragment implements ColorPickerDialog
     LinearLayout optionAddImage;
     @BindView(R.id.layout_add_text_fragment_canvas_options)
     LinearLayout optionAddText;
+    @BindView(R.id.layout_add_box_fragment_canvas_options)
+    LinearLayout optionAddBox;
     @BindView(R.id.rv_canvas_themes_fragment_canvas_options)
     RecyclerView recyclerViewCanvasThemes;
 
@@ -163,6 +166,13 @@ public class CanvasOptionsFragment extends Fragment implements ColorPickerDialog
             @Override
             public void onClick(View v) {
                 addComponentTextView();
+            }
+        });
+
+        optionAddBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addComponentBoxView();
             }
         });
 
@@ -325,6 +335,21 @@ public class CanvasOptionsFragment extends Fragment implements ColorPickerDialog
         }
     }
 
+    private void addComponentBoxView() {
+
+        ComponentBoxView boxView = new ComponentBoxView(mActivity, mCanvas);
+
+        boxView.setMinimumHeight(boxView.getMinimumHeight());
+
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(mCanvas.getWidth() / 2, mCanvas.getHeight() / 2);
+
+        mCanvas.addView(boxView, layoutParams);
+
+        if (mListener != null) {
+            mListener.onComponentBoxViewAdded(boxView);
+        }
+    }
+
     private void addComponentImageView(Uri imageUri) {
 
         ComponentImageView imageView = new ComponentImageView(mActivity, mCanvas, imageUri);
@@ -355,6 +380,8 @@ public class CanvasOptionsFragment extends Fragment implements ColorPickerDialog
         void onComponentTextViewAdded(ComponentTextView componentTextView);
 
         void onComponentImageViewAdded(ComponentImageView componentImageView);
+
+        void onComponentBoxViewAdded(ComponentBoxView boxView);
     }
 
 

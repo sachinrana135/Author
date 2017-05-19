@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#FD6469</color>
     <color name="colorPrimaryDark">#fc5256</color>
-    <color name="colorAccent">#fc5256</color>
+    <color name="colorAccent">#015376</color>
     <color name="colorOptionsBackground">#212121</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBlack">#000000</color>
@@ -12,4 +12,7 @@
     <color name="colorError">#d9534f</color>
     <color name="colorSuccess">#5cb85c</color>
     <color name="colorWarning">#f0ad4e</color>
+    <color name="colorGoogle">#DF4A32</color>
+    <color name="colorFacebook">#4267B2</color>
+    <color name="colorTwitter">#5EA9DD</color>
 </resources>

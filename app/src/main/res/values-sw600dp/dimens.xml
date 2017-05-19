@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- font sizes -->
+    <dimen name="font_xxlarge">45sp</dimen>
+    <dimen name="font_xlarge">35sp</dimen>
+    <dimen name="font_large">30sp</dimen>
+    <dimen name="font_normal">22sp</dimen>
+    <dimen name="font_small">17sp</dimen>
+    <dimen name="font_xsmall">15sp</dimen>
+    <dimen name="font_xxsmall">11sp</dimen>
+
+    <!-- typical spacing between two views -->
+    <dimen name="spacing_xxhuge">100dp</dimen>
+    <dimen name="spacing_xhuge">75dp</dimen>
+    <dimen name="spacing_huge">50dp</dimen>
+    <dimen name="spacing_large">32dp</dimen>
+    <dimen name="spacing_normal">20dp</dimen>
+    <dimen name="spacing_small">15dp</dimen>
+    <dimen name="spacing_xsmall">7dp</dimen>
+    <dimen name="spacing_xxsmall">4dp</dimen>
+
+    <dimen name="dialog_icon_size">70dp</dimen>
+    <dimen name="social_login_button_height">50dp</dimen>
+
+</resources>

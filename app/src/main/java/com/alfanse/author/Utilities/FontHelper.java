@@ -58,7 +58,7 @@ public class FontHelper {
                 Font font = new Font();
                 font.setFontName(jsonFontObject.getString("fontName"));
                 font.setFontFileName(jsonFontObject.getString("fileName"));
-                font.setFontTypeface(Typeface.createFromAsset(mContext.getAssets(), FONTS_DIR.concat(font.getFontFileName())));
+                font.setFontTypeface(getTypeface(mContext, font.getFontFileName()));
 
                 fontsHashMap.put(font.getFontName(), font);
                 fontsArrayList.add(font);
@@ -68,6 +68,10 @@ public class FontHelper {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static Typeface getTypeface(Context context, String fileName) {
+        return Typeface.createFromAsset(context.getAssets(), FONTS_DIR.concat(fileName));
     }
 
     public HashMap<String, Font> getFontsHashMap() {

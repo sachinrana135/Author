@@ -33,9 +33,11 @@ public class DialogBuilder extends AlertDialog.Builder {
     private String mTitle;
     private int mDialogType;
     private ImageView mIconView;
+    private TextView mTitleView;
     private View mHeaderLayout;
     private TextView mMessageView;
     private CharSequence mDialogMessage;
+
 
 
     public DialogBuilder(@NonNull Context context) {
@@ -61,6 +63,7 @@ public class DialogBuilder extends AlertDialog.Builder {
 
         mHeaderLayout = mView.findViewById(R.id.header_layout_dialog);
         mIconView = (ImageView) mView.findViewById(R.id.icon_layout_dialog);
+        mTitleView = (TextView) mView.findViewById(R.id.title_layout_dialog);
         mMessageView = (TextView) mView.findViewById(R.id.message_layout_dialog);
         setView(mView);
     }
@@ -76,7 +79,7 @@ public class DialogBuilder extends AlertDialog.Builder {
             }
 
             case ERROR: {
-                mIconView.setImageDrawable(CommonMethod.getInstance(mContext).getDrawable(R.drawable.ic_error_white_24dp));
+                mIconView.setImageDrawable(CommonMethod.getInstance(mContext).getDrawable(R.drawable.ic_sad_face_24dp));
                 mHeaderLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorError));
                 break;
             }
@@ -103,6 +106,26 @@ public class DialogBuilder extends AlertDialog.Builder {
     @Override
     public DialogBuilder setMessage(@StringRes int messageId) {
         mMessageView.setText(mContext.getText(messageId));
+        return this;
+    }
+
+    @Override
+    public AlertDialog.Builder setMessage(@Nullable CharSequence message) {
+        mMessageView.setText(message);
+        return this;
+    }
+
+    @Override
+    public AlertDialog.Builder setTitle(@StringRes int titleId) {
+        mTitleView.setVisibility(View.VISIBLE);
+        mTitleView.setText(mContext.getText(titleId));
+        return this;
+    }
+
+    @Override
+    public AlertDialog.Builder setTitle(@Nullable CharSequence title) {
+        mTitleView.setVisibility(View.VISIBLE);
+        mTitleView.setText(title);
         return this;
     }
 
