@@ -1,22 +1,21 @@
 package com.alfanse.author.Fragments;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -47,8 +46,7 @@ public class ComponentTextViewOptionsFragment extends Fragment implements ColorP
 
     public static final int COMPONENT_TEXTVIEW_OPTIONS_COLOR_PICKER_DIALOG_ID = 101;
     private final static String UNIT_TEXT_SIZE = "sp";
-    @BindView(R.id.bottom_nav_fragment_component_textview_options)
-    BottomNavigationView bottomNav;
+
     @BindView(R.id.layout_text_format_fragment_component_textview_options)
     LinearLayout layoutTextFormat;
     @BindView(R.id.layout_text_size_fragment_component_textview_options)
@@ -73,6 +71,16 @@ public class ComponentTextViewOptionsFragment extends Fragment implements ColorP
     LinearLayout optionBringToFront;
     @BindView(R.id.layout_colorize_fragment_component_textview_options)
     LinearLayout optionColorize;
+    @BindView(R.id.layout_back_option_item_fragment_component_textview_options)
+    LinearLayout optionBack;
+    @BindView(R.id.layout_format_option_item_fragment_component_textview_options)
+    LinearLayout optionFormat;
+    @BindView(R.id.layout_text_size_option_item_fragment_component_textview_options)
+    LinearLayout optionTextSize;
+    @BindView(R.id.layout_font_option_item_fragment_component_textview_options)
+    LinearLayout optionFont;
+    @BindView(R.id.layout_options_container_fragment_component_textview_options)
+    LinearLayout optionContainer;
     @BindView(R.id.seekbar_textsize_fragment_component_textview_options)
     SeekBar optionSeekBarTextSize;
     @BindView(R.id.value_seekbar_fragment_component_textview_options)
@@ -88,46 +96,6 @@ public class ComponentTextViewOptionsFragment extends Fragment implements ColorP
     private FontsAdapter mFontsAdapter;
     private ArrayList<Font> mListFonts = new ArrayList<Font>();
     private LinearLayoutManager mLinearLayoutManager;
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-            switch (item.getItemId()) {
-
-                case R.id.bottom_nav_item_back_fragment_component_textview_options:
-                    if (mListener != null) {
-                        mListener.onFragmentBackPressed();
-                    }
-                    break;
-
-                case R.id.bottom_nav_item_format_text_fragment_component_textview_options:
-
-                    layoutTextSize.setVisibility(View.GONE);
-                    layoutFontFamily.setVisibility(View.GONE);
-                    layoutTextFormat.setVisibility(View.VISIBLE);
-
-                    break;
-                case R.id.bottom_nav_item_text_size_fragment_component_textview_options:
-
-                    layoutTextSize.setVisibility(View.VISIBLE);
-                    layoutFontFamily.setVisibility(View.GONE);
-                    layoutTextFormat.setVisibility(View.GONE);
-
-                    break;
-                case R.id.bottom_nav_item_font_family_fragment_component_textview_options:
-
-                    layoutTextSize.setVisibility(View.GONE);
-                    layoutFontFamily.setVisibility(View.VISIBLE);
-                    layoutTextFormat.setVisibility(View.GONE);
-
-                    break;
-            }
-            return true;
-        }
-
-    };
     private SeekBar.OnSeekBarChangeListener textSizeSeekBarListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -170,8 +138,14 @@ public class ComponentTextViewOptionsFragment extends Fragment implements ColorP
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_component_textview_options, container, false);
         unbinder = ButterKnife.bind(this, view);
-        bottomNav.setSelectedItemId(R.id.bottom_nav_item_format_text_fragment_component_textview_options);
-        bottomNav.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        ImageView optionImage = (ImageView) optionFormat.findViewWithTag(getString(R.string.option_item_image_tag));
+        TextView optionText = (TextView) optionFormat.findViewWithTag(getString(R.string.option_item_text_tag));
+
+        int primaryDarkColor = ContextCompat.getColor(mContext, R.color.colorPrimaryDark);
+        optionImage.setColorFilter(primaryDarkColor, PorterDuff.Mode.SRC_ATOP);
+        optionText.setTextColor(primaryDarkColor);
+
         optionSeekBarTextSize.setOnSeekBarChangeListener(textSizeSeekBarListener);
         int mTextSize = Math.round(mComponentTextView.getTextSize());
         optionSeekBarTextSize.setProgress(mTextSize);
@@ -185,6 +159,53 @@ public class ComponentTextViewOptionsFragment extends Fragment implements ColorP
     }
 
     private void initOptionItemClickListener() {
+
+        optionBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                focusOptionView(v);
+                mListener.onFragmentBackPressed();
+            }
+        });
+
+        optionFormat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                focusOptionView(v);
+                layoutTextFormat.setVisibility(View.VISIBLE);
+                layoutTextSize.setVisibility(View.GONE);
+                layoutFontFamily.setVisibility(View.GONE);
+            }
+        });
+
+        optionTextSize.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                focusOptionView(v);
+                layoutTextFormat.setVisibility(View.GONE);
+                layoutTextSize.setVisibility(View.VISIBLE);
+                layoutFontFamily.setVisibility(View.GONE);
+            }
+        });
+
+        optionFont.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                focusOptionView(v);
+                layoutTextFormat.setVisibility(View.GONE);
+                layoutTextSize.setVisibility(View.GONE);
+                layoutFontFamily.setVisibility(View.VISIBLE);
+            }
+        });
+
+        optionLeftAlign.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mComponentTextView.setAlignment(Gravity.LEFT);
+
+            }
+        });
 
         optionLeftAlign.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -272,6 +293,31 @@ public class ComponentTextViewOptionsFragment extends Fragment implements ColorP
 
     }
 
+    private void focusOptionView(View selectedOptionView) {
+
+        try {
+            for (int index = 0; index < optionContainer.getChildCount(); index++) {
+
+                if (optionContainer.getChildAt(index) instanceof LinearLayout) {
+                    LinearLayout optionView = (LinearLayout) optionContainer.getChildAt(index);
+                    int whiteColor = ContextCompat.getColor(mContext, R.color.colorWhite);
+                    ImageView optionImage = (ImageView) optionView.findViewWithTag(getString(R.string.option_item_image_tag));
+                    TextView optionText = (TextView) optionView.findViewWithTag(getString(R.string.option_item_text_tag));
+                    optionImage.setColorFilter(whiteColor, PorterDuff.Mode.SRC_ATOP);
+                    optionText.setTextColor(whiteColor);
+                }
+            }
+
+            int primaryDarkColor = ContextCompat.getColor(mContext, R.color.colorPrimaryDark);
+            ImageView selectedOptionImage = (ImageView) selectedOptionView.findViewWithTag(getString(R.string.option_item_image_tag));
+            TextView selectedOptionText = (TextView) selectedOptionView.findViewWithTag(getString(R.string.option_item_text_tag));
+            selectedOptionImage.setColorFilter(primaryDarkColor, PorterDuff.Mode.SRC_ATOP);
+            selectedOptionText.setTextColor(primaryDarkColor);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -336,6 +382,7 @@ public class ComponentTextViewOptionsFragment extends Fragment implements ColorP
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onComponentTextViewAdded(ComponentTextView componentTextView);
+
         void onFragmentBackPressed();
     }
 }

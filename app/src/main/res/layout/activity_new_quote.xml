@@ -23,6 +23,7 @@
 
 
     <LinearLayout
+        android:id="@+id/container_new_quote"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/appbar_new_quote"
@@ -51,9 +52,6 @@
             android:orientation="vertical">
 
         </LinearLayout>
-
-
-
 
     </LinearLayout>
 

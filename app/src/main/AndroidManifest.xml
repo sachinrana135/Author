@@ -36,7 +36,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activities.HomeActivity" />
-        <activity android:name=".Activities.NewQuoteActivity" />
+        <activity
+            android:name=".Activities.NewQuoteActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" /> <!-- optional (needed if default theme has no action bar) -->

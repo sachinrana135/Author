@@ -202,7 +202,7 @@ public class SignInActivity extends AppCompatActivity implements
         textSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent signUpIntent = new Intent(mActivity, SignUpActivity.class);
+                Intent signUpIntent = new Intent(mActivity, NewQuoteActivity.class);
                 startActivity(signUpIntent);
             }
         });

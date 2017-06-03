@@ -2,16 +2,18 @@ package com.alfanse.author.Activities;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AlertDialog;
@@ -28,6 +30,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import com.alfanse.author.CustomViews.ComponentBoxView;
 import com.alfanse.author.CustomViews.ComponentImageView;
@@ -78,6 +81,8 @@ public class NewQuoteActivity extends AppCompatActivity implements
     Toolbar mToolbar;
     @BindView(R.id.SquareFrameLayoutWriteQuoteCanvas)
     QuoteCanvas mQuoteCanvas;
+    @BindView(R.id.container_new_quote)
+    LinearLayout container;
 
     private Context mContext;
     private Activity mActivity;
@@ -89,7 +94,7 @@ public class NewQuoteActivity extends AppCompatActivity implements
     private ComponentImageViewOptionsFragment mComponentImageViewOptionsFragment;
     private ComponentTextViewOptionsFragment mComponentTextViewOptionsFragment;
     private ComponentBoxViewOptionsFragment mComponentBoxViewOptionsFragment;
-    private android.support.v4.app.Fragment mActiveOptionFragment = null;
+    private Fragment mActiveOptionFragment = null;
 
     private ComponentTextView mActiveComponentTextView;
     private ComponentImageView mActiveComponentImageView;
@@ -140,7 +145,7 @@ public class NewQuoteActivity extends AppCompatActivity implements
         mContext = getApplicationContext();
         mActivity = NewQuoteActivity.this;
         mDatabase = FirebaseDatabase.getInstance();
-        mFragmentManager = getSupportFragmentManager();
+        mFragmentManager = getFragmentManager();
 
         mDatabase = FirebaseDatabase.getInstance();
         mCanvasThemesRef = mDatabase.getReference(Constants.CANVAS_THEME);
@@ -152,6 +157,12 @@ public class NewQuoteActivity extends AppCompatActivity implements
         mQuoteCanvas.setOnTouchListener(new CanvasTouchListener());
         if (mActiveOptionFragment == null) {
             mActiveOptionFragment = new CanvasOptionsFragment();
+        }
+
+        if (mActivity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            container.setOrientation(LinearLayout.HORIZONTAL);
+        } else if (mActivity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            container.setOrientation(LinearLayout.VERTICAL);
         }
 
         loadCanvasOptionsFragment();
@@ -423,6 +434,17 @@ public class NewQuoteActivity extends AppCompatActivity implements
 
                 return;
             }
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Checks the orientation of the screen
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            container.setOrientation(LinearLayout.HORIZONTAL);
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            container.setOrientation(LinearLayout.VERTICAL);
         }
     }
 

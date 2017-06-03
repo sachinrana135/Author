@@ -1,7 +1,9 @@
 package com.alfanse.author.Fragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -9,7 +11,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -186,6 +187,7 @@ public class CanvasOptionsFragment extends Fragment implements ColorPickerDialog
 
     }
 
+    @SuppressLint("NewApi")
     private void startPickImageActivity() {
 
         // For API >= 23 we need to check specifically that we have permissions to read external storage,
@@ -268,6 +270,7 @@ public class CanvasOptionsFragment extends Fragment implements ColorPickerDialog
         }
     }
 
+    @SuppressLint("NewApi")
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
