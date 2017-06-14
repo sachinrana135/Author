@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alfanse.author.R;
-import com.alfanse.author.Utilities.CommonMethod;
+import com.alfanse.author.Utilities.Utils;
 
 /**
  * Created by Velocity-1601 on 5/12/2017.
@@ -73,30 +73,30 @@ public class DialogBuilder extends AlertDialog.Builder {
 
         switch (dialogType) {
             case DEFAULT: {
-                mIconView.setImageDrawable(CommonMethod.getInstance(mContext).getDrawable(R.drawable.ic_info_white_24dp));
+                mIconView.setImageDrawable(Utils.getInstance(mContext).getDrawable(R.drawable.ic_info_white_24dp));
                 mHeaderLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
                 break;
             }
 
             case ERROR: {
-                mIconView.setImageDrawable(CommonMethod.getInstance(mContext).getDrawable(R.drawable.ic_sad_face_24dp));
+                mIconView.setImageDrawable(Utils.getInstance(mContext).getDrawable(R.drawable.ic_sad_face_24dp));
                 mHeaderLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorError));
                 break;
             }
 
             case SUCCESS: {
-                mIconView.setImageDrawable(CommonMethod.getInstance(mContext).getDrawable(R.drawable.ic_check_circle_white_24dp));
+                mIconView.setImageDrawable(Utils.getInstance(mContext).getDrawable(R.drawable.ic_check_circle_white_24dp));
                 mHeaderLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorSuccess));
                 break;
             }
 
             case WARNING: {
-                mIconView.setImageDrawable(CommonMethod.getInstance(mContext).getDrawable(R.drawable.ic_warning_white_24dp));
+                mIconView.setImageDrawable(Utils.getInstance(mContext).getDrawable(R.drawable.ic_warning_white_24dp));
                 mHeaderLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorWarning));
                 break;
             }
             default: {
-                mIconView.setImageDrawable(CommonMethod.getInstance(mContext).getDrawable(R.drawable.ic_info_white_24dp));
+                mIconView.setImageDrawable(Utils.getInstance(mContext).getDrawable(R.drawable.ic_info_white_24dp));
                 mHeaderLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
             }
         }

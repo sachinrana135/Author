@@ -11,8 +11,8 @@ import android.widget.TextView;
 
 import com.alfanse.author.Models.CanvasTheme;
 import com.alfanse.author.R;
-import com.alfanse.author.Utilities.CommonMethod;
 import com.alfanse.author.Utilities.FontHelper;
+import com.alfanse.author.Utilities.Utils;
 
 /**
  * Created by Velocity-1601 on 4/18/2017.
@@ -98,7 +98,7 @@ public class ComponentTextView extends ComponentView {
 
     public Float getTextSize() {
         Float sizeInPx = mTextView.getTextSize(); // return value in px unit
-        return CommonMethod.getInstance(mContext).pixelToSp(sizeInPx);
+        return Utils.getInstance(mContext).pixelToSp(sizeInPx);
     }
 
     public void setTextSize(Float textSize) {

@@ -15,6 +15,7 @@
  */
 
 package com.alfanse.author.CustomViews;
+
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -23,7 +24,9 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.alfanse.author.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,30 +39,29 @@ import java.util.List;
  * Time: 8:17 PM
  */
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-public class TagLayout extends ViewGroup {
-
-    private int mGravity = (isIcs() ? Gravity.START : Gravity.LEFT) | Gravity.TOP;
+public class FlowLayout extends ViewGroup {
 
     private final List<List<View>> mLines = new ArrayList<List<View>>();
     private final List<Integer> mLineHeights = new ArrayList<Integer>();
     private final List<Integer> mLineMargins = new ArrayList<Integer>();
+    private int mGravity = (isIcs() ? Gravity.START : Gravity.LEFT) | Gravity.TOP;
 
-    public TagLayout(Context context) {
+    public FlowLayout(Context context) {
         this(context, null);
     }
 
-    public TagLayout(Context context, AttributeSet attrs) {
+    public FlowLayout(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public TagLayout(Context context, AttributeSet attrs, int defStyle) {
+    public FlowLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
         TypedArray a = context.obtainStyledAttributes(attrs,
-                R.styleable.TagLayout, defStyle, 0);
+                R.styleable.FlowLayout, defStyle, 0);
 
         try {
-            int index = a.getInt(R.styleable.TagLayout_android_gravity, -1);
+            int index = a.getInt(R.styleable.FlowLayout_android_gravity, -1);
             if (index > 0) {
                 setGravity(index);
             }
@@ -67,6 +69,13 @@ public class TagLayout extends ViewGroup {
             a.recycle();
         }
 
+    }
+
+    /**
+     * @return <code>true</code> if device is running ICS or grater version of Android.
+     */
+    private static boolean isIcs() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;
     }
 
     /**
@@ -348,6 +357,10 @@ public class TagLayout extends ViewGroup {
         return super.checkLayoutParams(p) && p instanceof LayoutParams;
     }
 
+    public int getGravity() {
+        return mGravity;
+    }
+
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     public void setGravity(int gravity) {
         if (mGravity != gravity) {
@@ -362,17 +375,6 @@ public class TagLayout extends ViewGroup {
             mGravity = gravity;
             requestLayout();
         }
-    }
-
-    public int getGravity() {
-        return mGravity;
-    }
-
-    /**
-     * @return <code>true</code> if device is running ICS or grater version of Android.
-     */
-    private static boolean isIcs() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;
     }
 
     public static class LayoutParams extends MarginLayoutParams {

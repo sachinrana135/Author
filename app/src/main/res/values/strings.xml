@@ -9,6 +9,8 @@
 
     <!-- Activity Title -->
     <string name="title_new_quote">New Quote</string>
+    <string name="title_choose_category">Category</string>
+    <string name="title_publish_quote">Publish</string>
 
 
     <!-- Menu -->
@@ -25,6 +27,17 @@
     <string name="text_no_account_sign_in">Don\'t have an account?</string>
     <string name="text_sign_up_sign_in">Sign Up</string>
     <string name="text_forgot_password_sign_in">Forgot Password?</string>
+    <string name="text_select_category">Select Category</string>
+    <string name="text_select_category_hint">Choose maximum 3 category</string>
+    <string name="text_search_tags">Search Tags</string>
+    <string name="text_search_tags_hint">Tag helps users to search your quote</string>
+    <string name="text_copyright">Copyright</string>
+    <string name="text_is_copyrighted_content">Is this your own creation?</string>
+
+    <!-- Loading messages -->
+    <string name="text_loading">Loading...</string>
+    <string name="text_loading_canvas_image">Loading Images...</string>
+    <string name="text_loading_save_quote">Saving Quote...</string>
 
 
     <!-- Button -->
@@ -34,12 +47,18 @@
     <string name="button_login_twitter">Twitter</string>
     <string name="button_login">Login</string>
     <string name="button_sign_up">Sign Up</string>
+    <string name="button_choose_category">Choose category</string>
+    <string name="button_publish">Publish</string>
 
     <!-- Hint -->
     <string name="hint_email">Email*</string>
     <string name="hint_name">Your Name*</string>
     <string name="hint_password">Password*</string>
     <string name="hint_confirm_password">Confirm Password*</string>
+    <string name="hint_quote_caption">Write something about quote</string>
+    <string name="hint_search_category">Search Category</string>
+    <string name="hint_enter_tags">Enter Tags</string>
+    <string name="hint_enter_quote_source">Enter original source name</string>
     <!-- Options-->
     <string name="option_item_default_tag">option_tag_default</string>
     <string name="option_item_image_tag">option_tag_image</string>
@@ -66,6 +85,8 @@
     <string name="action_cancel">Cancel</string>
     <string name="action_reset">Reset</string>
     <string name="action_logout">Logout</string>
+    <string name="action_yes">Yes</string>
+    <string name="action_no">No</string>
 
     <!-- messages-->
     <string name="msg_exit_confirm">Are you sure? All changes will be lost.</string>
@@ -171,6 +192,10 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
+
+    <string name="title_activity_choose_category">ChooseCategoryActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 
 
 </resources>

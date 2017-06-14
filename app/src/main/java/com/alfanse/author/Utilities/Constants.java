@@ -6,9 +6,15 @@ package com.alfanse.author.Utilities;
 
 public class Constants {
 
+    /******************** Bundle Keys reference ************/
+
+    public static final String BUNDLE_KEY_SELECTED_CATEGORIES = "selectedCategories";
+    public static final String BUNDLE_KEY_QUOTE = "quote";
+
     /********  Firebase Reference*******/
 
-    public static final String CANVAS_THEME = "canvas_themes";
+    public static final String FIREBASE_REFERENCE_CANVAS_THEMES = "canvas_themes";
+    public static final String FIREBASE_REFERENCE_AUTHORS = "authors";
     public static final String TAG_DEFAULT_CANVASE_TEXT_VIEW = "TAG_DEFAULT_CANVASE_TEXT_VIEW";
     public static final String DEFAULT_COMPONENT_TEXTVIEW_FONT = "Helvetica";
     public static final String DEFAULT_COMPONENT_TEXTVIEW_STYLE = "1";//Bold

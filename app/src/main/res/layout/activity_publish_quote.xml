@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.alfanse.author.Activities.PublishQuoteActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar_publish_quote"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_publish_quote"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/appbar_publish_quote"
+        android:layout_marginBottom="@dimen/spacing_xhuge"
+        android:fillViewport="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/spacing_small">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/edit_text_quote_caption_publish_quote"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/quote_caption_height"
+                        android:layout_alignStart="@+id/textInputLayout"
+                        android:background="@android:color/transparent"
+                        android:ems="10"
+                        android:gravity="top|left"
+                        android:hint="@string/hint_quote_caption"
+                        android:inputType="textMultiLine|textCapWords"
+                        android:textSize="@dimen/font_xlarge" />
+                </LinearLayout>
+
+                <View
+                    style="@style/HorizontalDividerGrey"
+                    android:layout_marginLeft="@dimen/spacing_small"
+                    android:layout_marginRight="@dimen/spacing_small" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_small"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_select_category"
+                        android:textSize="@dimen/font_xlarge" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_select_category_hint"
+                        android:textSize="@dimen/font_small" />
+
+                    <com.alfanse.author.CustomViews.FlowLayout
+                        android:id="@+id/category_tags_container_publish_quote"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_normal"></com.alfanse.author.CustomViews.FlowLayout>
+
+                    <Button
+                        android:id="@+id/button_choose_category_publish_quote"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/spacing_normal"
+                        android:background="@color/colorAccent"
+                        android:padding="@dimen/spacing_small"
+                        android:text="@string/button_choose_category"
+                        android:textColor="@color/colorWhite" />
+                </LinearLayout>
+
+                <View
+                    style="@style/HorizontalDividerGrey"
+                    android:layout_marginLeft="@dimen/spacing_small"
+                    android:layout_marginRight="@dimen/spacing_small" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_search_tags"
+                        android:textSize="@dimen/font_xlarge" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_search_tags_hint"
+                        android:textSize="@dimen/font_small" />
+
+                    <com.alfanse.author.CustomViews.FlowLayout
+                        android:id="@+id/quotes_tags_container_publish_quote"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_normal">
+
+                    </com.alfanse.author.CustomViews.FlowLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <EditText
+                            android:id="@+id/edit_text_enter_tags_publish_quote"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/hint_enter_tags"
+                            android:imeOptions="actionGo"
+                            android:inputType="textCapWords" />
+
+                    </android.support.design.widget.TextInputLayout>
+                </LinearLayout>
+
+                <View
+                    style="@style/HorizontalDividerGrey"
+                    android:layout_marginLeft="@dimen/spacing_small"
+                    android:layout_marginRight="@dimen/spacing_small" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="@dimen/spacing_xsmall"
+                        android:drawableRight="@drawable/ic_copyright_accent_24dp"
+                        android:text="@string/text_copyright"
+                        android:textSize="@dimen/font_xlarge" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="80"
+                            android:drawablePadding="@dimen/spacing_xsmall"
+                            android:text="@string/text_is_copyrighted_content" />
+
+                        <ToggleButton
+                            android:id="@+id/toggle_button_copyright_publish_quote"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="20"
+                            android:checked="true"
+                            android:textOff="@string/action_no"
+                            android:textOn="@string/action_yes" />
+
+                    </LinearLayout>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <EditText
+                            android:id="@+id/edit_text_enter_quote_source_publish_quote"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/hint_enter_quote_source"
+                            android:imeOptions="actionDone"
+                            android:inputType="textCapWords" />
+                    </android.support.design.widget.TextInputLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/fullscreen_content_controls"
+        style="?metaButtonBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="@dimen/spacing_large"
+        android:background="@color/black_overlay"
+        android:orientation="horizontal"
+        tools:ignore="UselessParent">
+
+        <Button
+            android:id="@+id/button_publish_publish_quote"
+            style="?metaButtonBarButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
+            android:text="@string/button_publish"
+            android:textColor="@color/colorWhite" />
+
+    </LinearLayout>
+</RelativeLayout>

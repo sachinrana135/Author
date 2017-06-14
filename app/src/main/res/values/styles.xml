@@ -25,10 +25,28 @@
         <item name="android:background">@color/colorWhite</item>
     </style>
 
+    <style name="HorizontalDividerGrey">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">.5dp</item>
+        <item name="android:background">@color/colorComponentViewStroke</item>
+    </style>
+
     <style name="VerticalDivider">
         <item name="android:layout_width">1dp</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:background">@color/colorWhite</item>
+    </style>
+
+    <style name="FullscreenTheme" parent="AppTheme">
+        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
+        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
+    </style>
+
+    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
     </style>
 
 

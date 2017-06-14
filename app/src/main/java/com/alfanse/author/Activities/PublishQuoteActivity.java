@@ -1,0 +1,271 @@
+package com.alfanse.author.Activities;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.ToggleButton;
+
+import com.alfanse.author.CustomViews.FlowLayout;
+import com.alfanse.author.Models.Category;
+import com.alfanse.author.Models.Quote;
+import com.alfanse.author.R;
+import com.alfanse.author.Utilities.Utils;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_QUOTE;
+import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_SELECTED_CATEGORIES;
+
+public class PublishQuoteActivity extends AppCompatActivity {
+
+    private static final int REQUEST_CODE_CHOOSE_CATEGORY = 5345;
+    @BindView(R.id.toolbar_publish_quote)
+    Toolbar mToolbar;
+    @BindView(R.id.edit_text_quote_caption_publish_quote)
+    EditText editTextQuoteCaption;
+    @BindView(R.id.button_choose_category_publish_quote)
+    Button buttonChooseCategory;
+    @BindView(R.id.category_tags_container_publish_quote)
+    FlowLayout categoryTagsContainer;
+    @BindView(R.id.quotes_tags_container_publish_quote)
+    FlowLayout quoteTagsContainer;
+    @BindView(R.id.edit_text_enter_tags_publish_quote)
+    EditText editTextTags;
+    @BindView(R.id.toggle_button_copyright_publish_quote)
+    ToggleButton toggleButtonCopyright;
+    @BindView(R.id.edit_text_enter_quote_source_publish_quote)
+    EditText editTextQuoteSource;
+    @BindView(R.id.button_publish_publish_quote)
+    Button buttonPublishQuote;
+
+    private Context mContext;
+    private Activity mActivity;
+    private Quote mQuote;
+    private HashMap<String, Category> mHashmapCategories;
+    private ArrayList<String> mListTags;
+    private View.OnClickListener categoryTagOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+
+            if (v instanceof TextView) {
+                TextView categoryTag = (TextView) v;
+                Category category = (Category) categoryTag.getTag();
+                categoryTagsContainer.removeView(v);
+                mHashmapCategories.remove(category.getId());
+            }
+        }
+    };
+    private View.OnClickListener quoteTagOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+
+            if (v instanceof TextView) {
+                TextView quoteTag = (TextView) v;
+                quoteTagsContainer.removeView(v);
+                mListTags.remove(mListTags.indexOf((quoteTag.getText())));
+            }
+        }
+    };
+
+    private TextWatcher quoteTagsTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            String tagString = s.toString();
+            if (tagString.length() == 0) return;
+            if (tagString.contains(",")) // another method
+            {
+                // comma is entered
+                String actualTagString = tagString.substring(0, tagString.length() - 1);// escape last comma
+                if (!actualTagString.trim().isEmpty()) {
+
+                    int randomTagColor = Utils.getInstance(mContext).getRandomTagColor();
+                    Drawable mRoundBorderDrawable = Utils.getInstance(mContext).getDrawable(R.drawable.round_border);
+                    mRoundBorderDrawable.setColorFilter(new PorterDuffColorFilter(randomTagColor, PorterDuff.Mode.SRC_IN));
+
+                    TextView quoteTag = new TextView(mContext);
+                    quoteTag.setText(actualTagString);
+                    quoteTag.setTypeface(null, Typeface.BOLD);
+
+                    quoteTag.setTextColor(Utils.getInstance(mContext).getColor(R.color.colorWhite));
+                    quoteTag.setBackground(mRoundBorderDrawable);
+                    quoteTag.setPadding((int) getResources().getDimension(R.dimen.spacing_normal), (int) getResources().getDimension(R.dimen.spacing_small), (int) getResources().getDimension(R.dimen.spacing_normal), (int) getResources().getDimension(R.dimen.spacing_small));
+                    quoteTag.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_delete_white_24dp, 0);
+                    quoteTag.setCompoundDrawablePadding((int) getResources().getDimension(R.dimen.spacing_xsmall));
+                    quoteTag.setOnClickListener(quoteTagOnClickListener);
+                    editTextTags.setText("");
+                    mListTags.add(quoteTag.getText().toString());
+                    addTag(quoteTagsContainer, quoteTag);
+                }
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
+    private TextView.OnEditorActionListener quoteTagsEditorActionListener = new TextView.OnEditorActionListener() {
+        @Override
+        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            if (actionId == EditorInfo.IME_ACTION_GO && !editTextTags.getText().toString().trim().isEmpty()) {
+
+                int randomTagColor = Utils.getInstance(mContext).getRandomTagColor();
+                Drawable mRoundBorderDrawable = Utils.getInstance(mContext).getDrawable(R.drawable.round_border);
+                mRoundBorderDrawable.setColorFilter(new PorterDuffColorFilter(randomTagColor, PorterDuff.Mode.SRC_IN));
+
+                TextView quoteTag = new TextView(mContext);
+                quoteTag.setText(editTextTags.getText().toString());
+                quoteTag.setTypeface(null, Typeface.BOLD);
+
+                quoteTag.setTextColor(Utils.getInstance(mContext).getColor(R.color.colorWhite));
+                quoteTag.setBackground(mRoundBorderDrawable);
+                quoteTag.setPadding((int) getResources().getDimension(R.dimen.spacing_normal), (int) getResources().getDimension(R.dimen.spacing_small), (int) getResources().getDimension(R.dimen.spacing_normal), (int) getResources().getDimension(R.dimen.spacing_small));
+                quoteTag.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_delete_white_24dp, 0);
+                quoteTag.setCompoundDrawablePadding((int) getResources().getDimension(R.dimen.spacing_xsmall));
+                quoteTag.setOnClickListener(quoteTagOnClickListener);
+                editTextTags.setText("");
+                mListTags.add(quoteTag.getText().toString());
+                addTag(quoteTagsContainer, quoteTag);
+
+                return true;
+            }
+            return false;
+        }
+    };
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_publish_quote);
+        ButterKnife.bind(this);
+        mContext = getApplicationContext();
+        mActivity = PublishQuoteActivity.this;
+        initToolbar();
+        initListener();
+
+        mListTags = new ArrayList<String>();
+
+        Intent intent = getIntent();
+        if (intent.getExtras() != null) {
+            if (intent.hasExtra(BUNDLE_KEY_QUOTE)) {
+                mQuote = (Quote) intent.getSerializableExtra(BUNDLE_KEY_QUOTE);
+            }
+        }
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+    }
+
+    private void initToolbar() {
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle(getString(R.string.title_publish_quote));
+    }
+
+    private void initListener() {
+
+        editTextTags.addTextChangedListener(quoteTagsTextWatcher);
+        editTextTags.setOnEditorActionListener(quoteTagsEditorActionListener);
+
+        buttonChooseCategory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent chooseCategoryIntent = new Intent(mActivity, ChooseCategoryActivity.class);
+
+                startActivityForResult(chooseCategoryIntent, REQUEST_CODE_CHOOSE_CATEGORY);
+            }
+        });
+
+        buttonPublishQuote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+
+            case REQUEST_CODE_CHOOSE_CATEGORY: {
+
+                if (data.getExtras() != null) {
+
+                    if (data.hasExtra(BUNDLE_KEY_SELECTED_CATEGORIES)) {
+                        mHashmapCategories = (HashMap<String, Category>) data.getSerializableExtra(BUNDLE_KEY_SELECTED_CATEGORIES);
+                        updateTagsView();
+                    }
+
+                } else {
+                    //TODO catch Exception
+                }
+
+                break;
+            }
+        }
+    }
+
+    private void updateTagsView() {
+
+        categoryTagsContainer.removeAllViews();
+
+        for (Category category : mHashmapCategories.values()) {
+
+            int randomTagColor = Utils.getInstance(mContext).getRandomTagColor();
+            Drawable mRoundBorderDrawable = Utils.getInstance(mContext).getDrawable(R.drawable.round_border);
+            mRoundBorderDrawable.setColorFilter(new PorterDuffColorFilter(randomTagColor, PorterDuff.Mode.SRC_IN));
+
+            TextView categoryTag = new TextView(mContext);
+            categoryTag.setText(category.getName());
+            categoryTag.setTypeface(null, Typeface.BOLD);
+            categoryTag.setTag(category);
+            categoryTag.setTextColor(Utils.getInstance(mContext).getColor(R.color.colorWhite));
+            categoryTag.setBackground(mRoundBorderDrawable);
+            categoryTag.setPadding((int) getResources().getDimension(R.dimen.spacing_normal), (int) getResources().getDimension(R.dimen.spacing_small), (int) getResources().getDimension(R.dimen.spacing_normal), (int) getResources().getDimension(R.dimen.spacing_small));
+            categoryTag.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_delete_white_24dp, 0);
+            categoryTag.setCompoundDrawablePadding((int) getResources().getDimension(R.dimen.spacing_xsmall));
+            categoryTag.setOnClickListener(categoryTagOnClickListener);
+
+            addTag(categoryTagsContainer, categoryTag);
+
+        }
+    }
+
+    public void addTag(FlowLayout container, View tag) {
+
+        FlowLayout.LayoutParams params = new FlowLayout.LayoutParams(FlowLayout.LayoutParams.WRAP_CONTENT, FlowLayout.LayoutParams.WRAP_CONTENT);
+        params.rightMargin = (int) getResources().getDimension(R.dimen.spacing_xsmall);
+        params.leftMargin = (int) getResources().getDimension(R.dimen.spacing_xsmall);
+        params.topMargin = (int) getResources().getDimension(R.dimen.spacing_xsmall);
+        params.bottomMargin = (int) getResources().getDimension(R.dimen.spacing_xsmall);
+        tag.setLayoutParams(params);
+        container.addView(tag);
+    }
+}

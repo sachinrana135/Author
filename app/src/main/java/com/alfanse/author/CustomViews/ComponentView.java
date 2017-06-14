@@ -11,7 +11,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.alfanse.author.R;
-import com.alfanse.author.Utilities.CommonMethod;
+import com.alfanse.author.Utilities.Utils;
 
 /**
  * Created by Velocity-1601 on 4/18/2017.
@@ -51,7 +51,7 @@ public class ComponentView extends FrameLayout {
         mImgRemove = new ImageView(mContext);
         mImgResize = new ImageView(mContext);
 
-        drawableRemove = CommonMethod.getInstance(mContext).getDrawable(R.drawable.ic_resize_grey_24dp);
+        drawableRemove = Utils.getInstance(mContext).getDrawable(R.drawable.ic_resize_grey_24dp);
 
         mMinimumWidth = getMinimumWidth();
         mMinimumHeight = getMinimumHeight();
@@ -66,7 +66,7 @@ public class ComponentView extends FrameLayout {
     private void drawControlButtons() {
 
 
-        Drawable drawableRemove = CommonMethod.getInstance(mContext).getDrawable(R.drawable.ic_delete_grey_24dp);
+        Drawable drawableRemove = Utils.getInstance(mContext).getDrawable(R.drawable.ic_delete_grey_24dp);
         mImgRemove.setImageDrawable(drawableRemove);
 
         FrameLayout.LayoutParams imgRemoveLayoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
@@ -75,7 +75,7 @@ public class ComponentView extends FrameLayout {
         this.addView(mImgRemove);
 
 
-        Drawable drawableResize = CommonMethod.getInstance(mContext).getDrawable(R.drawable.ic_resize_grey_24dp);
+        Drawable drawableResize = Utils.getInstance(mContext).getDrawable(R.drawable.ic_resize_grey_24dp);
         mImgResize.setImageDrawable(drawableResize);
 
         FrameLayout.LayoutParams imgResizeLayoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
@@ -111,7 +111,7 @@ public class ComponentView extends FrameLayout {
 
         if (isFocus) {
             unFocusOtherViews();
-            this.setBackgroundDrawable(CommonMethod.getInstance(mContext).getDrawable(R.drawable.border));
+            this.setBackgroundDrawable(Utils.getInstance(mContext).getDrawable(R.drawable.border));
             mImgRemove.setVisibility(VISIBLE);
             mImgResize.setVisibility(VISIBLE);
         } else {
@@ -292,7 +292,7 @@ public class ComponentView extends FrameLayout {
 
     public void setStatePressed(boolean isPressed) {
         if (isPressed) {
-            this.setForeground(CommonMethod.getInstance(mContext).getDrawable(R.drawable.border_with_background));
+            this.setForeground(Utils.getInstance(mContext).getDrawable(R.drawable.border_with_background));
             mImgResize.setVisibility(VISIBLE);
             mImgRemove.setVisibility(VISIBLE);
         } else {

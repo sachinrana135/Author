@@ -17,7 +17,7 @@
   -->
 
 <resources>
-    <declare-styleable name="TagLayout">
+    <declare-styleable name="FlowLayout">
         <attr name="android:gravity" />
     </declare-styleable>
     <declare-styleable name="TagLayout_Layout">

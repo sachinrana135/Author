@@ -7,6 +7,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -42,12 +43,15 @@ import com.alfanse.author.Fragments.CanvasOptionsFragment;
 import com.alfanse.author.Fragments.ComponentBoxViewOptionsFragment;
 import com.alfanse.author.Fragments.ComponentImageViewOptionsFragment;
 import com.alfanse.author.Fragments.ComponentTextViewOptionsFragment;
+import com.alfanse.author.Models.Author;
 import com.alfanse.author.Models.CanvasTheme;
+import com.alfanse.author.Models.Quote;
 import com.alfanse.author.R;
-import com.alfanse.author.Utilities.CommonMethod;
 import com.alfanse.author.Utilities.CommonView;
 import com.alfanse.author.Utilities.Constants;
 import com.alfanse.author.Utilities.FontHelper;
+import com.alfanse.author.Utilities.Utils;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -67,6 +71,7 @@ import butterknife.ButterKnife;
 import static com.alfanse.author.Fragments.CanvasOptionsFragment.CANVAS_OPTIONS_COLOR_PICKER_DIALOG_ID;
 import static com.alfanse.author.Fragments.ComponentBoxViewOptionsFragment.COMPONENT_BOXVIEW_OPTIONS_BG_COLOR_PICKER_DIALOG_ID;
 import static com.alfanse.author.Fragments.ComponentTextViewOptionsFragment.COMPONENT_TEXTVIEW_OPTIONS_COLOR_PICKER_DIALOG_ID;
+import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_QUOTE;
 
 public class NewQuoteActivity extends AppCompatActivity implements
         CanvasOptionsFragment.OnFragmentInteractionListener,
@@ -148,9 +153,9 @@ public class NewQuoteActivity extends AppCompatActivity implements
         mFragmentManager = getFragmentManager();
 
         mDatabase = FirebaseDatabase.getInstance();
-        mCanvasThemesRef = mDatabase.getReference(Constants.CANVAS_THEME);
+        mCanvasThemesRef = mDatabase.getReference(Constants.FIREBASE_REFERENCE_CANVAS_THEMES);
 
-        CommonView.getInstance(mContext).showTransparentProgressDialog(mActivity);
+        CommonView.getInstance(mContext).showTransparentProgressDialog(mActivity, getString(R.string.text_loading_canvas_image));
         mCanvasThemesRef.addListenerForSingleValueEvent(CanvasThemesValueEventListener);
         fontsLoaderTask.run();
 
@@ -340,16 +345,33 @@ public class NewQuoteActivity extends AppCompatActivity implements
             case android.R.id.home:
                 onBackPressed();
                 return true;
-            case R.id.action_reset:
+            case R.id.action_reset_new_quote:
                 showResetWarningDialog();
                 return true;
 
-            case R.id.action_done:
+            case R.id.action_done_new_quote:
 
                 if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_WRITE_EXTERNAL_STORAGE);
                 } else {
-                    saveCanvasIntoImage();
+                    String localImagePath = saveCanvasIntoImage();
+
+                    if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+
+                        Quote quote = new Quote();
+                        quote.setLocalImagePath(localImagePath);
+
+                        Author author = new Author();
+                        author.setAuthorId(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                        quote.setAuthor(author);
+
+                        Intent publishQuoteIntent = new Intent(mActivity, PublishQuoteActivity.class);
+                        publishQuoteIntent.putExtra(BUNDLE_KEY_QUOTE, quote);
+                        startActivity(publishQuoteIntent);
+                    } else {
+                        Intent signInIntent = new Intent(mActivity, SignInActivity.class);
+                        startActivity(signInIntent);
+                    }
                 }
                 return true;
             default:
@@ -360,11 +382,14 @@ public class NewQuoteActivity extends AppCompatActivity implements
         }
     }
 
-    private void saveCanvasIntoImage() {
+    private String saveCanvasIntoImage() {
+
+        CommonView.getInstance(mContext).showTransparentProgressDialog(mActivity, getString(R.string.text_loading_save_quote));
 
         Bitmap bitmap = Bitmap.createBitmap(mQuoteCanvas.getWidth(), mQuoteCanvas.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         mQuoteCanvas.draw(canvas);
+        File file = null;
         try {
 
             File dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), Constants.QUOTE_PUBLIC_OUTPUT_DIRECTORY);
@@ -373,7 +398,7 @@ public class NewQuoteActivity extends AppCompatActivity implements
                 Log.e("Error", "Directory not created");
             }
 
-            File file = new File(dir.getAbsolutePath() + "/" + CommonMethod.getTimeStamp() + Constants.QUOTE_OUTPUT_FORMAT);
+            file = new File(dir.getAbsolutePath() + "/" + Utils.getTimeStamp() + Constants.QUOTE_OUTPUT_FORMAT);
 
             FileOutputStream output = new FileOutputStream(file);
             bitmap.compress(Bitmap.CompressFormat.JPEG, 70, output);
@@ -383,6 +408,8 @@ public class NewQuoteActivity extends AppCompatActivity implements
         } catch (IOException e) {
             e.printStackTrace();
         }
+        CommonView.getInstance(mContext).dismissProgressDialog();
+        return file.getAbsolutePath();
     }
 
     private void showResetWarningDialog() {

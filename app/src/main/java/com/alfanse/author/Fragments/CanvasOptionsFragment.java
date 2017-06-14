@@ -107,7 +107,7 @@ public class CanvasOptionsFragment extends Fragment implements ColorPickerDialog
 
     public CanvasOptionsFragment() {
         mDatabase = FirebaseDatabase.getInstance();
-        mCanvasThemesRef = mDatabase.getReference(Constants.CANVAS_THEME);
+        mCanvasThemesRef = mDatabase.getReference(Constants.FIREBASE_REFERENCE_CANVAS_THEMES);
     }
 
     @Override

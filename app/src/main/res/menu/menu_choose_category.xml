@@ -3,13 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_reset_new_quote"
-        android:icon="@drawable/ic_reset_white_24dp"
-        android:title="@string/action_reset"
-        app:showAsAction="always" />
-
-    <item
-        android:id="@+id/action_done_new_quote"
+        android:id="@+id/action_done_choose_category"
         android:icon="@drawable/ic_done_all_white_24dp"
         android:title="@string/action_done"
         app:showAsAction="always" />

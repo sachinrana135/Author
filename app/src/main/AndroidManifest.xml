@@ -70,7 +70,9 @@
         <activity
             android:name=".Activities.UserAccountActivity"
             android:label="@string/title_activity_scrolling"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
+        <activity android:name=".Activities.PublishQuoteActivity" />
+        <activity android:name=".Activities.ChooseCategoryActivity"></activity>
     </application>
 
 </manifest>

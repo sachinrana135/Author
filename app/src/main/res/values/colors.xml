@@ -15,4 +15,25 @@
     <color name="colorGoogle">#DF4A32</color>
     <color name="colorFacebook">#4267B2</color>
     <color name="colorTwitter">#5EA9DD</color>
+
+    <color name="black_overlay">#66000000</color>
+
+
+    <color name="colorCyan">#009688</color>
+    <color name="colorSkyBlue">#00BCD4</color>
+    <color name="colorDarkBlue">#3F51B5</color>
+    <color name="colorViolet">#9C27B0</color>
+    <color name="colorDarkPink">#E91E63</color>
+    <color name="colorDarkOrange">#FF9800</color>
+    <color name="colorDarkRed">#DB4437</color>
+
+    <integer-array name="tagColors">
+        <item>@color/colorCyan</item>
+        <item>@color/colorSkyBlue</item>
+        <item>@color/colorDarkBlue</item>
+        <item>@color/colorViolet</item>
+        <item>@color/colorDarkPink</item>
+        <item>@color/colorDarkOrange</item>
+        <item>@color/colorDarkRed</item>
+    </integer-array>
 </resources>

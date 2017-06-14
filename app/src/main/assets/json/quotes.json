@@ -1,0 +1,47 @@
+{
+  "quotes": {
+    "1": {
+      "quoteId": "1",
+      "authorId": "1",
+      "authorName": "Sachin Rana",
+      "likeCount": "20",
+      "viewCount": "20",
+      "commentCount": "20",
+      "dateAdded": "1313413",
+      "source": "Sachin",
+      "imageUrl": "imageUrl",
+      "categories": {
+        "funny": true,
+        "jokes": true
+      }
+    },
+    "2": {
+      "quoteId": "2",
+      "authorId": "1",
+      "authorName": "Sachin Rana",
+      "likeCount": "20",
+      "viewCount": "20",
+      "commentCount": "20",
+      "dateAdded": "1313413",
+      "source": "Sachin",
+      "imageUrl": "imageUrl",
+      "categories": {
+        "funny": true
+      }
+    },
+    "3": {
+      "quoteId": "3",
+      "authorId": "1",
+      "authorName": "Sachin Rana",
+      "likeCount": "20",
+      "viewCount": "20",
+      "commentCount": "20",
+      "dateAdded": "1313413",
+      "source": "Sachin",
+      "imageUrl": "imageUrl",
+      "categories": {
+        "jokes": true
+      }
+    }
+  }
+}

@@ -83,7 +83,6 @@ public class SignInActivity extends AppCompatActivity implements
     private FirebaseAuth mAuth;
     private GoogleApiClient mGoogleApiClient;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,6 +93,12 @@ public class SignInActivity extends AppCompatActivity implements
         mContext = getApplicationContext();
         mActivity = SignInActivity.this;
         mAuth = FirebaseAuth.getInstance();
+
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            //Intent homeIntent = new Intent(mActivity,HomeActivity.class);
+            Intent homeIntent = new Intent(mActivity, PublishQuoteActivity.class);
+            startActivity(homeIntent);
+        }
 
         initListener();
         initFacebookAuth();
@@ -202,7 +207,7 @@ public class SignInActivity extends AppCompatActivity implements
         textSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent signUpIntent = new Intent(mActivity, NewQuoteActivity.class);
+                Intent signUpIntent = new Intent(mActivity, SignUpActivity.class);
                 startActivity(signUpIntent);
             }
         });
@@ -258,10 +263,7 @@ public class SignInActivity extends AppCompatActivity implements
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            String email = user.getEmail();
-                            String name = user.getDisplayName();
-
+                            addOrUpdateUser();
                         } else {
                             // If sign in fails, display a message to the user.
                             CommonView.getInstance(mContext).showErrorDialog(mActivity, null, task.getException().getMessage());
@@ -276,7 +278,7 @@ public class SignInActivity extends AppCompatActivity implements
     }
 
 
-    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+    private void authWithGoogle(GoogleSignInAccount acct) {
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
@@ -285,7 +287,7 @@ public class SignInActivity extends AppCompatActivity implements
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser user = mAuth.getCurrentUser();
+                            addOrUpdateUser();
 
                         } else {
                             // If sign in fails, display a message to the user.
@@ -305,6 +307,14 @@ public class SignInActivity extends AppCompatActivity implements
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = mAuth.getCurrentUser();
+                            if (user != null) {
+                                // User is signed in.
+                                addOrUpdateUser();
+                            } else {
+                                // No user is signed in.
+                            }
+
+
                         } else {
                             // If sign in fails, display a message to the user.
                             CommonView.getInstance(mContext).showErrorDialog(mActivity, null, task.getException().getMessage());
@@ -312,6 +322,27 @@ public class SignInActivity extends AppCompatActivity implements
 
                     }
                 });
+    }
+
+    private void addOrUpdateUser() {
+
+        /*FirebaseUser author = FirebaseAuth.getInstance().getCurrentUser();
+        HashMap<String,String> authorData= new HashMap<String, String>();
+        authorData.put(Author.AUTHOR_NAME, author.getDisplayName());
+        authorData.put(Author.AUTHOR_EMAIL, author.getEmail());
+        authorData.put(Author.AUTHOR_PROFILE_IMAGE, author.getPhotoUrl().toString());
+        authorData.put(Author.AUTHOR_PROVIDER_DATA, author.getProviderData().toString());
+        authorData.put(Author.AUTHOR_PROVIDER_ID, author.getProviderId());
+        authorData.put(Author.AUTHOR_PROVIDERS, author.getProviders().toString());
+        authorData.put(Author.AUTHOR_COUNTRY, Utils.getInstance(mContext).getCurrentLocale().getCountry());
+        authorData.put(Author.AUTHOR_LANGUAGE, Utils.getInstance(mContext).getCurrentLocale().getLanguage());*/
+
+        // TODO Call API to add or update user
+        // TODO call API if user has complete details, if not, redirect to complete details activity
+
+        Intent homeIntent = new Intent(mActivity, HomeActivity.class);
+        startActivity(homeIntent);
+
     }
 
     @Override
@@ -329,7 +360,7 @@ public class SignInActivity extends AppCompatActivity implements
             if (result.isSuccess()) {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
-                firebaseAuthWithGoogle(account);
+                authWithGoogle(account);
             } else {
                 // Google Sign In failed, update UI appropriately
                 CommonView.getInstance(mContext).showErrorDialog(mActivity, null, result.getStatus().getStatusMessage());

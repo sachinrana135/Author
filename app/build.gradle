@@ -54,12 +54,10 @@ dependencies {
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
     compile 'com.google.firebase:firebase-auth:10.2.4'
     compile 'com.google.android.gms:play-services-auth:10.2.4'
+    compile 'com.android.volley:volley:1.0.0'
+    compile 'com.android.support:support-v4:25.3.1'
+    compile 'com.google.code.gson:gson:2.8.1'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
 }
-
-
-
-
-
 apply plugin: 'com.google.gms.google-services'

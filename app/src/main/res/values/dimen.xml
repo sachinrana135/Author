@@ -22,5 +22,6 @@
 
     <dimen name="dialog_icon_size">50dp</dimen>
     <dimen name="social_login_button_height">40dp</dimen>
+    <dimen name="quote_caption_height">100dp</dimen>
 
 </resources>

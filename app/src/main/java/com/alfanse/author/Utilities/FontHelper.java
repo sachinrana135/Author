@@ -20,6 +20,7 @@ public class FontHelper {
 
     public static final String FONTS_DIR = "fonts/";
     public static final String FONTS_JSON_FILE_NAME = "json/fonts.json";
+    public static final String CATEGORY_JSON_FILE_NAME = "json/category.json";
     public static final HashMap<String, Font> fontsHashMap = new HashMap<String, Font>();
     public static final ArrayList<Font> fontsArrayList = new ArrayList<Font>();
     private static FontHelper sInstance;
@@ -43,7 +44,7 @@ public class FontHelper {
         fontsHashMap.clear();
         fontsArrayList.clear();
 
-        JSONObject jsonObject = CommonMethod.getInstance(mContext).loadJSONFromAsset(FONTS_JSON_FILE_NAME);
+        JSONObject jsonObject = Utils.getInstance(mContext).loadJSONFromAsset(FONTS_JSON_FILE_NAME);
         JSONArray jsonFontsArray = null;
         try {
             jsonFontsArray = jsonObject.getJSONArray("fonts");

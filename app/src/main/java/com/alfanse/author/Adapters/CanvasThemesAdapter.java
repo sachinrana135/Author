@@ -9,7 +9,7 @@ import android.widget.ImageView;
 
 import com.alfanse.author.Models.CanvasTheme;
 import com.alfanse.author.R;
-import com.alfanse.author.Utilities.CommonMethod;
+import com.alfanse.author.Utilities.Utils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -76,7 +76,7 @@ public class CanvasThemesAdapter extends RecyclerView.Adapter<CanvasThemesAdapte
             Picasso.with(mContext)
                     .load(canvasTheme.getImageUrl())
                     .fit()
-                    .error(CommonMethod.getInstance(mContext).getDrawable(R.drawable.ic_gallery_grey_24dp))
+                    .error(Utils.getInstance(mContext).getDrawable(R.drawable.ic_gallery_grey_24dp))
                     .into(canvasThemeImage);
 
             itemView.setOnClickListener(new View.OnClickListener() {

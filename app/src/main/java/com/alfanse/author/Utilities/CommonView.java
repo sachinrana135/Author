@@ -7,6 +7,10 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.view.ContextThemeWrapper;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 
 import com.alfanse.author.CustomViews.DialogBuilder;
 import com.alfanse.author.R;
@@ -32,15 +36,26 @@ public class CommonView {
         return sInstance;
     }
 
-    public void showTransparentProgressDialog(Activity activity) {
+    public void showTransparentProgressDialog(Activity activity, String message) {
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             return;
         }
+
+        ContextThemeWrapper ctx = new ContextThemeWrapper(mContext, R.style.AppTheme);
+
+        LayoutInflater layoutInflater = LayoutInflater.from(ctx);
+
+        View view = layoutInflater.inflate(R.layout.item_progress_bar, null);
+
+        TextView messageView = (TextView) view.findViewById(R.id.message_item_progress);
+
+        messageView.setText(message);
+
         mProgressDialog = new ProgressDialog(activity);
         mProgressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         mProgressDialog.setIndeterminate(false);
         mProgressDialog.show();
-        mProgressDialog.setContentView(R.layout.item_progress_bar);
+        mProgressDialog.setContentView(view);
 
     }
 

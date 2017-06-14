@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.alfanse.author.R;
-import com.alfanse.author.Utilities.CommonMethod;
+import com.alfanse.author.Utilities.Utils;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -79,7 +79,7 @@ public class QuoteCanvas extends SquareFrameLayout {
         Picasso.with(mContext)
                 .load(imageUrl)
                 .fit()
-                .error(CommonMethod.getInstance(mContext).getDrawable(R.drawable.ic_gallery_grey_24dp))
+                .error(Utils.getInstance(mContext).getDrawable(R.drawable.ic_gallery_grey_24dp))
                 .into(mImageView, new Callback() {
                     @Override
                     public void onSuccess() {
