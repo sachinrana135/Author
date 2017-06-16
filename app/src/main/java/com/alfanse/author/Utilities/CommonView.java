@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.alfanse.author.CustomViews.DialogBuilder;
+import com.alfanse.author.Models.CustomDialog;
 import com.alfanse.author.R;
 
 /**
@@ -59,26 +60,50 @@ public class CommonView {
 
     }
 
+    public void showProgressDialog(Activity activity, String message) {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            return;
+        }
+        mProgressDialog = new ProgressDialog(activity);
+        mProgressDialog.setIndeterminate(false);
+        mProgressDialog.setMessage(message);
+        mProgressDialog.show();
+    }
+
+    public void showProgressDialog(Activity activity, String message, String title) {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            return;
+        }
+        mProgressDialog = new ProgressDialog(activity);
+        mProgressDialog.setIndeterminate(false);
+        mProgressDialog.setTitle(title);
+        mProgressDialog.setMessage(message);
+        mProgressDialog.show();
+    }
+
     public void dismissProgressDialog() {
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
         }
     }
 
-    public void showErrorDialog(Activity activity, String title, String message) {
 
-        DialogBuilder builder = new DialogBuilder(activity);
+    public void showDialog(CustomDialog customDialog) {
+
+        DialogBuilder builder = new DialogBuilder(customDialog.getActivity());
         // Add the buttons
         builder.setPositiveButton(R.string.action_ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
             }
         });
         // Set other dialog properties
-        if (title == null) {
-            builder.setTitle(mContext.getString(R.string.error_exception));
+        if (customDialog.getTitle() != null) {
+            builder.setTitle(customDialog.getTitle());
         }
-        builder.setMessage(message);
-        builder.setDialogType(DialogBuilder.ERROR);
+        if (customDialog.getMessage() != null) {
+            builder.setMessage(customDialog.getMessage());
+        }
+        builder.setDialogType(customDialog.getDialogType());
 
         // Create the AlertDialog
         AlertDialog dialog = builder.create();

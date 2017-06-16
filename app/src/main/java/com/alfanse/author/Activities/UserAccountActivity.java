@@ -1,41 +1,50 @@
 package com.alfanse.author.Activities;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.alfanse.author.R;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
-public class UserAccountActivity extends AppCompatActivity {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public class UserAccountActivity extends BaseActivity {
+
+    @BindView(R.id.toolbar_account_user)
+    Toolbar mToolbar;
 
     private FirebaseAuth mAuth;
+    private Activity mActivity;
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_user);
-
+        ButterKnife.bind(this);
+        mContext = getApplicationContext();
+        mActivity = UserAccountActivity.this;
         mAuth = FirebaseAuth.getInstance();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        initToolbar();
+        initListener();
+    }
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+    private void initToolbar() {
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle(null);
+    }
+
+    private void initListener() {
     }
 
     @Override
@@ -46,17 +55,19 @@ public class UserAccountActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
-            case R.id.action_logout:
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            
+            case R.id.action_signout_account_user:
                 mAuth.signOut();
+                Intent signInIntent = new Intent(mActivity, SignInActivity.class);
+                startActivity(signInIntent);
+                finish();
+            case R.id.action_update_password_account_user:
+
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.

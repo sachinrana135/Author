@@ -53,7 +53,7 @@
                         android:ems="10"
                         android:gravity="top|left"
                         android:hint="@string/hint_quote_caption"
-                        android:inputType="textMultiLine|textCapWords"
+                        android:inputType="textMultiLine|textCapWords|textNoSuggestions"
                         android:textSize="@dimen/font_xlarge" />
                 </LinearLayout>
 
@@ -188,8 +188,10 @@
                     </LinearLayout>
 
                     <android.support.design.widget.TextInputLayout
+                        android:id="@+id/layout_enter_quote_source_publish_quote"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:visibility="gone">
 
                         <EditText
                             android:id="@+id/edit_text_enter_quote_source_publish_quote"

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
@@ -15,7 +14,7 @@ import com.alfanse.author.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends BaseActivity {
 
     @BindView(R.id.fragment_container_home) FrameLayout fragmentContainer;
     @BindView(R.id.bottom_nav_home)
@@ -45,8 +44,8 @@ public class HomeActivity extends AppCompatActivity {
 
                     break;
                 case R.id.bottom_nav_item_account_home:
-                    Intent loginIntent = new Intent(mActivity, SignInActivity.class);
-                    startActivity(loginIntent);
+                    Intent accountIntent = new Intent(mActivity, UserAccountActivity.class);
+                    startActivity(accountIntent);
                     break;
             }
             return true;
@@ -74,6 +73,15 @@ public class HomeActivity extends AppCompatActivity {
 
     private void initListener() {
         bottomNav.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent setIntent = new Intent(Intent.ACTION_MAIN);
+        setIntent.addCategory(Intent.CATEGORY_HOME);
+        setIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(setIntent);
     }
 
 }

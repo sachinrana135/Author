@@ -18,7 +18,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -73,7 +72,7 @@ import static com.alfanse.author.Fragments.ComponentBoxViewOptionsFragment.COMPO
 import static com.alfanse.author.Fragments.ComponentTextViewOptionsFragment.COMPONENT_TEXTVIEW_OPTIONS_COLOR_PICKER_DIALOG_ID;
 import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_QUOTE;
 
-public class NewQuoteActivity extends AppCompatActivity implements
+public class NewQuoteActivity extends BaseActivity implements
         CanvasOptionsFragment.OnFragmentInteractionListener,
         ComponentTextViewOptionsFragment.OnFragmentInteractionListener,
         ComponentImageViewOptionsFragment.OnFragmentInteractionListener,
@@ -362,7 +361,7 @@ public class NewQuoteActivity extends AppCompatActivity implements
                         quote.setLocalImagePath(localImagePath);
 
                         Author author = new Author();
-                        author.setAuthorId(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                        author.setId(FirebaseAuth.getInstance().getCurrentUser().getUid());
                         quote.setAuthor(author);
 
                         Intent publishQuoteIntent = new Intent(mActivity, PublishQuoteActivity.class);

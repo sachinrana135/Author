@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -18,9 +19,33 @@
             android:padding="@dimen/spacing_small">
 
             <LinearLayout
+                android:id="@+id/layout_app_signature_sign_up"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="false"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_sign_up"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/font_xxlarge" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/layout_app_signature_sign_up"
+                android:layout_marginTop="@dimen/spacing_large"
                 android:orientation="vertical">
 
                 <android.support.design.widget.TextInputLayout
@@ -34,7 +59,8 @@
                         android:layout_weight="1"
                         android:ems="10"
                         android:hint="@string/hint_name"
-                        android:inputType="textPersonName" />
+                        android:imeOptions="actionNext"
+                        android:inputType="textPersonName|textCapWords" />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -42,20 +68,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <EditText
+                    <AutoCompleteTextView
                         android:id="@+id/edit_text_user_email_sign_up"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:ems="10"
                         android:hint="@string/hint_email"
-                        android:inputType="textEmailAddress" />
+                        android:imeOptions="actionNext"
+                        android:inputType="textEmailAddress|textAutoComplete" />
 
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    app:passwordToggleEnabled="true">
 
                     <EditText
                         android:id="@+id/edit_text_user_password_sign_up"
@@ -64,13 +92,15 @@
                         android:layout_weight="1"
                         android:ems="10"
                         android:hint="@string/hint_password"
-                        android:inputType="textVisiblePassword" />
+                        android:imeOptions="actionNext"
+                        android:inputType="textPassword" />
 
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    app:passwordToggleEnabled="true">
 
                     <EditText
                         android:id="@+id/edit_text_user_confirm_password_sign_up"
@@ -79,17 +109,43 @@
                         android:layout_weight="1"
                         android:ems="10"
                         android:hint="@string/hint_confirm_password"
-                        android:inputType="textVisiblePassword" />
+                        android:imeOptions="actionDone"
+                        android:inputType="textPassword" />
 
                 </android.support.design.widget.TextInputLayout>
 
                 <Button
-                    android:id="@+id/button_login_sign_in"
+                    android:id="@+id/button_sign_up_sign_up"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="10"
                     android:background="@color/colorWhite"
                     android:text="@string/button_sign_up" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_large"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_have_account_sign_up"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/font_normal" />
+
+                    <TextView
+                        android:id="@+id/text_sign_in_sign_up"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/spacing_small"
+                        android:text="@string/text_sign_in"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="@dimen/font_large"
+                        android:textStyle="bold" />
+                </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
     </ScrollView>

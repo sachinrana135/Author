@@ -24,10 +24,10 @@ public class Constants {
     public static final String DEFAULT_COMPONENT_TEXTVIEW_LOCATION_Y = "30";
     public static final String QUOTE_PUBLIC_OUTPUT_DIRECTORY = "Author";
     public static final String QUOTE_OUTPUT_FORMAT = ".JPG";
+    public static final int MINIMUM_PASSWORD_LENGTH = 6;
 
     public static final String DEFAULT_APP_NAME_FONT_FILE_NAME = "Helvetica.ttf";
     public final static String PATTERN_EMAIL = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
-
-
+    public static int ANIMATION_DELAY_SEC = 500;
 }

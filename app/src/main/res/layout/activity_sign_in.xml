@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -23,8 +24,26 @@
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/layout_app_signature_sign_up"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_normal"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_welcome"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/font_xxlarge" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_large"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -168,20 +187,22 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent">
 
-                            <EditText
+                            <AutoCompleteTextView
                                 android:id="@+id/edit_text_user_email_sign_in"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:ems="10"
                                 android:hint="@string/hint_email"
+                                android:imeOptions="actionNext"
                                 android:inputType="textEmailAddress" />
 
                         </android.support.design.widget.TextInputLayout>
 
                         <android.support.design.widget.TextInputLayout
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent">
+                            android:layout_height="match_parent"
+                            app:passwordToggleEnabled="true">
 
                             <EditText
                                 android:id="@+id/edit_text_user_password_sign_in"
@@ -190,6 +211,7 @@
                                 android:layout_weight="1"
                                 android:ems="10"
                                 android:hint="@string/hint_password"
+                                android:imeOptions="actionGo"
                                 android:inputType="textPassword" />
 
                         </android.support.design.widget.TextInputLayout>
@@ -237,7 +259,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="@dimen/spacing_small"
-                                android:text="@string/text_sign_up_sign_in"
+                                android:text="@string/text_sign_up"
                                 android:textColor="@color/colorAccent"
                                 android:textSize="@dimen/font_large"
                                 android:textStyle="bold" />
@@ -251,7 +273,55 @@
 
         </RelativeLayout>
 
-
     </ScrollView>
 
+    <LinearLayout
+        android:id="@+id/layout_forgot_password_sign_in"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black_overlay"
+        android:gravity="center"
+        android:padding="@dimen/spacing_normal"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorWhite"
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_normal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/text_forgot_password_message" />
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <AutoCompleteTextView
+                    android:id="@+id/edit_text_user_email_forgot_password_sign_in"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="@string/hint_email"
+                    android:imeOptions="actionGo"
+                    android:inputType="textEmailAddress" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:id="@+id/button_forgot_password_proceed_sign_in"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorAccent"
+                android:text="@string/button_proceed"
+                android:textColor="@color/colorWhite" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
 </RelativeLayout>

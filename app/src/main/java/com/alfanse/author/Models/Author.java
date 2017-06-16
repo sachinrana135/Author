@@ -1,6 +1,7 @@
 package com.alfanse.author.Models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by Velocity-1601 on 6/4/2017.
@@ -8,60 +9,57 @@ import java.io.Serializable;
 
 public class Author implements Serializable {
 
-    private String authorId;
-    private String originalName;
-    private String authorName;
-    private String originalProfileImage;
-    private String authorProfileImage;
+    private String id;
+    private String passwordHash;
+    private String firebaseId;
+    private String name;
+    private String gender;
+    private String dob;
+    private String mobile;
     private String email;
-    private String authorCoverImage;
+    private String profileImage;
+    private String coverImage;
     private String status;
     private String totalQuotes;
     private String totalFollowers;
     private String totalFollowing;
     private String dateCreated;
     private String country;
-    private Quotes quotes;
+    private ArrayList<Quote> quotes;
+    private ArrayList<Author> followers;
+    private ArrayList<Author> followedBy;
 
 
-    public String getAuthorId() {
-        return authorId;
+    public String getId() {
+        return id;
     }
 
-    public void setAuthorId(String authorId) {
-        this.authorId = authorId;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getOriginalName() {
-        return originalName;
+    public String getPasswordHash() {
+        return passwordHash;
     }
 
-    public void setOriginalName(String originalName) {
-        this.originalName = originalName;
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
     }
 
-    public String getAuthorName() {
-        return authorName;
+    public String getFirebaseId() {
+        return firebaseId;
     }
 
-    public void setAuthorName(String authorName) {
-        this.authorName = authorName;
+    public void setFirebaseId(String firebaseId) {
+        this.firebaseId = firebaseId;
     }
 
-    public String getOriginalProfileImage() {
-        return originalProfileImage;
+    public String getName() {
+        return name;
     }
 
-    public void setOriginalProfileImage(String originalProfileImage) {
-        this.originalProfileImage = originalProfileImage;
-    }
-
-    public String getAuthorProfileImage() {
-        return authorProfileImage;
-    }
-
-    public void setAuthorProfileImage(String authorProfileImage) {
-        this.authorProfileImage = authorProfileImage;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
@@ -72,12 +70,20 @@ public class Author implements Serializable {
         this.email = email;
     }
 
-    public String getAuthorCoverImage() {
-        return authorCoverImage;
+    public String getProfileImage() {
+        return profileImage;
     }
 
-    public void setAuthorCoverImage(String authorCoverImage) {
-        this.authorCoverImage = authorCoverImage;
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
+
+    public String getCoverImage() {
+        return coverImage;
+    }
+
+    public void setCoverImage(String coverImage) {
+        this.coverImage = coverImage;
     }
 
     public String getStatus() {
@@ -128,11 +134,11 @@ public class Author implements Serializable {
         this.country = country;
     }
 
-    public Quotes getQuotes() {
+    public ArrayList<Quote> getQuotes() {
         return quotes;
     }
 
-    public void setQuotes(Quotes quotes) {
+    public void setQuotes(ArrayList<Quote> quotes) {
         this.quotes = quotes;
     }
 }

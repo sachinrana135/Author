@@ -1,54 +1,52 @@
-{
-  "categories": [
-    {
-      "id": "1",
-      "name": "Funny",
-      "sortOrder": "1"
-    },
-    {
-      "id": "2",
-      "name": "Emotional",
-      "sortOrder": "1"
-    },
-    {
-      "id": "3",
-      "name": "Life",
-      "sortOrder": "1"
-    },
-    {
-      "id": "4",
-      "name": "Nature",
-      "sortOrder": "1"
-    },
-    {
-      "id": "5",
-      "name": "Love",
-      "sortOrder": "1"
-    },
-    {
-      "id": "6",
-      "name": "Devotion",
-      "sortOrder": "1"
-    },
-    {
-      "id": "7",
-      "name": "Shayari",
-      "sortOrder": "1"
-    },
-    {
-      "id": "8",
-      "name": "Gazal",
-      "sortOrder": "1"
-    },
-    {
-      "id": "9",
-      "name": "Poem",
-      "sortOrder": "1"
-    },
-    {
-      "id": "10",
-      "name": "Attitude",
-      "sortOrder": "1"
-    }
-  ]
-}
+[
+  {
+    "id": "1",
+    "name": "Funny",
+    "sortOrder": "1"
+  },
+  {
+    "id": "2",
+    "name": "Emotional",
+    "sortOrder": "1"
+  },
+  {
+    "id": "3",
+    "name": "Life",
+    "sortOrder": "1"
+  },
+  {
+    "id": "4",
+    "name": "Nature",
+    "sortOrder": "1"
+  },
+  {
+    "id": "5",
+    "name": "Love",
+    "sortOrder": "1"
+  },
+  {
+    "id": "6",
+    "name": "Devotion",
+    "sortOrder": "1"
+  },
+  {
+    "id": "7",
+    "name": "Shayari",
+    "sortOrder": "1"
+  },
+  {
+    "id": "8",
+    "name": "Gazal",
+    "sortOrder": "1"
+  },
+  {
+    "id": "9",
+    "name": "Poem",
+    "sortOrder": "1"
+  },
+  {
+    "id": "10",
+    "name": "Attitude",
+    "sortOrder": "1"
+  }
+]

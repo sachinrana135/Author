@@ -1,6 +1,7 @@
 package com.alfanse.author.Models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by Velocity-1601 on 6/4/2017.
@@ -17,8 +18,8 @@ public class Quote implements Serializable {
     private String localImagePath;
     private String dateAdded;
     private Author author;
-    private Tags tags;
-    private Categories categories;
+    private ArrayList<String> tags;
+    private ArrayList<Category> categories;
 
     public String getTotalLikes() {
         return totalLikes;
@@ -92,19 +93,19 @@ public class Quote implements Serializable {
         this.author = author;
     }
 
-    public Tags getTags() {
+    public ArrayList<String> getTags() {
         return tags;
     }
 
-    public void setTags(Tags tags) {
+    public void setTags(ArrayList<String> tags) {
         this.tags = tags;
     }
 
-    public Categories getCategories() {
+    public ArrayList<Category> getCategories() {
         return categories;
     }
 
-    public void setCategories(Categories categories) {
+    public void setCategories(ArrayList<Category> categories) {
         this.categories = categories;
     }
 }

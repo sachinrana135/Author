@@ -8,15 +8,17 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -26,9 +28,9 @@ import com.alfanse.author.Models.Category;
 import com.alfanse.author.Models.Quote;
 import com.alfanse.author.R;
 import com.alfanse.author.Utilities.Utils;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,7 +38,7 @@ import butterknife.ButterKnife;
 import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_QUOTE;
 import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_SELECTED_CATEGORIES;
 
-public class PublishQuoteActivity extends AppCompatActivity {
+public class PublishQuoteActivity extends BaseActivity {
 
     private static final int REQUEST_CODE_CHOOSE_CATEGORY = 5345;
     @BindView(R.id.toolbar_publish_quote)
@@ -53,6 +55,8 @@ public class PublishQuoteActivity extends AppCompatActivity {
     EditText editTextTags;
     @BindView(R.id.toggle_button_copyright_publish_quote)
     ToggleButton toggleButtonCopyright;
+    @BindView(R.id.layout_enter_quote_source_publish_quote)
+    TextInputLayout layoutQuoteSource;
     @BindView(R.id.edit_text_enter_quote_source_publish_quote)
     EditText editTextQuoteSource;
     @BindView(R.id.button_publish_publish_quote)
@@ -61,7 +65,7 @@ public class PublishQuoteActivity extends AppCompatActivity {
     private Context mContext;
     private Activity mActivity;
     private Quote mQuote;
-    private HashMap<String, Category> mHashmapCategories;
+    private ArrayList<Category> mListCategories;
     private ArrayList<String> mListTags;
     private View.OnClickListener categoryTagOnClickListener = new View.OnClickListener() {
         @Override
@@ -71,7 +75,7 @@ public class PublishQuoteActivity extends AppCompatActivity {
                 TextView categoryTag = (TextView) v;
                 Category category = (Category) categoryTag.getTag();
                 categoryTagsContainer.removeView(v);
-                mHashmapCategories.remove(category.getId());
+                mListCategories.remove(category.getId());
             }
         }
     };
@@ -113,7 +117,7 @@ public class PublishQuoteActivity extends AppCompatActivity {
 
                     quoteTag.setTextColor(Utils.getInstance(mContext).getColor(R.color.colorWhite));
                     quoteTag.setBackground(mRoundBorderDrawable);
-                    quoteTag.setPadding((int) getResources().getDimension(R.dimen.spacing_normal), (int) getResources().getDimension(R.dimen.spacing_small), (int) getResources().getDimension(R.dimen.spacing_normal), (int) getResources().getDimension(R.dimen.spacing_small));
+                    quoteTag.setPadding((int) getResources().getDimension(R.dimen.spacing_normal), (int) getResources().getDimension(R.dimen.spacing_xsmall), (int) getResources().getDimension(R.dimen.spacing_normal), (int) getResources().getDimension(R.dimen.spacing_xsmall));
                     quoteTag.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_delete_white_24dp, 0);
                     quoteTag.setCompoundDrawablePadding((int) getResources().getDimension(R.dimen.spacing_xsmall));
                     quoteTag.setOnClickListener(quoteTagOnClickListener);
@@ -144,7 +148,7 @@ public class PublishQuoteActivity extends AppCompatActivity {
 
                 quoteTag.setTextColor(Utils.getInstance(mContext).getColor(R.color.colorWhite));
                 quoteTag.setBackground(mRoundBorderDrawable);
-                quoteTag.setPadding((int) getResources().getDimension(R.dimen.spacing_normal), (int) getResources().getDimension(R.dimen.spacing_small), (int) getResources().getDimension(R.dimen.spacing_normal), (int) getResources().getDimension(R.dimen.spacing_small));
+                quoteTag.setPadding((int) getResources().getDimension(R.dimen.spacing_normal), (int) getResources().getDimension(R.dimen.spacing_xsmall), (int) getResources().getDimension(R.dimen.spacing_normal), (int) getResources().getDimension(R.dimen.spacing_xsmall));
                 quoteTag.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_delete_white_24dp, 0);
                 quoteTag.setCompoundDrawablePadding((int) getResources().getDimension(R.dimen.spacing_xsmall));
                 quoteTag.setOnClickListener(quoteTagOnClickListener);
@@ -206,8 +210,35 @@ public class PublishQuoteActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                mQuote.setCaption(editTextQuoteCaption.getText().toString().trim());
+                mQuote.setSource(editTextQuoteSource.getText().toString().trim());
+                mQuote.setTags(mListTags);
+                mQuote.setCategories(mListCategories);
+
+                String quoteJson = new Gson().toJson(mQuote);
+                saveQuote(quoteJson);
+                //TODO save quote and upload image
+
             }
         });
+
+        toggleButtonCopyright.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if (isChecked) {
+                    layoutQuoteSource.setVisibility(View.GONE);
+                } else {
+                    layoutQuoteSource.setVisibility(View.VISIBLE);
+                    editTextQuoteSource.requestFocus();
+                }
+
+            }
+        });
+    }
+
+    private void saveQuote(String quoteJson) {
+
     }
 
     @Override
@@ -219,7 +250,7 @@ public class PublishQuoteActivity extends AppCompatActivity {
                 if (data.getExtras() != null) {
 
                     if (data.hasExtra(BUNDLE_KEY_SELECTED_CATEGORIES)) {
-                        mHashmapCategories = (HashMap<String, Category>) data.getSerializableExtra(BUNDLE_KEY_SELECTED_CATEGORIES);
+                        mListCategories = (ArrayList<Category>) data.getSerializableExtra(BUNDLE_KEY_SELECTED_CATEGORIES);
                         updateTagsView();
                     }
 
@@ -236,7 +267,7 @@ public class PublishQuoteActivity extends AppCompatActivity {
 
         categoryTagsContainer.removeAllViews();
 
-        for (Category category : mHashmapCategories.values()) {
+        for (Category category : mListCategories) {
 
             int randomTagColor = Utils.getInstance(mContext).getRandomTagColor();
             Drawable mRoundBorderDrawable = Utils.getInstance(mContext).getDrawable(R.drawable.round_border);
@@ -248,7 +279,7 @@ public class PublishQuoteActivity extends AppCompatActivity {
             categoryTag.setTag(category);
             categoryTag.setTextColor(Utils.getInstance(mContext).getColor(R.color.colorWhite));
             categoryTag.setBackground(mRoundBorderDrawable);
-            categoryTag.setPadding((int) getResources().getDimension(R.dimen.spacing_normal), (int) getResources().getDimension(R.dimen.spacing_small), (int) getResources().getDimension(R.dimen.spacing_normal), (int) getResources().getDimension(R.dimen.spacing_small));
+            categoryTag.setPadding((int) getResources().getDimension(R.dimen.spacing_normal), (int) getResources().getDimension(R.dimen.spacing_xsmall), (int) getResources().getDimension(R.dimen.spacing_normal), (int) getResources().getDimension(R.dimen.spacing_xsmall));
             categoryTag.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_delete_white_24dp, 0);
             categoryTag.setCompoundDrawablePadding((int) getResources().getDimension(R.dimen.spacing_xsmall));
             categoryTag.setOnClickListener(categoryTagOnClickListener);
@@ -261,6 +292,7 @@ public class PublishQuoteActivity extends AppCompatActivity {
     public void addTag(FlowLayout container, View tag) {
 
         FlowLayout.LayoutParams params = new FlowLayout.LayoutParams(FlowLayout.LayoutParams.WRAP_CONTENT, FlowLayout.LayoutParams.WRAP_CONTENT);
+        params.gravity = Gravity.CENTER;
         params.rightMargin = (int) getResources().getDimension(R.dimen.spacing_xsmall);
         params.leftMargin = (int) getResources().getDimension(R.dimen.spacing_xsmall);
         params.topMargin = (int) getResources().getDimension(R.dimen.spacing_xsmall);

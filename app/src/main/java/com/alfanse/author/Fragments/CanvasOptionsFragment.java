@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.v4.content.ContextCompat;
@@ -29,6 +28,7 @@ import com.alfanse.author.CustomViews.QuoteCanvas;
 import com.alfanse.author.Models.CanvasTheme;
 import com.alfanse.author.R;
 import com.alfanse.author.Utilities.Constants;
+import com.alfanse.author.Utilities.Utils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -195,7 +195,7 @@ public class CanvasOptionsFragment extends Fragment implements ColorPickerDialog
 
         String[] PERMISSIONS = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
 
-        if (!hasPermissions(PERMISSIONS)) {
+        if (!Utils.getInstance(mContext).hasPermissions(PERMISSIONS)) {
             // request permissions and handle the result in onRequestPermissionsResult()
             requestPermissions(PERMISSIONS, ALL_PERMISSIONS_REQUEST_CODE);
         } else {
@@ -254,7 +254,7 @@ public class CanvasOptionsFragment extends Fragment implements ColorPickerDialog
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     startActivityForResult(CropImage.getPickImageChooserIntent(mContext), PICK_IMAGE_CHOOSER_REQUEST_CODE);
                 } else {
-                    Toast.makeText(mActivity, "Cancelling, required permissions are not granted", Toast.LENGTH_LONG).show();
+                    // TODO show message
                 }
                 break;
             }
@@ -263,7 +263,7 @@ public class CanvasOptionsFragment extends Fragment implements ColorPickerDialog
                     // required permissions granted, start crop image activity
                     startCropImageActivity(mCropImageUri);
                 } else {
-                    Toast.makeText(mActivity, "Cancelling, required permissions are not granted", Toast.LENGTH_LONG).show();
+                    // TODO show message
                 }
                 break;
             }
@@ -309,17 +309,6 @@ public class CanvasOptionsFragment extends Fragment implements ColorPickerDialog
                 break;
             }
         }
-    }
-
-    public boolean hasPermissions(String... permissions) {
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && mContext != null && permissions != null) {
-            for (String permission : permissions) {
-                if (mContext.checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
-                    return false;
-                }
-            }
-        }
-        return true;
     }
 
     private void addComponentTextView() {

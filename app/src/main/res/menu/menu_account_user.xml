@@ -1,10 +1,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.alfanse.author.Activities.UserAccountActivity">
+
     <item
-        android:id="@+id/action_logout"
-        android:icon="@drawable/ic_logout_white_24dp"
-        android:title="@string/action_logout"
-        app:showAsAction="always" />
+        android:id="@+id/action_update_password_account_user"
+        android:title="@string/text_update_password" />
+    <item
+        android:id="@+id/action_signout_account_user"
+        android:title="@string/text_sign_out" />
 </menu>
