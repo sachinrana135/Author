@@ -26,6 +26,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+                <ProgressBar
+                    android:id="@+id/progress_bar_cover_image_account_user"
+                    style="?android:progressBarStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center" />
+
                 <ImageView
                     android:id="@+id/image_view_cover_image_account_user"
                     android:layout_width="match_parent"
@@ -41,7 +48,7 @@
                     android:layout_width="@dimen/fab_size_edit_image"
                     android:layout_height="@dimen/fab_size_edit_image"
                     android:layout_gravity="right|bottom"
-                    android:layout_marginBottom="@dimen/spacing_normal"
+                    android:layout_marginBottom="@dimen/spacing_huge"
                     android:clickable="true"
                     app:fabSize="mini"
                     app:srcCompat="@drawable/ic_edit_white_24dp" />
@@ -52,7 +59,7 @@
                 android:id="@+id/toolbar_account_user"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:title="My Account"
+                android:title="@string/title_my_account"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
 

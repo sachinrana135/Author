@@ -28,6 +28,11 @@ public class Constants {
 
     public static final String DEFAULT_APP_NAME_FONT_FILE_NAME = "Helvetica.ttf";
     public final static String PATTERN_EMAIL = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
-
+    public static final String ASSETS_DIR_FONTS = "fonts/";
+    public static final String ASSETS_DIR_JSON = "json/";
+    public static final String ASSETS_FILE_FONTS = ASSETS_DIR_JSON + "fonts.json";
+    public static final String ASSETS_FILE_CATEGORY = ASSETS_DIR_JSON + "category.json";
+    public static final String ASSETS_FILE_AUTHOR = ASSETS_DIR_JSON + "author.json";
+    public static final String ASSETS_FILE_FOLLOWERS = ASSETS_DIR_JSON + "followers.json";
     public static int ANIMATION_DELAY_SEC = 500;
 }

@@ -1,16 +1,24 @@
 package com.alfanse.author.Adapters;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.alfanse.author.Models.CanvasTheme;
 import com.alfanse.author.R;
 import com.alfanse.author.Utilities.Utils;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 
 import java.util.ArrayList;
 
@@ -65,6 +73,9 @@ public class CanvasThemesAdapter extends RecyclerView.Adapter<CanvasThemesAdapte
 
         @BindView(R.id.canvas_theme_image_item_canvas_image)
         ImageView canvasThemeImage;
+        @BindView(R.id.progress_bar_item_canvas_image)
+        ProgressBar canvasThemeProgressBar;
+
 
         public CanvasThemeViewHolder(View view) {
             super(view);
@@ -73,10 +84,27 @@ public class CanvasThemesAdapter extends RecyclerView.Adapter<CanvasThemesAdapte
 
         public void bind(final CanvasTheme canvasTheme, final OnItemClickListener listener) {
 
-            Picasso.with(mContext)
-                    .load(canvasTheme.getImageUrl())
-                    .fit()
+            RequestOptions canvasImageOptions = new RequestOptions()
                     .error(Utils.getInstance(mContext).getDrawable(R.drawable.ic_gallery_grey_24dp))
+                    .fitCenter()
+                    .centerCrop();
+
+            Glide.with(mContext)
+                    .load(canvasTheme.getImageUrl())
+                    .apply(canvasImageOptions)
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            canvasThemeProgressBar.setVisibility(View.GONE);
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            canvasThemeProgressBar.setVisibility(View.GONE);
+                            return false;
+                        }
+                    })
                     .into(canvasThemeImage);
 
             itemView.setOnClickListener(new View.OnClickListener() {

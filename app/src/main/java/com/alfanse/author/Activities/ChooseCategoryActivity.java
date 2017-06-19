@@ -34,8 +34,8 @@ import java.util.regex.Pattern;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.alfanse.author.Utilities.Constants.ASSETS_FILE_CATEGORY;
 import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_SELECTED_CATEGORIES;
-import static com.alfanse.author.Utilities.FontHelper.CATEGORY_JSON_FILE_NAME;
 
 public class ChooseCategoryActivity extends BaseActivity {
 
@@ -140,7 +140,7 @@ public class ChooseCategoryActivity extends BaseActivity {
     }
 
     private void loadCategoriesList() {
-        String categoryJson = Utils.getInstance(mContext).getJsonResponse(CATEGORY_JSON_FILE_NAME);
+        String categoryJson = Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_CATEGORY);
 
         Type categoryListType = new TypeToken<ArrayList<Category>>() {
         }.getType();

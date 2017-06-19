@@ -4,9 +4,12 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
+import android.util.Base64;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
@@ -15,6 +18,7 @@ import com.alfanse.author.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -178,4 +182,14 @@ public class Utils {
         }
         return true;
     }
+
+    public String getStringImage(String imagePath) {
+        Bitmap bm = BitmapFactory.decodeFile(imagePath);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
+        byte[] byteArrayImage = baos.toByteArray();
+        String encodedImage = Base64.encodeToString(byteArrayImage, Base64.DEFAULT);
+        return encodedImage;
+    }
+
 }

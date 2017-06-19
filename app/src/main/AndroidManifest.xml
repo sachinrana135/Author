@@ -74,7 +74,10 @@
             android:theme="@style/AppTheme" />
         <activity android:name=".Activities.PublishQuoteActivity" />
         <activity android:name=".Activities.ChooseCategoryActivity" />
-        <activity android:name=".Activities.BaseActivity"></activity>
+        <activity android:name=".Activities.BaseActivity" />
+        <activity android:name=".Activities.EditProfileActivity" />
+        <activity android:name=".Activities.UpdatePasswordActivity" />
+        <activity android:name=".Activities.FollowersActivity"></activity>
     </application>
 
 </manifest>

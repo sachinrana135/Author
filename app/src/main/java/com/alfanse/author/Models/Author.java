@@ -10,7 +10,6 @@ import java.util.ArrayList;
 public class Author implements Serializable {
 
     private String id;
-    private String passwordHash;
     private String firebaseId;
     private String name;
     private String gender;
@@ -21,13 +20,15 @@ public class Author implements Serializable {
     private String coverImage;
     private String status;
     private String totalQuotes;
+    private String totalLikes;
     private String totalFollowers;
     private String totalFollowing;
     private String dateCreated;
     private String country;
+    private Boolean isFollowing;
     private ArrayList<Quote> quotes;
     private ArrayList<Author> followers;
-    private ArrayList<Author> followedBy;
+    private ArrayList<Author> following;
 
 
     public String getId() {
@@ -36,14 +37,6 @@ public class Author implements Serializable {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getPasswordHash() {
-        return passwordHash;
-    }
-
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
     }
 
     public String getFirebaseId() {
@@ -60,6 +53,30 @@ public class Author implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getDob() {
+        return dob;
+    }
+
+    public void setDob(String dob) {
+        this.dob = dob;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 
     public String getEmail() {
@@ -102,6 +119,14 @@ public class Author implements Serializable {
         this.totalQuotes = totalQuotes;
     }
 
+    public String getTotalLikes() {
+        return totalLikes;
+    }
+
+    public void setTotalLikes(String totalLikes) {
+        this.totalLikes = totalLikes;
+    }
+
     public String getTotalFollowers() {
         return totalFollowers;
     }
@@ -134,11 +159,31 @@ public class Author implements Serializable {
         this.country = country;
     }
 
+    public Boolean getFollowing() {
+        return isFollowing;
+    }
+
+    public void setFollowing(ArrayList<Author> following) {
+        this.following = following;
+    }
+
+    public void setFollowing(Boolean following) {
+        isFollowing = following;
+    }
+
     public ArrayList<Quote> getQuotes() {
         return quotes;
     }
 
     public void setQuotes(ArrayList<Quote> quotes) {
         this.quotes = quotes;
+    }
+
+    public ArrayList<Author> getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(ArrayList<Author> followers) {
+        this.followers = followers;
     }
 }

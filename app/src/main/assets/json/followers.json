@@ -1,0 +1,56 @@
+[
+  {
+    "id": "1",
+    "name": "Sachin Rana",
+    "profileImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGjEbPQ0ve0Cg8SqI8v7hyVBdqoKnf_8B7K_JXiE4D24E9a6z6Pw",
+    "isFollowing": true
+  },
+  {
+    "id": "1",
+    "name": "Gaurav Rana",
+    "profileImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGjEbPQ0ve0Cg8SqI8v7hyVBdqoKnf_8B7K_JXiE4D24E9a6z6Pw",
+    "isFollowing": false
+  },
+  {
+    "id": "1",
+    "name": "Ravi Rana",
+    "profileImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGjEbPQ0ve0Cg8SqI8v7hyVBdqoKnf_8B7K_JXiE4D24E9a6z6Pw",
+    "isFollowing": true
+  },
+  {
+    "id": "1",
+    "name": "Neelam Rana",
+    "profileImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGjEbPQ0ve0Cg8SqI8v7hyVBdqoKnf_8B7K_JXiE4D24E9a6z6Pw",
+    "isFollowing": true
+  },
+  {
+    "id": "1",
+    "name": "Minesh Rana",
+    "profileImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGjEbPQ0ve0Cg8SqI8v7hyVBdqoKnf_8B7K_JXiE4D24E9a6z6Pw",
+    "isFollowing": false
+  },
+  {
+    "id": "1",
+    "name": "Sachin Rana",
+    "profileImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGjEbPQ0ve0Cg8SqI8v7hyVBdqoKnf_8B7K_JXiE4D24E9a6z6Pw",
+    "isFollowing": true
+  },
+  {
+    "id": "1",
+    "name": "Sachin Rana",
+    "profileImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGjEbPQ0ve0Cg8SqI8v7hyVBdqoKnf_8B7K_JXiE4D24E9a6z6Pw",
+    "isFollowing": true
+  },
+  {
+    "id": "1",
+    "name": "Sachin Rana",
+    "profileImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGjEbPQ0ve0Cg8SqI8v7hyVBdqoKnf_8B7K_JXiE4D24E9a6z6Pw",
+    "isFollowing": true
+  },
+  {
+    "id": "1",
+    "name": "Sachin Rana",
+    "profileImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGjEbPQ0ve0Cg8SqI8v7hyVBdqoKnf_8B7K_JXiE4D24E9a6z6Pw",
+    "isFollowing": false
+  }
+]

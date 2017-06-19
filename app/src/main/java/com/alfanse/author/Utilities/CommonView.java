@@ -60,16 +60,6 @@ public class CommonView {
 
     }
 
-    public void showProgressDialog(Activity activity, String message) {
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            return;
-        }
-        mProgressDialog = new ProgressDialog(activity);
-        mProgressDialog.setIndeterminate(false);
-        mProgressDialog.setMessage(message);
-        mProgressDialog.show();
-    }
-
     public void showProgressDialog(Activity activity, String message, String title) {
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             return;

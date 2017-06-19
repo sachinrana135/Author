@@ -12,15 +12,15 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static com.alfanse.author.Utilities.Constants.ASSETS_DIR_FONTS;
+import static com.alfanse.author.Utilities.Constants.ASSETS_FILE_FONTS;
+
 /**
  * Created by Velocity-1601 on 5/10/2017.
  */
 
 public class FontHelper {
 
-    public static final String FONTS_DIR = "fonts/";
-    public static final String FONTS_JSON_FILE_NAME = "json/fonts.json";
-    public static final String CATEGORY_JSON_FILE_NAME = "json/category.json";
     public static final HashMap<String, Font> fontsHashMap = new HashMap<String, Font>();
     public static final ArrayList<Font> fontsArrayList = new ArrayList<Font>();
     private static FontHelper sInstance;
@@ -44,7 +44,7 @@ public class FontHelper {
         fontsHashMap.clear();
         fontsArrayList.clear();
 
-        JSONObject jsonObject = Utils.getInstance(mContext).loadJSONFromAsset(FONTS_JSON_FILE_NAME);
+        JSONObject jsonObject = Utils.getInstance(mContext).loadJSONFromAsset(ASSETS_FILE_FONTS);
         JSONArray jsonFontsArray = null;
         try {
             jsonFontsArray = jsonObject.getJSONArray("fonts");
@@ -72,7 +72,7 @@ public class FontHelper {
     }
 
     public static Typeface getTypeface(Context context, String fileName) {
-        return Typeface.createFromAsset(context.getAssets(), FONTS_DIR.concat(fileName));
+        return Typeface.createFromAsset(context.getAssets(), ASSETS_DIR_FONTS.concat(fileName));
     }
 
     public HashMap<String, Font> getFontsHashMap() {

@@ -12,6 +12,8 @@
     <string name="title_choose_category">Category</string>
     <string name="title_publish_quote">Publish</string>
     <string name="title_my_account">My Account</string>
+    <string name="title_edit_profile">Edit Profile</string>
+    <string name="title_followers">Followers</string>
 
 
     <!-- Menu -->
@@ -50,6 +52,9 @@
     <string name="text_invite_friends">Invite Friends</string>
     <string name="text_sign_out">Sign Out</string>
     <string name="text_update_password">Update Password</string>
+    <string name="text_gender">Gender</string>
+    <string name="text_male">Male</string>
+    <string name="text_female">Female</string>
 
     <!-- Loading messages -->
     <string name="text_please_wait">Please Wait...</string>
@@ -60,6 +65,8 @@
     <string name="text_loading_reset_password_email">Sending email...</string>
     <string name="text_loading_verification_email">Sending verification email...</string>
     <string name="text_loading_user_signup">Creating account...</string>
+    <string name="text_loading_update_profile">Updating profile...</string>
+    <string name="text_loading_update_password">Updating password...</string>
 
 
     <!-- Button -->
@@ -72,16 +79,21 @@
     <string name="button_choose_category">Choose category</string>
     <string name="button_publish">Publish</string>
     <string name="button_proceed">Proceed</string>
+    <string name="button_update">Update</string>
 
     <!-- Hint -->
     <string name="hint_email">Email*</string>
+    <string name="hint_mobile">Mobile No.</string>
+    <string name="hint_dob">Date of Birth</string>
     <string name="hint_name">Your Name*</string>
     <string name="hint_password">Password*</string>
     <string name="hint_confirm_password">Confirm Password*</string>
     <string name="hint_quote_caption">Write something about quote</string>
+    <string name="hint_author_status">Something about yourself..</string>
     <string name="hint_search_category">Search Category</string>
     <string name="hint_enter_tags">Enter Tags</string>
     <string name="hint_enter_quote_source">Enter original source name</string>
+
     <!-- Options-->
     <string name="option_item_default_tag">option_tag_default</string>
     <string name="option_item_image_tag">option_tag_image</string>
@@ -111,6 +123,7 @@
     <string name="action_yes">Yes</string>
     <string name="action_no">No</string>
     <string name="action_verify_now">Verify now</string>
+    <string name="action_save">Save</string>
 
     <!-- messages-->
     <string name="msg_exit_confirm">Are you sure? All changes will be lost.</string>
@@ -126,6 +139,8 @@
     <!-- Success -->
     <string name="success_email_sent">Email sent successfully</string>
     <string name="success_signup">Account created successfully</string>
+    <string name="success_profile_updated">Profile updated successfully</string>
+    <string name="success_password_updated">Password updated successfully</string>
 
     <!-- error messages -->
     <string name="error_bad_network">Cannot connect to Internet...Please check your connection!</string>
@@ -146,7 +161,6 @@
         "Material is the metaphor.\n\n"
      </string>
 
-    <string name="title_activity_choose_category">ChooseCategoryActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
