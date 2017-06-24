@@ -4,17 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.alfanse.author.Activities.FollowersActivity">
+    tools:context="com.alfanse.author.Activities.CommentsActivity">
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar_followers"
+        android:id="@+id/appbar_comments"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar_followers"
+            android:id="@+id/toolbar_comments"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
@@ -22,9 +22,11 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_followers_followers"
+    <FrameLayout
+        android:id="@+id/fragment_container_comments_comments"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/appbar_followers" />
+        android:layout_below="@id/appbar_comments">
+
+    </FrameLayout>
 </RelativeLayout>

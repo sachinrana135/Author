@@ -17,6 +17,7 @@
     <dimen name="spacing_large">32dp</dimen>
     <dimen name="spacing_normal">20dp</dimen>
     <dimen name="spacing_small">15dp</dimen>
+    <dimen name="spacing_mini">11dp</dimen>
     <dimen name="spacing_xsmall">7dp</dimen>
     <dimen name="spacing_xxsmall">4dp</dimen>
 
@@ -26,5 +27,6 @@
     <dimen name="profile_image_height">130dp</dimen>
     <dimen name="profile_image_width">130dp</dimen>
     <dimen name="fab_size_edit_image">35dp</dimen>
+    <dimen name="card_view_radius">5dp</dimen>
 
 </resources>

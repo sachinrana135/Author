@@ -14,9 +14,11 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -25,16 +27,22 @@ import android.widget.ToggleButton;
 
 import com.alfanse.author.CustomViews.FlowLayout;
 import com.alfanse.author.Models.Category;
+import com.alfanse.author.Models.Language;
 import com.alfanse.author.Models.Quote;
 import com.alfanse.author.R;
 import com.alfanse.author.Utilities.Utils;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.alfanse.author.Utilities.Constants.ASSETS_FILE_LANGUAGES;
 import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_QUOTE;
 import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_SELECTED_CATEGORIES;
 
@@ -45,6 +53,8 @@ public class PublishQuoteActivity extends BaseActivity {
     Toolbar mToolbar;
     @BindView(R.id.edit_text_quote_caption_publish_quote)
     EditText editTextQuoteCaption;
+    @BindView(R.id.spinner_select_language_publish_quote)
+    SearchableSpinner spinnerLanguages;
     @BindView(R.id.button_choose_category_publish_quote)
     Button buttonChooseCategory;
     @BindView(R.id.category_tags_container_publish_quote)
@@ -66,7 +76,11 @@ public class PublishQuoteActivity extends BaseActivity {
     private Activity mActivity;
     private Quote mQuote;
     private ArrayList<Category> mListCategories;
+    private ArrayList<Language> mLanguages;
+    private HashMap<String, String> mHashLanguages;
+    private ArrayList<String> mListLanguages;
     private ArrayList<String> mListTags;
+    private ArrayAdapter<String> mLanguageAdapter;
     private View.OnClickListener categoryTagOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -173,6 +187,9 @@ public class PublishQuoteActivity extends BaseActivity {
         initListener();
 
         mListTags = new ArrayList<String>();
+        mListCategories = new ArrayList<Category>();
+        mListLanguages = new ArrayList<String>();
+        mHashLanguages = new HashMap<String, String>();
 
         Intent intent = getIntent();
         if (intent.getExtras() != null) {
@@ -182,6 +199,27 @@ public class PublishQuoteActivity extends BaseActivity {
         }
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        fillLanguageSpinner();
+    }
+
+    private void fillLanguageSpinner() {
+
+        //TODO get language API
+
+        String languageJson = Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_LANGUAGES);
+
+        Type languageListType = new TypeToken<ArrayList<Language>>() {
+        }.getType();
+        mLanguages = new Gson().fromJson(languageJson, languageListType);
+
+        for (Language language : mLanguages) {
+            mHashLanguages.put(language.getLanguageName(), language.getLanguageId());
+            mListLanguages.add(language.getLanguageName());
+        }
+        mLanguageAdapter = new ArrayAdapter<String>(mActivity, android.R.layout.simple_spinner_item, mListLanguages);
+        mLanguageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerLanguages.setTitle(getString(R.string.text_select_language));
+        spinnerLanguages.setAdapter(mLanguageAdapter);
     }
 
     private void initToolbar() {
@@ -210,7 +248,12 @@ public class PublishQuoteActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
 
+                Language language = new Language();
+                language.setLanguageName(spinnerLanguages.getSelectedItem().toString());
+                language.setLanguageId(mHashLanguages.get(language.getLanguageName()));
+
                 mQuote.setCaption(editTextQuoteCaption.getText().toString().trim());
+                mQuote.setLanguage(language);
                 mQuote.setSource(editTextQuoteSource.getText().toString().trim());
                 mQuote.setTags(mListTags);
                 mQuote.setCategories(mListCategories);
@@ -299,5 +342,19 @@ public class PublishQuoteActivity extends BaseActivity {
         params.bottomMargin = (int) getResources().getDimension(R.dimen.spacing_xsmall);
         tag.setLayoutParams(params);
         container.addView(tag);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(menuItem);
+
+        }
     }
 }

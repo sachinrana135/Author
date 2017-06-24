@@ -2,9 +2,6 @@ package com.alfanse.author.Activities;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -93,12 +90,12 @@ public class NewQuoteActivity extends BaseActivity implements
     private GestureDetectorCompat mComponentTextViewGestureDetector;
 
 
-    private FragmentManager mFragmentManager;
+    private android.support.v4.app.FragmentManager mFragmentManager;
     private CanvasOptionsFragment mCanvasOptionsFragment;
     private ComponentImageViewOptionsFragment mComponentImageViewOptionsFragment;
     private ComponentTextViewOptionsFragment mComponentTextViewOptionsFragment;
     private ComponentBoxViewOptionsFragment mComponentBoxViewOptionsFragment;
-    private Fragment mActiveOptionFragment = null;
+    private android.support.v4.app.Fragment mActiveOptionFragment = null;
 
     private ComponentTextView mActiveComponentTextView;
     private ComponentImageView mActiveComponentImageView;
@@ -149,7 +146,7 @@ public class NewQuoteActivity extends BaseActivity implements
         mContext = getApplicationContext();
         mActivity = NewQuoteActivity.this;
         mDatabase = FirebaseDatabase.getInstance();
-        mFragmentManager = getFragmentManager();
+        mFragmentManager = getSupportFragmentManager();
 
         mDatabase = FirebaseDatabase.getInstance();
         mCanvasThemesRef = mDatabase.getReference(Constants.FIREBASE_REFERENCE_CANVAS_THEMES);
@@ -186,9 +183,9 @@ public class NewQuoteActivity extends BaseActivity implements
             mCanvasOptionsFragment.setQuoteCanvas(mQuoteCanvas);
         }
 
-        FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        transaction.replace(R.id.option_container_new_quote, mCanvasOptionsFragment);
-        transaction.commit();
+        mFragmentManager.beginTransaction()
+                .replace(R.id.option_container_new_quote, mCanvasOptionsFragment)
+                .commit();
     }
 
     @Override
@@ -220,9 +217,9 @@ public class NewQuoteActivity extends BaseActivity implements
         mComponentImageViewOptionsFragment.setQuoteCanvas(mQuoteCanvas);
         mComponentImageViewOptionsFragment.setComponentImageView(mActiveComponentImageView);
 
-        FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        transaction.replace(R.id.option_container_new_quote, mComponentImageViewOptionsFragment);
-        transaction.commit();
+        mFragmentManager.beginTransaction()
+                .replace(R.id.option_container_new_quote, mComponentImageViewOptionsFragment)
+                .commit();
     }
 
     public void loadComponentBoxViewOptionsFragment() {
@@ -231,9 +228,9 @@ public class NewQuoteActivity extends BaseActivity implements
         mComponentBoxViewOptionsFragment.setQuoteCanvas(mQuoteCanvas);
         mComponentBoxViewOptionsFragment.setComponentBoxView(mActiveComponentBoxView);
 
-        FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        transaction.replace(R.id.option_container_new_quote, mComponentBoxViewOptionsFragment);
-        transaction.commit();
+        mFragmentManager.beginTransaction()
+                .replace(R.id.option_container_new_quote, mComponentBoxViewOptionsFragment)
+                .commit();
     }
 
     public void loadComponentTextViewOptionsFragment() {
@@ -243,9 +240,9 @@ public class NewQuoteActivity extends BaseActivity implements
         mComponentTextViewOptionsFragment.setQuoteCanvas(mQuoteCanvas);
         mComponentTextViewOptionsFragment.setComponentTextView(mActiveComponentTextView);
 
-        FragmentTransaction transaction = mFragmentManager.beginTransaction();
-        transaction.replace(R.id.option_container_new_quote, mComponentTextViewOptionsFragment);
-        transaction.commit();
+        mFragmentManager.beginTransaction()
+                .replace(R.id.option_container_new_quote, mComponentTextViewOptionsFragment)
+                .commit();
     }
 
     @Override

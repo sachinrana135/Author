@@ -14,6 +14,9 @@
     <string name="title_my_account">My Account</string>
     <string name="title_edit_profile">Edit Profile</string>
     <string name="title_followers">Followers</string>
+    <string name="title_quote">Quote</string>
+    <string name="title_quotes">Quotes</string>
+    <string name="title_comments">Comments</string>
 
 
     <!-- Menu -->
@@ -32,8 +35,13 @@
     <string name="text_sign_in">Sign In</string>
     <string name="text_have_account_sign_up">Already have an account?</string>
     <string name="text_forgot_password_sign_in">Forgot Password?</string>
+    <string name="text_categories">Categories</string>
+    <string name="text_language">Language: </string>
+    <string name="text_tags">Tags</string>
+    <string name="text_source">Source: </string>
+    <string name="text_select_language">Choose Language</string>
     <string name="text_select_category">Select Category</string>
-    <string name="text_select_category_hint">Choose maximum 3 category</string>
+    <string name="text_select_category_hint">Choose maximum 3 categories</string>
     <string name="text_search_tags">Search Tags</string>
     <string name="text_search_tags_hint">Tag helps users to search your quote</string>
     <string name="text_copyright">Copyright</string>
@@ -55,6 +63,8 @@
     <string name="text_gender">Gender</string>
     <string name="text_male">Male</string>
     <string name="text_female">Female</string>
+    <string name="text_share_quote">Share Quote</string>
+    <string name="text_reason_for_report">Reason for Report</string>
 
     <!-- Loading messages -->
     <string name="text_please_wait">Please Wait...</string>
@@ -67,6 +77,7 @@
     <string name="text_loading_user_signup">Creating account...</string>
     <string name="text_loading_update_profile">Updating profile...</string>
     <string name="text_loading_update_password">Updating password...</string>
+    <string name="text_loading_downloading_quote">Downloading Quote...</string>
 
 
     <!-- Button -->
@@ -91,7 +102,7 @@
     <string name="hint_quote_caption">Write something about quote</string>
     <string name="hint_author_status">Something about yourself..</string>
     <string name="hint_search_category">Search Category</string>
-    <string name="hint_enter_tags">Enter Tags</string>
+    <string name="hint_enter_tags">Enter Tags (Comma separated)</string>
     <string name="hint_enter_quote_source">Enter original source name</string>
 
     <!-- Options-->
@@ -124,6 +135,10 @@
     <string name="action_no">No</string>
     <string name="action_verify_now">Verify now</string>
     <string name="action_save">Save</string>
+    <string name="action_follow">Follow</string>
+    <string name="action_unfollow">Unfollow</string>
+    <string name="action_download">Download</string>
+    <string name="action_report">Report</string>
 
     <!-- messages-->
     <string name="msg_exit_confirm">Are you sure? All changes will be lost.</string>
@@ -156,6 +171,8 @@
     <string name="error_exception">Oops, something went wrong.</string>
     <string name="error_signin_failed">Invalid email or password</string>
     <string name="error_unverified_email">Unverified Email</string>
+    <string name="error_quote_not_found">Quote not found!</string>
+    <string name="error_author_not_found">Author not found!</string>
     <string name="title_activity_scrolling">ScrollingActivity</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
@@ -163,6 +180,11 @@
 
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_author">AuthorActivity</string>
+    <string name="action_settings">Settings</string>
 
 
 </resources>

@@ -25,7 +25,7 @@ public class Author implements Serializable {
     private String totalFollowing;
     private String dateCreated;
     private String country;
-    private Boolean isFollowing;
+    private Boolean followingAuthor;
     private ArrayList<Quote> quotes;
     private ArrayList<Author> followers;
     private ArrayList<Author> following;
@@ -159,18 +159,6 @@ public class Author implements Serializable {
         this.country = country;
     }
 
-    public Boolean getFollowing() {
-        return isFollowing;
-    }
-
-    public void setFollowing(ArrayList<Author> following) {
-        this.following = following;
-    }
-
-    public void setFollowing(Boolean following) {
-        isFollowing = following;
-    }
-
     public ArrayList<Quote> getQuotes() {
         return quotes;
     }
@@ -186,4 +174,21 @@ public class Author implements Serializable {
     public void setFollowers(ArrayList<Author> followers) {
         this.followers = followers;
     }
+
+    public Boolean isFollowingAuthor() {
+        return followingAuthor;
+    }
+
+    public void setFollowingAuthor(Boolean followingAuthor) {
+        this.followingAuthor = followingAuthor;
+    }
+
+    public ArrayList<Author> getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(ArrayList<Author> following) {
+        this.following = following;
+    }
+
 }

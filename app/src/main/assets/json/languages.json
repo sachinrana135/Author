@@ -1,0 +1,26 @@
+[
+  {
+    "languageId": "1",
+    "languageName": "English"
+  },
+  {
+    "languageId": "2",
+    "languageName": "Hindi"
+  },
+  {
+    "languageId": "3",
+    "languageName": "French"
+  },
+  {
+    "languageId": "4",
+    "languageName": "Urdu"
+  },
+  {
+    "languageId": "5",
+    "languageName": "Spanish"
+  },
+  {
+    "languageId": "6",
+    "languageName": "German"
+  }
+]

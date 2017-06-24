@@ -1,0 +1,43 @@
+{
+  "author": {
+    "id": "1",
+    "name": "Sachin Rana",
+    "followingAuthor": false,
+    "profileImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGjEbPQ0ve0Cg8SqI8v7hyVBdqoKnf_8B7K_JXiE4D24E9a6z6Pw"
+  },
+  "language": {
+    "languageId": "1",
+    "languageName": "English"
+  },
+  "id": "5",
+  "totalLikes": "219",
+  "totalComments": "30",
+  "totalViews": "510",
+  "likeQuote": true,
+  "source": "Sarcasm Server",
+  "imageUrl": "https://image.freepik.com/free-vector/calligraphic-inspirational-quote_23-2147523840.jpg",
+  "caption": "World is good enough",
+  "localImagePath": "",
+  "dateAdded": "10-Jan-2016 03:02 PM",
+  "tags": [
+    "Best Quotes",
+    "New World"
+  ],
+  "categories": [
+    {
+      "id": "1",
+      "name": "Funny",
+      "sortOrder": "1"
+    },
+    {
+      "id": "2",
+      "name": "Emotional",
+      "sortOrder": "1"
+    },
+    {
+      "id": "3",
+      "name": "Life",
+      "sortOrder": "1"
+    }
+  ]
+}

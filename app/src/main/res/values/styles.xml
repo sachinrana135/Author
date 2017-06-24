@@ -37,6 +37,12 @@
         <item name="android:background">@color/colorWhite</item>
     </style>
 
+    <style name="VerticalDividerGrey">
+        <item name="android:layout_width">1dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/colorComponentViewStroke</item>
+    </style>
+
     <style name="FullscreenTheme" parent="AppTheme">
         <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
         <item name="android:windowActionBarOverlay">true</item>
@@ -47,6 +53,11 @@
 
     <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
         <item name="android:background">@color/black_overlay</item>
+    </style>
+
+    <style name="SpinnerTheme" parent="android:Widget.Spinner">
+        <item name="android:background">@drawable/selector_spinner</item>
+        <item name="android:paddingLeft">@dimen/spacing_small</item>
     </style>
 
 

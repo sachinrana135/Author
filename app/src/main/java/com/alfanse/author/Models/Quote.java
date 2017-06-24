@@ -9,6 +9,8 @@ import java.util.ArrayList;
 
 public class Quote implements Serializable {
 
+    private String id;
+    private Language language;
     private String totalLikes;
     private String totalComments;
     private String totalViews;
@@ -18,8 +20,17 @@ public class Quote implements Serializable {
     private String localImagePath;
     private String dateAdded;
     private Author author;
+    private Boolean likeQuote;
     private ArrayList<String> tags;
     private ArrayList<Category> categories;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getTotalLikes() {
         return totalLikes;
@@ -107,6 +118,22 @@ public class Quote implements Serializable {
 
     public void setCategories(ArrayList<Category> categories) {
         this.categories = categories;
+    }
+
+    public Boolean isLikeQuote() {
+        return likeQuote;
+    }
+
+    public void setLikeQuote(Boolean likeQuote) {
+        this.likeQuote = likeQuote;
+    }
+
+    public Language getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(Language language) {
+        this.language = language;
     }
 }
 

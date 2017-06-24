@@ -13,8 +13,11 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.alfanse.author.CustomViews.DialogBuilder;
+import com.alfanse.author.Interfaces.onReportItemSubmitListener;
 import com.alfanse.author.Models.CustomDialog;
 import com.alfanse.author.R;
+
+import java.util.ArrayList;
 
 /**
  * Created by Velocity-1601 on 5/9/2017.
@@ -95,6 +98,36 @@ public class CommonView {
         }
         builder.setDialogType(customDialog.getDialogType());
 
+        // Create the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    public void showReportDialog(ArrayList<String> listReport, Activity activity, final onReportItemSubmitListener listener) {
+
+        final String[] selectedReportReasonTitle = new String[1];
+        final String[] arrayReport = listReport.toArray(new String[listReport.size()]);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+
+        // Set the alert dialog title
+        builder.setTitle(mContext.getString(R.string.text_reason_for_report));
+
+        // Add the choices
+        builder.setSingleChoiceItems(arrayReport, -1, new DialogInterface.OnClickListener() {// Index of checked item (-1 = no selection)
+            public void onClick(DialogInterface dialog, int which) {
+                selectedReportReasonTitle[0] = arrayReport[which];
+            }
+        });
+        // Add the buttons
+        builder.setPositiveButton(R.string.action_report, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                listener.onReportItemSubmit(selectedReportReasonTitle[0]);
+            }
+        });
+        builder.setNegativeButton(R.string.action_cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
         // Create the AlertDialog
         AlertDialog dialog = builder.create();
         dialog.show();

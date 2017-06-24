@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_follow_author_item_quote"
+        android:title="@string/action_follow"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_download_quote_item_quote"
+        android:title="@string/action_download"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_report_quote_item_quote"
+        android:title="@string/action_report"
+        app:showAsAction="always" />
+
+
+</menu>

@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -75,6 +76,7 @@ import io.fabric.sdk.android.Fabric;
 
 import static com.alfanse.author.CustomViews.DialogBuilder.ERROR;
 import static com.alfanse.author.CustomViews.DialogBuilder.SUCCESS;
+import static com.alfanse.author.Utilities.Constants.ASSETS_FILE_AUTHOR;
 
 public class SignInActivity extends BaseActivity implements
         GoogleApiClient.OnConnectionFailedListener {
@@ -116,6 +118,7 @@ public class SignInActivity extends BaseActivity implements
     private CallbackManager mCallbackManager;
     private FirebaseAuth mAuth;
     private GoogleApiClient mGoogleApiClient;
+    private Author mLoggedAuthor;
     private TextView.OnEditorActionListener passwordEditorActionListener = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -302,14 +305,6 @@ public class SignInActivity extends BaseActivity implements
             }
         });
 
-        textForgotPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent forgotPasswordIntent = new Intent(mActivity, ForgotPasswordActivity.class);
-                startActivity(forgotPasswordIntent);
-            }
-        });
-
         editTextUserPassword.setOnEditorActionListener(passwordEditorActionListener);
         editTextForgotPasswordEmail.setOnEditorActionListener(resetPasswordEmailListener);
 
@@ -470,8 +465,7 @@ public class SignInActivity extends BaseActivity implements
                                 SharedManagement.getInstance(mContext).setString(SharedManagement.LAST_LOGIN_EMAIL, currentUser.getEmail());
 
                                 if (currentUser.isEmailVerified()) {
-                                    Intent homeIntent = new Intent(mActivity, HomeActivity.class);
-                                    startActivity(homeIntent);
+                                    postSignInAction();
                                 } else {
 
                                     DialogBuilder builder = new DialogBuilder(mActivity);
@@ -508,6 +502,18 @@ public class SignInActivity extends BaseActivity implements
                         }
                     });
         }
+    }
+
+    private void postSignInAction() {
+
+        //TODO get user API
+
+        mLoggedAuthor = new Gson().fromJson(Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_AUTHOR), Author.class);
+
+        SharedManagement.getInstance(mContext).setLoggedUser(mLoggedAuthor);
+
+        Intent homeIntent = new Intent(mActivity, HomeActivity.class);
+        startActivity(homeIntent);
     }
 
     private void sendVerificationEmail() {
@@ -682,8 +688,7 @@ public class SignInActivity extends BaseActivity implements
 
         // TODO Call API to add or update user
 
-        Intent homeIntent = new Intent(mActivity, HomeActivity.class);
-        startActivity(homeIntent);
+        postSignInAction();
 
     }
 
@@ -735,5 +740,19 @@ public class SignInActivity extends BaseActivity implements
         setIntent.addCategory(Intent.CATEGORY_HOME);
         setIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(setIntent);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(menuItem);
+
+        }
     }
 }

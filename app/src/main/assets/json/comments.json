@@ -1,0 +1,90 @@
+[
+  {
+    "author": {
+      "id": "1",
+      "name": "Vivek Singh",
+      "profileImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGjEbPQ0ve0Cg8SqI8v7hyVBdqoKnf_8B7K_JXiE4D24E9a6z6Pw"
+    },
+    "comment": "test comment",
+    "likeComment": true,
+    "dateAdded": "10-Jan-2016 03:02 PM",
+    "isAbusive": true
+  },
+  {
+    "author": {
+      "id": "1",
+      "name": "Sachin Rana",
+      "profileImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGjEbPQ0ve0Cg8SqI8v7hyVBdqoKnf_8B7K_JXiE4D24E9a6z6Pw"
+    },
+    "comment": "test comment",
+    "likeComment": true,
+    "dateAdded": "10-Jan-2016 03:02 PM",
+    "isAbusive": true
+  },
+  {
+    "author": {
+      "id": "1",
+      "name": "Sachin Rana",
+      "profileImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGjEbPQ0ve0Cg8SqI8v7hyVBdqoKnf_8B7K_JXiE4D24E9a6z6Pw"
+    },
+    "comment": "test comment",
+    "likeComment": true,
+    "dateAdded": "10-Jan-2016 03:02 PM",
+    "isAbusive": true
+  },
+  {
+    "author": {
+      "id": "1",
+      "name": "Sachin Rana",
+      "profileImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGjEbPQ0ve0Cg8SqI8v7hyVBdqoKnf_8B7K_JXiE4D24E9a6z6Pw"
+    },
+    "comment": "test comment",
+    "likeComment": true,
+    "dateAdded": "10-Jan-2016 03:02 PM",
+    "isAbusive": true
+  },
+  {
+    "author": {
+      "id": "1",
+      "name": "Sachin Rana",
+      "profileImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGjEbPQ0ve0Cg8SqI8v7hyVBdqoKnf_8B7K_JXiE4D24E9a6z6Pw"
+    },
+    "comment": "test comment",
+    "likeComment": true,
+    "dateAdded": "10-Jan-2016 03:02 PM",
+    "isAbusive": true
+  },
+  {
+    "author": {
+      "id": "1",
+      "name": "Sachin Rana",
+      "profileImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGjEbPQ0ve0Cg8SqI8v7hyVBdqoKnf_8B7K_JXiE4D24E9a6z6Pw"
+    },
+    "comment": "test comment",
+    "likeComment": true,
+    "dateAdded": "10-Jan-2016 03:02 PM",
+    "isAbusive": true
+  },
+  {
+    "author": {
+      "id": "1",
+      "name": "Sachin Rana",
+      "profileImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGjEbPQ0ve0Cg8SqI8v7hyVBdqoKnf_8B7K_JXiE4D24E9a6z6Pw"
+    },
+    "comment": "test comment",
+    "likeComment": true,
+    "dateAdded": "10-Jan-2016 03:02 PM",
+    "isAbusive": true
+  },
+  {
+    "author": {
+      "id": "1",
+      "name": "Sachin Rana",
+      "profileImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGjEbPQ0ve0Cg8SqI8v7hyVBdqoKnf_8B7K_JXiE4D24E9a6z6Pw"
+    },
+    "comment": "test comment",
+    "likeComment": true,
+    "dateAdded": "10-Jan-2016 03:02 PM",
+    "isAbusive": true
+  }
+]

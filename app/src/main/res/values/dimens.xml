@@ -17,6 +17,7 @@
     <dimen name="spacing_large">24dp</dimen>
     <dimen name="spacing_normal">14dp</dimen>
     <dimen name="spacing_small">10dp</dimen>
+    <dimen name="spacing_mini">7dp</dimen>
     <dimen name="spacing_xsmall">4dp</dimen>
     <dimen name="spacing_xxsmall">2dp</dimen>
 
@@ -27,6 +28,13 @@
     <dimen name="app_bar_accounts_user_height">210dp</dimen>
     <dimen name="profile_image_height">100dp</dimen>
     <dimen name="profile_image_width">100dp</dimen>
+
+    <dimen name="profile_image_height_small">50dp</dimen>
+    <dimen name="profile_image_width_small">50dp</dimen>
     <dimen name="fab_size_edit_image">30dp</dimen>
+    <dimen name="card_view_radius">5dp</dimen>
+    <dimen name="app_bar_height">180dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
 
 </resources>

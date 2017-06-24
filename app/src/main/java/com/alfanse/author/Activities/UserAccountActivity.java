@@ -29,6 +29,7 @@ import com.alfanse.author.Models.Author;
 import com.alfanse.author.R;
 import com.alfanse.author.Utilities.CommonView;
 import com.alfanse.author.Utilities.Constants;
+import com.alfanse.author.Utilities.SharedManagement;
 import com.alfanse.author.Utilities.Utils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -37,7 +38,6 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.gson.Gson;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.File;
@@ -48,7 +48,6 @@ import java.io.IOException;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.alfanse.author.Utilities.Constants.ASSETS_FILE_AUTHOR;
 import static com.theartofdev.edmodo.cropper.CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE;
 
 public class UserAccountActivity extends BaseActivity {
@@ -116,7 +115,8 @@ public class UserAccountActivity extends BaseActivity {
 
         initToolbar();
         initListener();
-        getUserDetails();
+        mAuthor = SharedManagement.getInstance(mContext).getLoggedUser();
+        renderView();
     }
 
     private void initToolbar() {
@@ -156,14 +156,15 @@ public class UserAccountActivity extends BaseActivity {
         textViewQuotes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent quotesIntent = new Intent(mActivity, QuotesActivity.class);
+                startActivity(quotesIntent);
             }
         });
 
         textViewFollowers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent followersIntent = new Intent(mActivity, FollowersActivity.class);
+                Intent followersIntent = new Intent(mActivity, AuthorsActivity.class);
                 startActivity(followersIntent);
             }
         });
@@ -171,7 +172,8 @@ public class UserAccountActivity extends BaseActivity {
         textViewFollowings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent followersIntent = new Intent(mActivity, AuthorsActivity.class);
+                startActivity(followersIntent);
             }
         });
 
@@ -181,14 +183,6 @@ public class UserAccountActivity extends BaseActivity {
 
             }
         });
-
-        textInviteFriends.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
     }
 
     @SuppressLint("NewApi")
@@ -339,7 +333,7 @@ public class UserAccountActivity extends BaseActivity {
             file = new File(dir.getAbsolutePath() + "/" + Utils.getTimeStamp() + Constants.QUOTE_OUTPUT_FORMAT);
 
             FileOutputStream output = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, output);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, output);
             output.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -350,12 +344,6 @@ public class UserAccountActivity extends BaseActivity {
         return file.getAbsolutePath();
     }
 
-
-    private void getUserDetails() {
-
-        mAuthor = new Gson().fromJson(Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_AUTHOR), Author.class);
-        renderView();
-    }
 
     private void renderView() {
 
@@ -400,13 +388,13 @@ public class UserAccountActivity extends BaseActivity {
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        progressBarCoverImage.setVisibility(View.GONE);
+                        progressBarProfileImage.setVisibility(View.GONE);
                         return false;
                     }
 
                     @Override
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        progressBarCoverImage.setVisibility(View.GONE);
+                        progressBarProfileImage.setVisibility(View.GONE);
                         return false;
                     }
                 })
@@ -428,10 +416,7 @@ public class UserAccountActivity extends BaseActivity {
                 return true;
 
             case R.id.action_signout_account_user:
-                mAuth.signOut();
-                Intent signInIntent = new Intent(mActivity, SignInActivity.class);
-                startActivity(signInIntent);
-                finish();
+                SharedManagement.getInstance(mContext).logoutUser();
                 return true;
             case R.id.action_update_password_account_user:
                 Intent updatePasswordInIntent = new Intent(mActivity, UpdatePasswordActivity.class);

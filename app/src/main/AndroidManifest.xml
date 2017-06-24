@@ -10,9 +10,11 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -67,7 +69,6 @@
             android:name="io.fabric.ApiKey"
             android:value="a54e4aa5b01b857f327df6071a2d53498d07261e" />
 
-        <activity android:name=".Activities.ForgotPasswordActivity" />
         <activity
             android:name=".Activities.UserAccountActivity"
             android:label="@string/title_activity_scrolling"
@@ -77,7 +78,14 @@
         <activity android:name=".Activities.BaseActivity" />
         <activity android:name=".Activities.EditProfileActivity" />
         <activity android:name=".Activities.UpdatePasswordActivity" />
-        <activity android:name=".Activities.FollowersActivity"></activity>
+        <activity android:name=".Activities.AuthorsActivity" />
+        <activity android:name=".Activities.QuotesActivity" />
+        <activity android:name=".Activities.QuoteActivity" />
+        <activity android:name=".Activities.CommentsActivity" />
+        <activity
+            android:name=".Activities.AuthorActivity"
+            android:label="@string/title_activity_author"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

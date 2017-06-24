@@ -1,7 +1,13 @@
 package com.alfanse.author.Utilities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+
+import com.alfanse.author.Activities.SignInActivity;
+import com.alfanse.author.Models.Author;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.gson.Gson;
 
 /**
  * Created by Velocity-1601 on 12/29/2016.
@@ -12,6 +18,7 @@ public class SharedManagement {
     public static final String PREF_NAME = "AUTHOR_PREFS";
     public final static int PRIVATE_MODE = 0;
     public final static String LAST_LOGIN_EMAIL = "LAST_LOGIN_EMAIL";
+    public final static String LOGGED_USER = "LOGGED_USER";
     public static Context mContext;
     private static SharedManagement mInstance;
     private SharedPreferences sharedpreferences;
@@ -36,7 +43,7 @@ public class SharedManagement {
     }
 
     public String getString(String key) {
-        return sharedpreferences.getString(key, "");
+        return sharedpreferences.getString(key, null);
     }
 
     public void setInt(String key, int value) {
@@ -54,5 +61,28 @@ public class SharedManagement {
 
     public void removeAll() {
         editor.clear().commit();
+    }
+
+    public Author getLoggedUser() {
+        if (getString(LOGGED_USER) != null) {
+            return new Gson().fromJson(getString(LOGGED_USER), Author.class);
+        } else {
+            logoutUser();
+        }
+        return null;
+    }
+
+    public void setLoggedUser(Author loggedUser) {
+        setString(LOGGED_USER, new Gson().toJson(loggedUser));
+    }
+
+    public void logoutUser() {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        mAuth.signOut();
+        remove(LOGGED_USER);
+        Intent signInIntent = new Intent(mContext, SignInActivity.class);
+        signInIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        signInIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        mContext.startActivity(signInIntent);
     }
 }

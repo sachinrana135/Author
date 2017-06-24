@@ -22,21 +22,19 @@ import com.alfanse.author.Models.Author;
 import com.alfanse.author.R;
 import com.alfanse.author.Utilities.CommonView;
 import com.alfanse.author.Utilities.Constants;
+import com.alfanse.author.Utilities.SharedManagement;
 import com.alfanse.author.Utilities.Utils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.alfanse.author.Utilities.Constants.ASSETS_FILE_AUTHOR;
 
 public class EditProfileActivity extends BaseActivity {
 
@@ -75,7 +73,8 @@ public class EditProfileActivity extends BaseActivity {
 
         initToolbar();
         initListener();
-        getUserDetails();
+        mAuthor = SharedManagement.getInstance(mContext).getLoggedUser();
+        renderView();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
@@ -112,12 +111,6 @@ public class EditProfileActivity extends BaseActivity {
         getSupportActionBar().setTitle(R.string.title_edit_profile);
     }
 
-
-    private void getUserDetails() {
-
-        mAuthor = new Gson().fromJson(Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_AUTHOR), Author.class);
-        renderView();
-    }
 
     private void renderView() {
 
@@ -300,5 +293,4 @@ public class EditProfileActivity extends BaseActivity {
                 });
 
     }
-
 }

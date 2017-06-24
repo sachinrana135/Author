@@ -15,6 +15,7 @@
     <color name="colorGoogle">#DF4A32</color>
     <color name="colorFacebook">#4267B2</color>
     <color name="colorTwitter">#5EA9DD</color>
+    <color name="colorGrey">#3F000000</color>
 
     <color name="black_overlay">#66000000</color>
 
