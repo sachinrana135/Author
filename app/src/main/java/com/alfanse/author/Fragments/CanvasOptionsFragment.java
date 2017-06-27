@@ -25,24 +25,25 @@ import com.alfanse.author.CustomViews.ComponentBoxView;
 import com.alfanse.author.CustomViews.ComponentImageView;
 import com.alfanse.author.CustomViews.ComponentTextView;
 import com.alfanse.author.CustomViews.QuoteCanvas;
+import com.alfanse.author.Interfaces.onCanvasThemeItemClickListener;
 import com.alfanse.author.Models.CanvasTheme;
 import com.alfanse.author.R;
 import com.alfanse.author.Utilities.Constants;
+import com.alfanse.author.Utilities.EndlessRecyclerViewScrollListener;
 import com.alfanse.author.Utilities.Utils;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.jrummyapps.android.colorpicker.ColorPickerDialog;
 import com.jrummyapps.android.colorpicker.ColorPickerDialogListener;
 import com.theartofdev.edmodo.cropper.CropImage;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.alfanse.author.Utilities.Constants.ASSETS_FILE_CANVAS_THEMES;
 import static com.theartofdev.edmodo.cropper.CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE;
 
 /**
@@ -76,55 +77,39 @@ public class CanvasOptionsFragment extends Fragment implements ColorPickerDialog
     private QuoteCanvas mCanvas;
     private Uri mCropImageUri;
     private CanvasThemesAdapter mCanvasThemesAdapter;
-    private FirebaseDatabase mDatabase;
-    private DatabaseReference mCanvasThemesRef;
     private ArrayList<CanvasTheme> mListCanvasThemes = new ArrayList<CanvasTheme>();
-    // Read from the database
-    ValueEventListener CanvasThemesValueEventListener = new ValueEventListener() {
-
-        @Override
-        public void onDataChange(DataSnapshot dataSnapshot) {
-
-            mListCanvasThemes.clear();
-            for (DataSnapshot canvasThemesSnapshot : dataSnapshot.getChildren()) {
-                CanvasTheme canvasTheme = canvasThemesSnapshot.getValue(CanvasTheme.class);
-                mListCanvasThemes.add(canvasTheme);
-            }
-            mCanvasThemesAdapter.notifyDataSetChanged();
-        }
-
-        @Override
-        public void onCancelled(DatabaseError databaseError) {
-
-        }
-    };
     private OnFragmentInteractionListener mListener;
     private ComponentTextView mActiveComponentTextView;
     private LinearLayoutManager mLinearLayoutManager;
     private CanvasTheme defaultCanvasTheme;
     private int firstIndex = 0;
     private String imageRequiredFor = null;
+    private EndlessRecyclerViewScrollListener mScrollListener;
+    private int mFirstPage = 1;
+    private int mVisibleThreshold = 5;
+
+    private onCanvasThemeItemClickListener mOnCanvasThemeItemClickListener = new onCanvasThemeItemClickListener() {
+        @Override
+        public void onItemClick(CanvasTheme canvasTheme) {
+            mCanvas.setBackground(canvasTheme.getImageUrl());
+
+            if (mCanvas.findViewWithTag(Constants.TAG_DEFAULT_CANVASE_TEXT_VIEW) != null) {
+                ComponentTextView componentTextView = (ComponentTextView) mCanvas.findViewWithTag(Constants.TAG_DEFAULT_CANVASE_TEXT_VIEW);
+                componentTextView.setTheme(canvasTheme);
+            }
+        }
+    };
 
     public CanvasOptionsFragment() {
-        mDatabase = FirebaseDatabase.getInstance();
-        mCanvasThemesRef = mDatabase.getReference(Constants.FIREBASE_REFERENCE_CANVAS_THEMES);
+
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mCanvasThemesRef.addListenerForSingleValueEvent(CanvasThemesValueEventListener);
-        mCanvasThemesAdapter = new CanvasThemesAdapter(mContext, mListCanvasThemes, new CanvasThemesAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(CanvasTheme canvasTheme) {
-                mCanvas.setBackground(canvasTheme.getImageUrl());
-
-                if (mCanvas.findViewWithTag(Constants.TAG_DEFAULT_CANVASE_TEXT_VIEW) != null) {
-                    ComponentTextView componentTextView = (ComponentTextView) mCanvas.findViewWithTag(Constants.TAG_DEFAULT_CANVASE_TEXT_VIEW);
-                    componentTextView.setTheme(canvasTheme);
-                }
-            }
-        });
+        mListCanvasThemes = new ArrayList<CanvasTheme>();
+        mCanvasThemesAdapter = new CanvasThemesAdapter(mContext, mListCanvasThemes, mOnCanvasThemeItemClickListener);
+        loadMoreThemes(mFirstPage);
     }
 
     @Override
@@ -133,11 +118,38 @@ public class CanvasOptionsFragment extends Fragment implements ColorPickerDialog
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_canvas_options, container, false);
         ButterKnife.bind(this, view);
+
         mLinearLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
         recyclerViewCanvasThemes.setLayoutManager(mLinearLayoutManager);
         recyclerViewCanvasThemes.setAdapter(mCanvasThemesAdapter);
         initOptionItemClickListener();
+        mScrollListener = new EndlessRecyclerViewScrollListener(mLinearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                loadMoreThemes(page);
+            }
+        };
+        mScrollListener.setVisibleThreshold(mVisibleThreshold);
+        // Adds the scroll listener to RecyclerView
+        recyclerViewCanvasThemes.addOnScrollListener(mScrollListener);
         return view;
+    }
+
+    private void loadMoreThemes(int firstPage) {
+
+        String themesJson = Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_CANVAS_THEMES);
+
+        Type themeListType = new TypeToken<ArrayList<CanvasTheme>>() {
+        }.getType();
+
+        ArrayList<CanvasTheme> listThemes = new ArrayList<>();
+        listThemes = new Gson().fromJson(themesJson, themeListType);
+
+        mListCanvasThemes.addAll(listThemes);
+
+        mCanvasThemesAdapter.notifyDataSetChanged();
     }
 
     private void initOptionItemClickListener() {

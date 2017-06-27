@@ -43,7 +43,9 @@ public class Constants {
     public static final String ASSETS_FILE_QUOTES = ASSETS_DIR_JSON + "quotes.json";
     public static final String ASSETS_FILE_COMMENTS = ASSETS_DIR_JSON + "comments.json";
     public static final String ASSETS_FILE_LANGUAGES = ASSETS_DIR_JSON + "languages.json";
+    public static final String ASSETS_FILE_COUNTRIES = ASSETS_DIR_JSON + "countries.json";
     public static final String ASSETS_FILE_QUOTE = ASSETS_DIR_JSON + "quote.json";
     public static final String ASSETS_FILE_REPORTS = ASSETS_DIR_JSON + "report_reasons.json";
+    public static final String ASSETS_FILE_CANVAS_THEMES = ASSETS_DIR_JSON + "canvas_themes.json";
     public static int ANIMATION_DELAY_SEC = 500;
 }

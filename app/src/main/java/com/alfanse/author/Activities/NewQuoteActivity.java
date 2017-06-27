@@ -48,17 +48,15 @@ import com.alfanse.author.Utilities.Constants;
 import com.alfanse.author.Utilities.FontHelper;
 import com.alfanse.author.Utilities.Utils;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.jrummyapps.android.colorpicker.ColorPickerDialogListener;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -67,6 +65,7 @@ import butterknife.ButterKnife;
 import static com.alfanse.author.Fragments.CanvasOptionsFragment.CANVAS_OPTIONS_COLOR_PICKER_DIALOG_ID;
 import static com.alfanse.author.Fragments.ComponentBoxViewOptionsFragment.COMPONENT_BOXVIEW_OPTIONS_BG_COLOR_PICKER_DIALOG_ID;
 import static com.alfanse.author.Fragments.ComponentTextViewOptionsFragment.COMPONENT_TEXTVIEW_OPTIONS_COLOR_PICKER_DIALOG_ID;
+import static com.alfanse.author.Utilities.Constants.ASSETS_FILE_CANVAS_THEMES;
 import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_QUOTE;
 
 public class NewQuoteActivity extends BaseActivity implements
@@ -100,32 +99,7 @@ public class NewQuoteActivity extends BaseActivity implements
     private ComponentTextView mActiveComponentTextView;
     private ComponentImageView mActiveComponentImageView;
     private ComponentBoxView mActiveComponentBoxView;
-    private FirebaseDatabase mDatabase;
-    private DatabaseReference mCanvasThemesRef;
     private ArrayList<CanvasTheme> mListCanvasThemes = new ArrayList<CanvasTheme>();
-    // Read from the database
-    ValueEventListener CanvasThemesValueEventListener = new ValueEventListener() {
-
-        @Override
-        public void onDataChange(DataSnapshot dataSnapshot) {
-
-            mListCanvasThemes.clear();
-            CanvasTheme canvasTheme = null;
-            for (DataSnapshot canvasThemesSnapshot : dataSnapshot.getChildren()) {
-                canvasTheme = canvasThemesSnapshot.getValue(CanvasTheme.class);
-                break;
-            }
-            mQuoteCanvas.setBackground(canvasTheme.getImageUrl());
-            mQuoteCanvas.getBackground();
-            addComponentTextView(canvasTheme);
-            CommonView.getInstance(mContext).dismissProgressDialog();
-        }
-
-        @Override
-        public void onCancelled(DatabaseError databaseError) {
-
-        }
-    };
 
     private Runnable fontsLoaderTask = new Runnable() {
         @Override
@@ -145,14 +119,9 @@ public class NewQuoteActivity extends BaseActivity implements
 
         mContext = getApplicationContext();
         mActivity = NewQuoteActivity.this;
-        mDatabase = FirebaseDatabase.getInstance();
         mFragmentManager = getSupportFragmentManager();
 
-        mDatabase = FirebaseDatabase.getInstance();
-        mCanvasThemesRef = mDatabase.getReference(Constants.FIREBASE_REFERENCE_CANVAS_THEMES);
-
-        CommonView.getInstance(mContext).showTransparentProgressDialog(mActivity, getString(R.string.text_loading_canvas_image));
-        mCanvasThemesRef.addListenerForSingleValueEvent(CanvasThemesValueEventListener);
+        getDefaultCanvasTheme();
         fontsLoaderTask.run();
 
         mQuoteCanvas.setOnTouchListener(new CanvasTouchListener());
@@ -167,6 +136,23 @@ public class NewQuoteActivity extends BaseActivity implements
         }
 
         loadCanvasOptionsFragment();
+    }
+
+    private void getDefaultCanvasTheme() {
+        CommonView.getInstance(mContext).showTransparentProgressDialog(mActivity, getString(R.string.text_loading_canvas_image));
+        String themesJson = Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_CANVAS_THEMES);
+
+        Type themeListType = new TypeToken<ArrayList<CanvasTheme>>() {
+        }.getType();
+
+        mListCanvasThemes = new Gson().fromJson(themesJson, themeListType);
+        for (CanvasTheme canvasTheme : mListCanvasThemes) {
+            mQuoteCanvas.setBackground(canvasTheme.getImageUrl());
+            mQuoteCanvas.getBackground();
+            addComponentTextView(canvasTheme);
+            break;
+        }
+        CommonView.getInstance(mContext).dismissProgressDialog();
     }
 
     private void initToolbar() {

@@ -13,6 +13,8 @@ public interface onQuoteItemClickListener {
 
     void onActionLikeClick(Quote quote);
 
+    void onTotalLikesClick(Quote quote);
+
     void onActionCommentClick(Quote quote);
 
     void onActionShareClick(Quote quote);

@@ -14,13 +14,13 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,6 +57,8 @@ public class UserAccountActivity extends BaseActivity {
     private static final int ALL_PERMISSIONS_REQUEST_CODE = 54353;
     @BindView(R.id.toolbar_account_user)
     Toolbar mToolbar;
+    @BindView(R.id.toolbar_layout_account_user)
+    CollapsingToolbarLayout collapsingToolbarLayout;
     @BindView(R.id.image_view_cover_image_account_user)
     ImageView imageCover;
     @BindView(R.id.fab_edit_cover_photo_account_user)
@@ -69,24 +71,26 @@ public class UserAccountActivity extends BaseActivity {
     TextView textAuthorName;
     @BindView(R.id.text_author_status_account_user)
     TextView textAuthorStatus;
+    @BindView(R.id.layout_total_quote_account_user)
+    LinearLayout layoutTotalQuotes;
     @BindView(R.id.text_total_quotes_account_user)
     TextView textTotalQuotes;
-    @BindView(R.id.text_total_likes_account_user)
-    TextView textTotalLikes;
+    @BindView(R.id.layout_total_followers_account_user)
+    LinearLayout layoutTotalFollowers;
     @BindView(R.id.text_total_followers_account_user)
     TextView textTotalFollowers;
+    @BindView(R.id.layout_total_following_account_user)
+    LinearLayout layoutTotalFollowing;
     @BindView(R.id.text_total_following_account_user)
     TextView textTotalFollowing;
     @BindView(R.id.text_view_edit_profile_account_user)
     TextView textEditProfile;
-    @BindView(R.id.text_view_your_quotes_account_user)
-    TextView textViewQuotes;
-    @BindView(R.id.text_view_your_followers_account_user)
-    TextView textViewFollowers;
-    @BindView(R.id.text_view_you_follows_account_user)
-    TextView textViewFollowings;
+    @BindView(R.id.text_update_password_account_user)
+    TextView textUpdatePassword;
     @BindView(R.id.text_view_settings_account_user)
     TextView textSettings;
+    @BindView(R.id.text_view_logout_account_user)
+    TextView textLogout;
     @BindView(R.id.text_view_invite_friends_account_user)
     TextView textInviteFriends;
     @BindView(R.id.progress_bar_cover_image_account_user)
@@ -112,10 +116,10 @@ public class UserAccountActivity extends BaseActivity {
         mContext = getApplicationContext();
         mActivity = UserAccountActivity.this;
         mAuth = FirebaseAuth.getInstance();
+        mAuthor = SharedManagement.getInstance(mContext).getLoggedUser();
 
         initToolbar();
         initListener();
-        mAuthor = SharedManagement.getInstance(mContext).getLoggedUser();
         renderView();
     }
 
@@ -123,7 +127,7 @@ public class UserAccountActivity extends BaseActivity {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle(null);
+        collapsingToolbarLayout.setTitle(mAuthor.getName());
     }
 
     private void initListener() {
@@ -153,7 +157,23 @@ public class UserAccountActivity extends BaseActivity {
             }
         });
 
-        textViewQuotes.setOnClickListener(new View.OnClickListener() {
+        textUpdatePassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent updatePasswordInIntent = new Intent(mActivity, UpdatePasswordActivity.class);
+                startActivity(updatePasswordInIntent);
+            }
+        });
+
+        textLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedManagement.getInstance(mContext).logoutUser();
+            }
+        });
+
+        layoutTotalQuotes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent quotesIntent = new Intent(mActivity, QuotesActivity.class);
@@ -161,7 +181,7 @@ public class UserAccountActivity extends BaseActivity {
             }
         });
 
-        textViewFollowers.setOnClickListener(new View.OnClickListener() {
+        layoutTotalFollowers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent followersIntent = new Intent(mActivity, AuthorsActivity.class);
@@ -169,7 +189,7 @@ public class UserAccountActivity extends BaseActivity {
             }
         });
 
-        textViewFollowings.setOnClickListener(new View.OnClickListener() {
+        layoutTotalFollowing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent followersIntent = new Intent(mActivity, AuthorsActivity.class);
@@ -351,7 +371,6 @@ public class UserAccountActivity extends BaseActivity {
         textAuthorStatus.setText(mAuthor.getStatus());
         textTotalFollowers.setText(mAuthor.getTotalFollowers());
         textTotalFollowing.setText(mAuthor.getTotalFollowing());
-        textTotalLikes.setText(mAuthor.getTotalLikes());
         textTotalQuotes.setText(mAuthor.getTotalQuotes());
 
         RequestOptions coverImageOptions = new RequestOptions()
@@ -402,25 +421,10 @@ public class UserAccountActivity extends BaseActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_account_user, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
-                return true;
-
-            case R.id.action_signout_account_user:
-                SharedManagement.getInstance(mContext).logoutUser();
-                return true;
-            case R.id.action_update_password_account_user:
-                Intent updatePasswordInIntent = new Intent(mActivity, UpdatePasswordActivity.class);
-                startActivity(updatePasswordInIntent);
                 return true;
             default:
                 // If we got here, the user's action was not recognized.

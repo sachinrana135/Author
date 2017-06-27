@@ -85,6 +85,7 @@
                 android:padding="@dimen/spacing_normal">
 
                 <LinearLayout
+                    android:id="@+id/layout_total_quote_account_user"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="10"
@@ -107,28 +108,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="10"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/text_total_likes_account_user"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/colorPrimaryDark"
-                        android:textSize="@dimen/font_xlarge"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/text_likes"
-                        android:textSize="@dimen/font_small" />
-                </LinearLayout>
-
-                <LinearLayout
+                    android:id="@+id/layout_total_followers_account_user"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="10"
@@ -151,6 +131,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/layout_total_following_account_user"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="10"
@@ -193,46 +174,33 @@
                     android:text="@string/text_edit_profile"
                     android:textSize="@dimen/font_normal" />
 
+
                 <View style="@style/HorizontalDividerGrey" />
 
                 <TextView
-                    android:id="@+id/text_view_your_quotes_account_user"
+                    android:id="@+id/text_update_password_account_user"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:clickable="true"
-                    android:drawableLeft="@drawable/ic_photo_accent_24dp"
+                    android:drawableLeft="@drawable/ic_security_accent_24dp"
                     android:drawablePadding="@dimen/font_normal"
                     android:padding="@dimen/spacing_normal"
-                    android:text="@string/text_your_quotes"
+                    android:text="@string/text_update_password"
                     android:textSize="@dimen/font_normal" />
 
                 <View style="@style/HorizontalDividerGrey" />
 
                 <TextView
-                    android:id="@+id/text_view_your_followers_account_user"
+                    android:id="@+id/text_view_invite_friends_account_user"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:clickable="true"
-                    android:drawableLeft="@drawable/ic_people_accent_24dp"
+                    android:drawableLeft="@drawable/ic_people_add_accent_24dp"
                     android:drawablePadding="@dimen/font_normal"
                     android:padding="@dimen/spacing_normal"
-                    android:text="@string/text_your_followers"
-                    android:textSize="@dimen/font_normal" />
-
-                <View style="@style/HorizontalDividerGrey" />
-
-                <TextView
-                    android:id="@+id/text_view_you_follows_account_user"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:clickable="true"
-                    android:drawableLeft="@drawable/ic_people_accent_24dp"
-                    android:drawablePadding="@dimen/font_normal"
-                    android:padding="@dimen/spacing_normal"
-                    android:text="@string/text_you_follows"
+                    android:text="@string/text_invite_friends"
                     android:textSize="@dimen/font_normal" />
 
                 <View style="@style/HorizontalDividerGrey" />
@@ -252,16 +220,17 @@
                 <View style="@style/HorizontalDividerGrey" />
 
                 <TextView
-                    android:id="@+id/text_view_invite_friends_account_user"
+                    android:id="@+id/text_view_logout_account_user"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:clickable="true"
-                    android:drawableLeft="@drawable/ic_people_add_accent_24dp"
+                    android:drawableLeft="@drawable/ic_logout_accent_24dp"
                     android:drawablePadding="@dimen/font_normal"
                     android:padding="@dimen/spacing_normal"
-                    android:text="@string/text_invite_friends"
+                    android:text="@string/text_sign_out"
                     android:textSize="@dimen/font_normal" />
+
 
             </LinearLayout>
 

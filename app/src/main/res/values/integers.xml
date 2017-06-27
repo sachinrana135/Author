@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <integer name="StaggeredGridLayoutManagerColumn">1</integer>
     <integer name="author_status_max_length">120</integer>
 </resources>

@@ -53,7 +53,7 @@
                         android:ems="10"
                         android:gravity="top|left"
                         android:hint="@string/hint_quote_caption"
-                        android:inputType="textMultiLine|textCapWords|textNoSuggestions"
+                        android:inputType="textMultiLine|textNoSuggestions"
                         android:textSize="@dimen/font_xlarge" />
                 </LinearLayout>
 
@@ -203,14 +203,12 @@
                             android:drawablePadding="@dimen/spacing_xsmall"
                             android:text="@string/text_is_copyrighted_content" />
 
-                        <ToggleButton
-                            android:id="@+id/toggle_button_copyright_publish_quote"
+                        <Switch
+                            android:id="@+id/switch_button_copyright_publish_quote"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="20"
-                            android:checked="true"
-                            android:textOff="@string/action_no"
-                            android:textOn="@string/action_yes" />
+                            android:checked="true" />
 
                     </LinearLayout>
 

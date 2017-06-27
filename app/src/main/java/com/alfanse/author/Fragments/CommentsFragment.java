@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import com.alfanse.author.Activities.AuthorActivity;
 import com.alfanse.author.Adapters.CommentsAdapter;
@@ -19,6 +21,7 @@ import com.alfanse.author.Models.Comment;
 import com.alfanse.author.Models.ReportReason;
 import com.alfanse.author.R;
 import com.alfanse.author.Utilities.CommonView;
+import com.alfanse.author.Utilities.EndlessRecyclerViewScrollListener;
 import com.alfanse.author.Utilities.Utils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -41,13 +44,69 @@ public class CommentsFragment extends Fragment {
 
     @BindView(R.id.rv_comments_fragment_comments)
     RecyclerView recyclerViewComments;
-    private LinearLayoutManager mLinearLayoutManager;
+    @BindView(R.id.edit_text_enter_comment_fragment_comments)
+    EditText editTextEnterComment;
+    @BindView(R.id.fab_submit_comment_fragment_comment)
+    FloatingActionButton fabSubmitComment;
+
 
     private Context mContext;
     private Activity mActivity;
     private ArrayList<Comment> mListComments;
     private CommentsAdapter mCommentsAdapter;
     private String quoteId;
+    private int mFirstPage = 1;
+    private int mVisibleThreshold = 7;
+    private EndlessRecyclerViewScrollListener mScrollListener;
+    private onCommentItemClickListener mOnCommentItemClickListener = new onCommentItemClickListener() {
+
+        @Override
+        public void onActionReportClick(Comment comment) {
+
+            String reportReasonsJson = Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_REPORTS);
+
+            Type reportListType = new TypeToken<ArrayList<ReportReason>>() {
+            }.getType();
+
+            ArrayList<ReportReason> listReportReasons = new Gson().fromJson(reportReasonsJson, reportListType);
+
+            final HashMap<String, String> hashReportReasons = new HashMap<String, String>();
+            ArrayList<String> listReportReasonsTitle = new ArrayList<String>();
+            for (ReportReason reportReason : listReportReasons) {
+                hashReportReasons.put(reportReason.getTitle(), reportReason.getId());
+                listReportReasonsTitle.add(reportReason.getTitle());
+            }
+            CommonView.getInstance(mContext).showReportDialog(listReportReasonsTitle, mActivity, new onReportItemSubmitListener() {
+                @Override
+                public void onReportItemSubmit(String titleReport) {
+
+                    String reportId = hashReportReasons.get(titleReport);
+
+                }
+            });
+
+
+        }
+
+        @Override
+        public void onAuthorClick(Comment comment) {
+
+            Intent authorIntent = new Intent(mActivity, AuthorActivity.class);
+            authorIntent.putExtra(BUNDLE_KEY_AUTHOR_ID, comment.getAuthor().getId());
+            startActivity(authorIntent);
+        }
+    };
+    private View.OnClickListener commentSubmitOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (!editTextEnterComment.getText().toString().trim().equalsIgnoreCase(null)
+                    && !editTextEnterComment.getText().toString().trim().equalsIgnoreCase("")
+                    && !editTextEnterComment.getText().toString().trim().isEmpty()) {
+                // TODO Submit comment API
+            }
+
+        }
+    };
 
     public CommentsFragment() {
         // Required empty public constructor
@@ -65,52 +124,8 @@ public class CommentsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mListComments = new ArrayList<Comment>();
-
-        String commentsJson = Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_COMMENTS);
-
-        Type commentListType = new TypeToken<ArrayList<Comment>>() {
-        }.getType();
-        mListComments = new Gson().fromJson(commentsJson, commentListType);
-
-        mCommentsAdapter = new CommentsAdapter(mContext, mListComments, new onCommentItemClickListener() {
-
-            @Override
-            public void onActionReportClick(Comment comment) {
-
-                String reportReasonsJson = Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_REPORTS);
-
-                Type reportListType = new TypeToken<ArrayList<ReportReason>>() {
-                }.getType();
-
-                ArrayList<ReportReason> listReportReasons = new Gson().fromJson(reportReasonsJson, reportListType);
-
-                final HashMap<String, String> hashReportReasons = new HashMap<String, String>();
-                ArrayList<String> listReportReasonsTitle = new ArrayList<String>();
-                for (ReportReason reportReason : listReportReasons) {
-                    hashReportReasons.put(reportReason.getTitle(), reportReason.getId());
-                    listReportReasonsTitle.add(reportReason.getTitle());
-                }
-                CommonView.getInstance(mContext).showReportDialog(listReportReasonsTitle, mActivity, new onReportItemSubmitListener() {
-                    @Override
-                    public void onReportItemSubmit(String titleReport) {
-
-                        String reportId = hashReportReasons.get(titleReport);
-
-                    }
-                });
-
-
-            }
-
-            @Override
-            public void onAuthorClick(Comment comment) {
-
-                Intent authorIntent = new Intent(mActivity, AuthorActivity.class);
-                authorIntent.putExtra(BUNDLE_KEY_AUTHOR_ID, comment.getAuthor().getId());
-                startActivity(authorIntent);
-            }
-        });
-
+        mCommentsAdapter = new CommentsAdapter(mContext, mListComments, mOnCommentItemClickListener);
+        loadMoreComments(mFirstPage);
     }
 
     @Override
@@ -120,10 +135,34 @@ public class CommentsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_comments, container, false);
         ButterKnife.bind(this, view);
 
-        mLinearLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false);
-        recyclerViewComments.setLayoutManager(mLinearLayoutManager);
+        int column = 1;
+        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(column, StaggeredGridLayoutManager.VERTICAL);
+        recyclerViewComments.setLayoutManager(layoutManager);
         recyclerViewComments.setAdapter(mCommentsAdapter);
+        mScrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                loadMoreComments(page);
+            }
+        };
+        mScrollListener.setVisibleThreshold(mVisibleThreshold);
+        // Adds the scroll listener to RecyclerView
         return view;
+    }
+
+    private void loadMoreComments(int firstPage) {
+        String commentsJson = Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_COMMENTS);
+
+        Type commentListType = new TypeToken<ArrayList<Comment>>() {
+        }.getType();
+
+        ArrayList<Comment> listComments = new ArrayList<>();
+
+        listComments = new Gson().fromJson(commentsJson, commentListType);
+        mListComments.addAll(listComments);
+        mCommentsAdapter.notifyDataSetChanged();
     }
 
     @Override

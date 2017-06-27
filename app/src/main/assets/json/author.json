@@ -11,8 +11,10 @@
   "status": "Vivamus vulputate ultricies dolor quis placerat. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed posuere odio ac porttitor aliquet.",
   "totalQuotes": "10",
   "totalLikes": "456",
+  "followingAuthor": false,
   "totalFollowers": "523",
   "totalFollowing": "35",
   "dateCreated": "10-May-2017",
-  "country": "India"
+  "country": {
+  }
 }

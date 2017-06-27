@@ -235,9 +235,18 @@ public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.QuoteViewH
                 }
             });
 
+            textTotalLikes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onTotalLikesClick(quote);
+                }
+            });
+
             imageLikeQuote.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    listener.onActionLikeClick(quote);
+
                     int dest = 0;
                     if (quote.isLikeQuote()) {
                         dest = -360;// rotate anti-clockwise

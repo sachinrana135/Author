@@ -111,6 +111,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="10"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -123,10 +124,9 @@
                         android:id="@+id/text_total_likes_item_quote"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/spacing_small"
                         android:text="21"
                         android:textColor="@color/colorAccent"
-                        android:textSize="@dimen/font_normal" />
+                        android:textSize="@dimen/font_small" />
 
                 </LinearLayout>
 
@@ -137,6 +137,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="10"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -153,7 +154,7 @@
                         android:layout_weight="10"
                         android:text="5"
                         android:textColor="@color/colorAccent"
-                        android:textSize="@dimen/font_normal" />
+                        android:textSize="@dimen/font_small" />
                 </LinearLayout>
 
                 <View style="@style/VerticalDividerGrey" />

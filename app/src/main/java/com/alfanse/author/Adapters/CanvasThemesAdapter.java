@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.alfanse.author.Interfaces.onCanvasThemeItemClickListener;
 import com.alfanse.author.Models.CanvasTheme;
 import com.alfanse.author.R;
 import com.alfanse.author.Utilities.Utils;
@@ -31,16 +32,14 @@ import butterknife.ButterKnife;
 
 public class CanvasThemesAdapter extends RecyclerView.Adapter<CanvasThemesAdapter.CanvasThemeViewHolder> {
 
-    private final OnItemClickListener listener;
+    private final onCanvasThemeItemClickListener listener;
     private Context mContext;
     private ArrayList<CanvasTheme> mListCanvasThemes;
 
-    public CanvasThemesAdapter(Context context, ArrayList<CanvasTheme> listCanvasThemes, OnItemClickListener listener) {
+    public CanvasThemesAdapter(Context context, ArrayList<CanvasTheme> listCanvasThemes, onCanvasThemeItemClickListener listener) {
         mContext = context;
         mListCanvasThemes = listCanvasThemes;
         this.listener = listener;
-
-
     }
 
     @Override
@@ -82,7 +81,7 @@ public class CanvasThemesAdapter extends RecyclerView.Adapter<CanvasThemesAdapte
             ButterKnife.bind(this, view);
         }
 
-        public void bind(final CanvasTheme canvasTheme, final OnItemClickListener listener) {
+        public void bind(final CanvasTheme canvasTheme, final onCanvasThemeItemClickListener listener) {
 
             RequestOptions canvasImageOptions = new RequestOptions()
                     .error(Utils.getInstance(mContext).getDrawable(R.drawable.ic_gallery_grey_24dp))

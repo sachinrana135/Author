@@ -22,8 +22,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import com.alfanse.author.CustomViews.FlowLayout;
 import com.alfanse.author.Models.Category;
@@ -63,8 +63,8 @@ public class PublishQuoteActivity extends BaseActivity {
     FlowLayout quoteTagsContainer;
     @BindView(R.id.edit_text_enter_tags_publish_quote)
     EditText editTextTags;
-    @BindView(R.id.toggle_button_copyright_publish_quote)
-    ToggleButton toggleButtonCopyright;
+    @BindView(R.id.switch_button_copyright_publish_quote)
+    Switch switchButtonCopyright;
     @BindView(R.id.layout_enter_quote_source_publish_quote)
     TextInputLayout layoutQuoteSource;
     @BindView(R.id.edit_text_enter_quote_source_publish_quote)
@@ -265,7 +265,7 @@ public class PublishQuoteActivity extends BaseActivity {
             }
         });
 
-        toggleButtonCopyright.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        switchButtonCopyright.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 

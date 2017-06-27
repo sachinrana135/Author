@@ -5,17 +5,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alfanse.author.Fragments.QuotesFragment;
 import com.alfanse.author.Models.Author;
 import com.alfanse.author.R;
+import com.alfanse.author.Utilities.CommonView;
 import com.alfanse.author.Utilities.SharedManagement;
 import com.alfanse.author.Utilities.Utils;
 import com.bumptech.glide.Glide;
@@ -35,6 +40,8 @@ public class AuthorActivity extends BaseActivity {
 
     @BindView(R.id.toolbar_author)
     Toolbar mToolbar;
+    @BindView(R.id.toolbar_layout_author)
+    CollapsingToolbarLayout collapsingToolbarLayout;
     @BindView(R.id.image_view_cover_image_author)
     ImageView imageCover;
     @BindView(R.id.image_view_profile_image_author)
@@ -43,27 +50,27 @@ public class AuthorActivity extends BaseActivity {
     TextView textAuthorName;
     @BindView(R.id.text_author_status_author)
     TextView textAuthorStatus;
+    @BindView(R.id.layout_total_quote_author)
+    LinearLayout layoutTotalQuotes;
     @BindView(R.id.text_total_quotes_author)
     TextView textTotalQuotes;
-    @BindView(R.id.text_total_likes_author)
-    TextView textTotalLikes;
+    @BindView(R.id.layout_total_followers_author)
+    LinearLayout layoutTotalFollowers;
     @BindView(R.id.text_total_followers_author)
     TextView textTotalFollowers;
+    @BindView(R.id.layout_total_following_author)
+    LinearLayout layoutTotalFollowing;
     @BindView(R.id.text_total_following_author)
     TextView textTotalFollowing;
-    @BindView(R.id.text_view_edit_profile_author)
-    TextView textEditProfile;
-    @BindView(R.id.text_view_your_quotes_author)
-    TextView textViewQuotes;
-    @BindView(R.id.text_view_your_followers_author)
-    TextView textViewFollowers;
-    @BindView(R.id.text_view_you_follows_author)
-    TextView textViewFollowings;
+    @BindView(R.id.text_follow_author)
+    TextView textFollow;
     @BindView(R.id.progress_bar_cover_image_author)
     ProgressBar progressBarCoverImage;
     @BindView(R.id.progress_bar_profile_image_author)
     ProgressBar progressBarProfileImage;
 
+    private QuotesFragment mQuotesFragment;
+    private android.support.v4.app.FragmentManager mFragmentManager;
     private FirebaseAuth mAuth;
     private Activity mActivity;
     private Context mContext;
@@ -79,6 +86,9 @@ public class AuthorActivity extends BaseActivity {
         mActivity = AuthorActivity.this;
         mAuth = FirebaseAuth.getInstance();
 
+        mAuthor = SharedManagement.getInstance(mContext).getLoggedUser();
+        // TODO API to get author details
+
         initToolbar();
         initListener();
 
@@ -92,29 +102,30 @@ public class AuthorActivity extends BaseActivity {
             }
         }
 
-        mAuthor = SharedManagement.getInstance(mContext).getLoggedUser();
         renderView();
+        loadQuotesFragment();
+    }
+
+
+    private void loadQuotesFragment() {
+        mQuotesFragment = new QuotesFragment();
+        mFragmentManager = getSupportFragmentManager();
+        mFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container_quotes_author, mQuotesFragment)
+                .commit();
     }
 
     private void initToolbar() {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle(null);
+        collapsingToolbarLayout.setTitle(mAuthor.getName());
     }
 
     private void initListener() {
 
-        textEditProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                Intent editProfileIntent = new Intent(mActivity, EditProfileActivity.class);
-                startActivity(editProfileIntent);
-            }
-        });
-
-        textViewQuotes.setOnClickListener(new View.OnClickListener() {
+        layoutTotalQuotes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent quotesIntent = new Intent(mActivity, QuotesActivity.class);
@@ -122,7 +133,7 @@ public class AuthorActivity extends BaseActivity {
             }
         });
 
-        textViewFollowers.setOnClickListener(new View.OnClickListener() {
+        layoutTotalFollowers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent followersIntent = new Intent(mActivity, AuthorsActivity.class);
@@ -130,11 +141,36 @@ public class AuthorActivity extends BaseActivity {
             }
         });
 
-        textViewFollowings.setOnClickListener(new View.OnClickListener() {
+        layoutTotalFollowing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent followersIntent = new Intent(mActivity, AuthorsActivity.class);
                 startActivity(followersIntent);
+            }
+        });
+
+        textFollow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CommonView.getInstance(mContext).showProgressDialog(mActivity, getString(R.string.text_loading), null);
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                        if (mAuthor.isFollowingAuthor()) {
+                            textFollow.setText(mContext.getString(R.string.action_follow));
+                            mAuthor.setFollowingAuthor(false);
+                            textTotalFollowers.setText(Integer.toString(Integer.parseInt(mAuthor.getTotalFollowers()) - 1));
+                            mAuthor.setTotalFollowers(Integer.toString(Integer.parseInt(mAuthor.getTotalFollowers()) - 1));
+                        } else {
+                            textFollow.setText(mContext.getString(R.string.action_unfollow));
+                            mAuthor.setFollowingAuthor(true);
+                            textTotalFollowers.setText(Integer.toString(Integer.parseInt(mAuthor.getTotalFollowers()) + 1));
+                            mAuthor.setTotalFollowers(Integer.toString(Integer.parseInt(mAuthor.getTotalFollowers()) + 1));
+                        }
+                    }
+                }, 2000);
             }
         });
     }
@@ -145,8 +181,13 @@ public class AuthorActivity extends BaseActivity {
         textAuthorStatus.setText(mAuthor.getStatus());
         textTotalFollowers.setText(mAuthor.getTotalFollowers());
         textTotalFollowing.setText(mAuthor.getTotalFollowing());
-        textTotalLikes.setText(mAuthor.getTotalLikes());
         textTotalQuotes.setText(mAuthor.getTotalQuotes());
+
+        if (mAuthor.isFollowingAuthor()) {
+            textFollow.setText(getString(R.string.action_unfollow));
+        } else {
+            textFollow.setText(getString(R.string.action_follow));
+        }
 
         RequestOptions coverImageOptions = new RequestOptions()
                 .fitCenter()

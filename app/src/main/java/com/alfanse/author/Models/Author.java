@@ -24,7 +24,7 @@ public class Author implements Serializable {
     private String totalFollowers;
     private String totalFollowing;
     private String dateCreated;
-    private String country;
+    private Country country;
     private Boolean followingAuthor;
     private ArrayList<Quote> quotes;
     private ArrayList<Author> followers;
@@ -151,11 +151,11 @@ public class Author implements Serializable {
         this.dateCreated = dateCreated;
     }
 
-    public String getCountry() {
+    public Country getCountry() {
         return country;
     }
 
-    public void setCountry(String country) {
+    public void setCountry(Country country) {
         this.country = country;
     }
 

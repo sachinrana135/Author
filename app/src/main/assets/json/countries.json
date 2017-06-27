@@ -1,0 +1,38 @@
+[
+  {
+    "countryId": "1",
+    "isoCode2": "in",
+    "isoCode3": "ind",
+    "countryName": "India"
+  },
+  {
+    "countryId": "2",
+    "isoCode2": "sp",
+    "isoCode3": "spa",
+    "countryName": "Spain"
+  },
+  {
+    "countryId": "3",
+    "isoCode2": "ge",
+    "isoCode3": "ger",
+    "countryName": "Germany"
+  },
+  {
+    "countryId": "4",
+    "isoCode2": "br",
+    "isoCode3": "bri",
+    "countryName": "Britain"
+  },
+  {
+    "countryId": "5",
+    "isoCode2": "ca",
+    "isoCode3": "can",
+    "countryName": "Canada"
+  },
+  {
+    "countryId": "6",
+    "isoCode2": "ja",
+    "isoCode3": "USA",
+    "countryName": "USA"
+  }
+]

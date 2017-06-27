@@ -155,9 +155,7 @@ public class SignInActivity extends BaseActivity implements
         mAuth = FirebaseAuth.getInstance();
 
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            Intent homeIntent = new Intent(mActivity, HomeActivity.class);
-            //Intent homeIntent = new Intent(mActivity, PublishQuoteActivity.class);
-            startActivity(homeIntent);
+            postSignInAction();
         }
 
         initListener();
@@ -512,8 +510,15 @@ public class SignInActivity extends BaseActivity implements
 
         SharedManagement.getInstance(mContext).setLoggedUser(mLoggedAuthor);
 
-        Intent homeIntent = new Intent(mActivity, HomeActivity.class);
-        startActivity(homeIntent);
+        if (mLoggedAuthor.getCountry().getCountryId() == null) {
+            Intent chooseCountryIntent = new Intent(mActivity, ChooseCountryActivity.class);
+            startActivity(chooseCountryIntent);
+        } else {
+            Intent homeIntent = new Intent(mActivity, HomeActivity.class);
+            startActivity(homeIntent);
+        }
+
+
     }
 
     private void sendVerificationEmail() {

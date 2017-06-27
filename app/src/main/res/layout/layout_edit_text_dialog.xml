@@ -32,6 +32,9 @@
                 android:id="@+id/edit_text_layout_edit_text_dialog"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:ems="10"
+                android:gravity="top|left"
+                android:inputType="textMultiLine|textNoSuggestions"
                 android:minLines="6" />
         </LinearLayout>
 

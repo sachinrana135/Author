@@ -5,18 +5,18 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.alfanse.author.Activities.AuthorActivity;
+import com.alfanse.author.Activities.AuthorsActivity;
 import com.alfanse.author.Activities.CommentsActivity;
 import com.alfanse.author.Activities.QuoteActivity;
 import com.alfanse.author.Adapters.QuotesAdapter;
@@ -27,6 +27,7 @@ import com.alfanse.author.Models.Quote;
 import com.alfanse.author.Models.ReportReason;
 import com.alfanse.author.R;
 import com.alfanse.author.Utilities.CommonView;
+import com.alfanse.author.Utilities.EndlessRecyclerViewScrollListener;
 import com.alfanse.author.Utilities.Utils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -58,6 +59,110 @@ public class QuotesFragment extends Fragment {
     private QuotesAdapter mQuotesAdapter;
     private Quote quoteForDownload;
     private Bitmap quoteBitmapToSave = null;
+    private EndlessRecyclerViewScrollListener mScrollListener;
+    private int mFirstPage = 1;
+    private int mVisibleThreshold = 5;
+
+    private onQuoteItemClickListener mOnQuoteItemClickListener = new onQuoteItemClickListener() {
+
+        @Override
+        public void onItemClick(Quote quote) {
+            // Nothing to do
+        }
+
+        @Override
+        public void onQuoteClick(Quote quote) {
+            Intent quoteIntent = new Intent(mActivity, QuoteActivity.class);
+            quoteIntent.putExtra(BUNDLE_KEY_QUOTE_ID, quote.getId());
+            startActivity(quoteIntent);
+        }
+
+        @Override
+        public void onActionLikeClick(Quote quote) {
+            // Nothing to do, event handled in QuotesAdapter
+        }
+
+        @Override
+        public void onTotalLikesClick(Quote quote) {
+            Intent quoteIntent = new Intent(mActivity, AuthorsActivity.class);
+            quoteIntent.putExtra(BUNDLE_KEY_QUOTE_ID, quote.getId());
+            startActivity(quoteIntent);
+        }
+
+        @Override
+        public void onActionCommentClick(Quote quote) {
+            Intent commentIntent = new Intent(mActivity, CommentsActivity.class);
+            commentIntent.putExtra(BUNDLE_KEY_QUOTE_ID, quote.getId());
+            startActivity(commentIntent);
+        }
+
+        @Override
+        public void onActionShareClick(final Quote quote) {
+
+            CommonView.getInstance(mContext).showProgressDialog(mActivity, getString(R.string.text_loading), null);
+
+            Utils.getInstance(mContext).getBitmapFromUrl(quote.getImageUrl(), new bitmapRequestListener() {
+                @Override
+                public void onSuccess(Bitmap bitmap) {
+                    CommonView.getInstance(mContext).dismissProgressDialog();
+                    if (bitmap != null) {
+
+                        quoteBitmapToSave = bitmap;
+
+                        checkPermissionAndSaveBitmapToDisk(bitmap);
+                    }
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    CommonView.getInstance(mContext).dismissProgressDialog();
+                }
+            });
+        }
+
+        @Override
+        public void onActionFollowClick(Quote quote) {
+            // Nothing to do, event handled in QuotesAdapter
+        }
+
+        @Override
+        public void onActionDownloadClick(Quote quote) {
+            quoteForDownload = quote;
+            checkPermissionAndDownloadQuote(quote);
+        }
+
+        @Override
+        public void onActionReportClick(Quote quote) {
+
+            String reportReasonsJson = Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_REPORTS);
+
+            Type reportListType = new TypeToken<ArrayList<ReportReason>>() {
+            }.getType();
+
+            ArrayList<ReportReason> listReportReasons = new Gson().fromJson(reportReasonsJson, reportListType);
+
+            final HashMap<String, String> hashReportReasons = new HashMap<String, String>();
+            ArrayList<String> listReportReasonsTitle = new ArrayList<String>();
+            for (ReportReason reportReason : listReportReasons) {
+                hashReportReasons.put(reportReason.getTitle(), reportReason.getId());
+                listReportReasonsTitle.add(reportReason.getTitle());
+            }
+            CommonView.getInstance(mContext).showReportDialog(listReportReasonsTitle, mActivity, new onReportItemSubmitListener() {
+                @Override
+                public void onReportItemSubmit(String titleReport) {
+
+                    String reportId = hashReportReasons.get(titleReport);
+                }
+            });
+        }
+
+        @Override
+        public void onAuthorClick(Quote quote) {
+            Intent authorIntent = new Intent(mActivity, AuthorActivity.class);
+            authorIntent.putExtra(BUNDLE_KEY_AUTHOR_ID, quote.getAuthor().getId());
+            startActivity(authorIntent);
+        }
+    };
 
     public QuotesFragment() {
         // Required empty public constructor
@@ -67,107 +172,48 @@ public class QuotesFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mListQuotes = new ArrayList<Quote>();
+        mQuotesAdapter = new QuotesAdapter(mContext, mListQuotes, mOnQuoteItemClickListener);
+        loadMoreQuotes(mFirstPage);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_quotes, container, false);
+        ButterKnife.bind(this, view);
+
+        int column = mContext.getResources().getInteger(R.integer.StaggeredGridLayoutManagerColumn);
+        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(column, StaggeredGridLayoutManager.VERTICAL);
+        recyclerViewQuotes.setLayoutManager(layoutManager);
+        recyclerViewQuotes.setAdapter(mQuotesAdapter);
+        mScrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                loadMoreQuotes(page);
+            }
+        };
+        mScrollListener.setVisibleThreshold(mVisibleThreshold);
+        // Adds the scroll listener to RecyclerView
+        recyclerViewQuotes.addOnScrollListener(mScrollListener);
+        return view;
+    }
+
+    private void loadMoreQuotes(int page) {
 
         String quotesJson = Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_QUOTES);
 
         Type quoteListType = new TypeToken<ArrayList<Quote>>() {
         }.getType();
-        mListQuotes = new Gson().fromJson(quotesJson, quoteListType);
 
-        mQuotesAdapter = new QuotesAdapter(mContext, mListQuotes, new onQuoteItemClickListener() {
+        ArrayList<Quote> listQuotes = new ArrayList<>();
+        listQuotes = new Gson().fromJson(quotesJson, quoteListType);
 
-            @Override
-            public void onItemClick(Quote quote) {
-                // Nothing to do
-            }
+        mListQuotes.addAll(listQuotes);
 
-            @Override
-            public void onQuoteClick(Quote quote) {
-                Intent quoteIntent = new Intent(mActivity, QuoteActivity.class);
-                quoteIntent.putExtra(BUNDLE_KEY_QUOTE_ID, quote.getId());
-                startActivity(quoteIntent);
-            }
-
-            @Override
-            public void onActionLikeClick(Quote quote) {
-                // Nothing to do, event handled in QuotesAdapter
-            }
-
-            @Override
-            public void onActionCommentClick(Quote quote) {
-                Intent commentIntent = new Intent(mActivity, CommentsActivity.class);
-                commentIntent.putExtra(BUNDLE_KEY_QUOTE_ID, quote.getId());
-                startActivity(commentIntent);
-            }
-
-            @Override
-            public void onActionShareClick(final Quote quote) {
-
-                CommonView.getInstance(mContext).showProgressDialog(mActivity, getString(R.string.text_loading), null);
-
-                Utils.getInstance(mContext).getBitmapFromUrl(quote.getImageUrl(), new bitmapRequestListener() {
-                    @Override
-                    public void onSuccess(Bitmap bitmap) {
-                        CommonView.getInstance(mContext).dismissProgressDialog();
-                        if (bitmap != null) {
-
-                            quoteBitmapToSave = bitmap;
-
-                            checkPermissionAndSaveBitmapToDisk(bitmap);
-                        }
-                    }
-
-                    @Override
-                    public void onError(Exception e) {
-                        CommonView.getInstance(mContext).dismissProgressDialog();
-                    }
-                });
-            }
-
-            @Override
-            public void onActionFollowClick(Quote quote) {
-                // Nothing to do, event handled in QuotesAdapter
-            }
-
-            @Override
-            public void onActionDownloadClick(Quote quote) {
-                quoteForDownload = quote;
-                checkPermissionAndDownloadQuote(quote);
-            }
-
-            @Override
-            public void onActionReportClick(Quote quote) {
-
-                String reportReasonsJson = Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_REPORTS);
-
-                Type reportListType = new TypeToken<ArrayList<ReportReason>>() {
-                }.getType();
-
-                ArrayList<ReportReason> listReportReasons = new Gson().fromJson(reportReasonsJson, reportListType);
-
-                final HashMap<String, String> hashReportReasons = new HashMap<String, String>();
-                ArrayList<String> listReportReasonsTitle = new ArrayList<String>();
-                for (ReportReason reportReason : listReportReasons) {
-                    hashReportReasons.put(reportReason.getTitle(), reportReason.getId());
-                    listReportReasonsTitle.add(reportReason.getTitle());
-                }
-                CommonView.getInstance(mContext).showReportDialog(listReportReasonsTitle, mActivity, new onReportItemSubmitListener() {
-                    @Override
-                    public void onReportItemSubmit(String titleReport) {
-
-                        String reportId = hashReportReasons.get(titleReport);
-                    }
-                });
-            }
-
-            @Override
-            public void onAuthorClick(Quote quote) {
-                Intent authorIntent = new Intent(mActivity, AuthorActivity.class);
-                authorIntent.putExtra(BUNDLE_KEY_AUTHOR_ID, quote.getAuthor().getId());
-                startActivity(authorIntent);
-            }
-        });
-
+        mQuotesAdapter.notifyDataSetChanged();
     }
 
     private void checkPermissionAndSaveBitmapToDisk(Bitmap quoteBitmap) {
@@ -208,22 +254,6 @@ public class QuotesFragment extends Fragment {
         } else {
             Utils.getInstance(mContext).downloadImageToDisk(quote.getImageUrl());
         }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_quotes, container, false);
-        ButterKnife.bind(this, view);
-
-        if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            recyclerViewQuotes.setLayoutManager(new GridLayoutManager(mContext, 1));
-        } else {
-            recyclerViewQuotes.setLayoutManager(new GridLayoutManager(mContext, 2));
-        }
-        recyclerViewQuotes.setAdapter(mQuotesAdapter);
-        return view;
     }
 
     @Override
@@ -269,6 +299,4 @@ public class QuotesFragment extends Fragment {
             }
         }
     }
-
-
 }

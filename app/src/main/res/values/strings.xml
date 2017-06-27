@@ -8,6 +8,7 @@
     <string name="twitter_consumer_secret" translatable="false">3R3cGoDZf24pyfoOfAPOIKGawJXSv0rdnfbZsVheP0FY3nIlV4</string>
 
     <!-- Activity Title -->
+    <string name="title_home">Home</string>
     <string name="title_new_quote">New Quote</string>
     <string name="title_choose_category">Category</string>
     <string name="title_publish_quote">Publish</string>
@@ -16,17 +17,23 @@
     <string name="title_followers">Followers</string>
     <string name="title_quote">Quote</string>
     <string name="title_quotes">Quotes</string>
+    <string name="title_explore">Explore</string>
     <string name="title_comments">Comments</string>
+    <string name="title_latest">Latest</string>
+    <string name="title_trending">Trending</string>
+    <string name="title_popular">Popular</string>
 
 
     <!-- Menu -->
     <string name="menu_item_home_bottom_nav_home">Home</string>
-    <string name="menu_item_quotes_bottom_nav_home">Post</string>
+    <string name="menu_item_quotes_bottom_nav_home">Explore</string>
     <string name="menu_item_write_quote_bottom_nav_home">Write</string>
     <string name="menu_item_account_bottom_nav_home">Account</string>
 
     <!-- text -->
 
+    <string name="text_welcome_title_home">Welcome to Author!</string>
+    <string name="text_welcome_body_home">The way to compose and share your beautiful thoughts. Explore our incredible quotes collection and start following others.</string>
     <string name="text_default_quote_fragment_write_quote_fragment">Double tap to edit</string>
     <string name="text_social_login_sign_in">Social Login</string>
     <string name="text_email_login_sign_in">Or via Email</string>
@@ -39,8 +46,9 @@
     <string name="text_language">Language: </string>
     <string name="text_tags">Tags</string>
     <string name="text_source">Source: </string>
-    <string name="text_select_language">Choose Language</string>
-    <string name="text_select_category">Select Category</string>
+    <string name="text_select_language">Choose language</string>
+    <string name="text_select_country">Select country</string>
+    <string name="text_select_category">Select category</string>
     <string name="text_select_category_hint">Choose maximum 3 categories</string>
     <string name="text_search_tags">Search Tags</string>
     <string name="text_search_tags_hint">Tag helps users to search your quote</string>
@@ -91,6 +99,7 @@
     <string name="button_publish">Publish</string>
     <string name="button_proceed">Proceed</string>
     <string name="button_update">Update</string>
+    <string name="button_explore">Explore</string>
 
     <!-- Hint -->
     <string name="hint_email">Email*</string>
@@ -104,6 +113,7 @@
     <string name="hint_search_category">Search Category</string>
     <string name="hint_enter_tags">Enter Tags (Comma separated)</string>
     <string name="hint_enter_quote_source">Enter original source name</string>
+    <string name="hint_enter_comment">Enter comment..</string>
 
     <!-- Options-->
     <string name="option_item_default_tag">option_tag_default</string>

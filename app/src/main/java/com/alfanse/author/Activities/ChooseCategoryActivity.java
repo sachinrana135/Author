@@ -190,7 +190,7 @@ public class ChooseCategoryActivity extends BaseActivity {
 
         switch (menuItem.getItemId()) {
             case android.R.id.home:
-                setResult();
+                onBackPressed();
                 return true;
             case R.id.action_done_choose_category:
                 setResult();
@@ -208,5 +208,10 @@ public class ChooseCategoryActivity extends BaseActivity {
             intent.putExtra(BUNDLE_KEY_SELECTED_CATEGORIES, mSelectedCategories);
         setResult(RESULT_CODE, intent);
             finish();//finishing activity
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult();
     }
 }

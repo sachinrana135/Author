@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#fc5256</color>
     <color name="colorAccent">#015376</color>
     <color name="colorOptionsBackground">#212121</color>
-    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorWhite">#ffffff</color>
     <color name="colorBlack">#000000</color>
     <color name="colorComponentViewStateFocused">#3F000000</color>
     <color name="colorComponentViewStroke">#3F000000</color>
