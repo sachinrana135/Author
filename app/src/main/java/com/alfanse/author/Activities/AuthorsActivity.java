@@ -6,15 +6,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.alfanse.author.Fragments.AuthorsFragment;
+import com.alfanse.author.Models.AuthorFilters;
 import com.alfanse.author.R;
+import com.alfanse.author.Utilities.Constants;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_QUOTE_ID;
 
 
 public class AuthorsActivity extends BaseActivity {
@@ -26,7 +25,9 @@ public class AuthorsActivity extends BaseActivity {
     private Activity mActivity;
     private AuthorsFragment mAuthorsFragment;
     private android.support.v4.app.FragmentManager mFragmentManager;
-    private String mQuoteId;
+    private String mAuthorId;
+    private String mTitle;
+    private AuthorFilters mAuthorFilters;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,31 +39,44 @@ public class AuthorsActivity extends BaseActivity {
         mActivity = AuthorsActivity.this;
 
         Intent intent = getIntent();
+
         if (intent.getExtras() != null) {
-            if (intent.hasExtra(BUNDLE_KEY_QUOTE_ID)) {
-                mQuoteId = intent.getStringExtra(BUNDLE_KEY_QUOTE_ID);
-            } else {
-                Toast.makeText(mActivity, getString(R.string.error_quote_not_found), Toast.LENGTH_LONG).show();
-                finish();
+            if (intent.hasExtra(Constants.BUNDLE_KEY_TITLE)) {
+                mTitle = intent.getStringExtra(Constants.BUNDLE_KEY_TITLE);
+            }
+
+            if (intent.hasExtra(Constants.BUNDLE_KEY_AUTHORS_FILTERS)) {
+                mAuthorFilters = (AuthorFilters) intent.getSerializableExtra(Constants.BUNDLE_KEY_AUTHORS_FILTERS);
             }
         }
+        loadAuthorsFragment();
 
 
+        initToolbar();
+    }
+
+    private void loadAuthorsFragment() {
         mAuthorsFragment = new AuthorsFragment();
         mFragmentManager = getSupportFragmentManager();
+
+        if (mAuthorFilters != null) {
+            mAuthorsFragment.setAuthorFilters(mAuthorFilters);
+        }
 
         mFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container_authors_authors, mAuthorsFragment)
                 .commit();
-
-        initToolbar();
     }
 
     private void initToolbar() {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle(R.string.title_followers);
+        if (mTitle != null) {
+            getSupportActionBar().setTitle(mTitle);
+        } else {
+            getSupportActionBar().setTitle(R.string.title_authors);
+        }
     }
 
 

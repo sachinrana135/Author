@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -15,12 +16,16 @@ import android.widget.EditText;
 
 import com.alfanse.author.Activities.AuthorActivity;
 import com.alfanse.author.Adapters.CommentsAdapter;
+import com.alfanse.author.Interfaces.NetworkCallback;
 import com.alfanse.author.Interfaces.onCommentItemClickListener;
 import com.alfanse.author.Interfaces.onReportItemSubmitListener;
 import com.alfanse.author.Models.Comment;
+import com.alfanse.author.Models.CommentFilters;
 import com.alfanse.author.Models.ReportReason;
 import com.alfanse.author.R;
+import com.alfanse.author.Utilities.ApiUtils;
 import com.alfanse.author.Utilities.CommonView;
+import com.alfanse.author.Utilities.Constants;
 import com.alfanse.author.Utilities.EndlessRecyclerViewScrollListener;
 import com.alfanse.author.Utilities.Utils;
 import com.google.gson.Gson;
@@ -33,7 +38,6 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.alfanse.author.Utilities.Constants.ASSETS_FILE_COMMENTS;
 import static com.alfanse.author.Utilities.Constants.ASSETS_FILE_REPORTS;
 import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_AUTHOR_ID;
 
@@ -42,6 +46,8 @@ import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_AUTHOR_ID;
  */
 public class CommentsFragment extends Fragment {
 
+    @BindView(R.id.swipe_refresh_fragment_comments)
+    SwipeRefreshLayout layoutSwipeRefresh;
     @BindView(R.id.rv_comments_fragment_comments)
     RecyclerView recyclerViewComments;
     @BindView(R.id.edit_text_enter_comment_fragment_comments)
@@ -54,10 +60,10 @@ public class CommentsFragment extends Fragment {
     private Activity mActivity;
     private ArrayList<Comment> mListComments;
     private CommentsAdapter mCommentsAdapter;
-    private String quoteId;
     private int mFirstPage = 1;
-    private int mVisibleThreshold = 7;
+    private int mVisibleThreshold = 10;
     private EndlessRecyclerViewScrollListener mScrollListener;
+    private CommentFilters commentFilters = new CommentFilters();
     private onCommentItemClickListener mOnCommentItemClickListener = new onCommentItemClickListener() {
 
         @Override
@@ -112,20 +118,11 @@ public class CommentsFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public String getQuoteId() {
-        return quoteId;
-    }
-
-    public void setQuoteId(String quoteId) {
-        this.quoteId = quoteId;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mListComments = new ArrayList<Comment>();
         mCommentsAdapter = new CommentsAdapter(mContext, mListComments, mOnCommentItemClickListener);
-        loadMoreComments(mFirstPage);
     }
 
     @Override
@@ -139,28 +136,73 @@ public class CommentsFragment extends Fragment {
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(column, StaggeredGridLayoutManager.VERTICAL);
         recyclerViewComments.setLayoutManager(layoutManager);
         recyclerViewComments.setAdapter(mCommentsAdapter);
+
+        layoutSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mListComments.clear();
+                mCommentsAdapter.notifyDataSetChanged();
+                loadComments(mFirstPage);
+            }
+        });
+
+        loadComments(mFirstPage);
+
         mScrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to the bottom of the list
-                loadMoreComments(page);
+                loadComments(page);
             }
         };
         mScrollListener.setVisibleThreshold(mVisibleThreshold);
         // Adds the scroll listener to RecyclerView
+        recyclerViewComments.addOnScrollListener(mScrollListener);
         return view;
     }
 
-    private void loadMoreComments(int firstPage) {
-        String commentsJson = Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_COMMENTS);
+    private void loadComments(int page) {
+
+        layoutSwipeRefresh.setRefreshing(true);
+
+        commentFilters.setPage(Integer.toString(page));
+
+        //region API_CALL_START
+        HashMap<String, String> param = new HashMap<>();
+        param.put(Constants.API_PARAM_KEY_COMMENT_FILTERS, new Gson().toJson(commentFilters));
+        ApiUtils api = new ApiUtils(mContext)
+                .setActivity(mActivity)
+                .setUrl(Constants.API_URL_GET_COMMENTS)
+                .setParams(param)
+                .setMessage("CommentsFragment.java|loadComments")
+                .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
+                    @Override
+                    public void onSuccessCallBack(String stringResponse) {
+                        parseLoadCommentsResponse(stringResponse);
+                        layoutSwipeRefresh.setRefreshing(false);
+                    }
+
+                    @Override
+                    public void onFailureCallBack(Exception e) {
+                        layoutSwipeRefresh.setRefreshing(false);
+                    }
+                });
+
+        api.call();
+        //endregion API_CALL_END
+    }
+
+    private void parseLoadCommentsResponse(String stringResponse) {
+
+        // String commentsJson = Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_COMMENTS);
 
         Type commentListType = new TypeToken<ArrayList<Comment>>() {
         }.getType();
 
         ArrayList<Comment> listComments = new ArrayList<>();
 
-        listComments = new Gson().fromJson(commentsJson, commentListType);
+        listComments = new Gson().fromJson(stringResponse, commentListType);
         mListComments.addAll(listComments);
         mCommentsAdapter.notifyDataSetChanged();
     }
@@ -178,5 +220,11 @@ public class CommentsFragment extends Fragment {
         super.onDetach();
     }
 
+    public CommentFilters getCommentFilters() {
+        return commentFilters;
+    }
 
+    public void setCommentFilters(CommentFilters commentFilters) {
+        this.commentFilters = commentFilters;
+    }
 }

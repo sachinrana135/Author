@@ -29,15 +29,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alfanse.author.CustomViews.FlowLayout;
+import com.alfanse.author.Interfaces.NetworkCallback;
 import com.alfanse.author.Interfaces.bitmapRequestListener;
 import com.alfanse.author.Interfaces.onReportItemSubmitListener;
 import com.alfanse.author.Models.Author;
 import com.alfanse.author.Models.Category;
+import com.alfanse.author.Models.CommentFilters;
+import com.alfanse.author.Models.CustomDialog;
 import com.alfanse.author.Models.Language;
 import com.alfanse.author.Models.Quote;
+import com.alfanse.author.Models.QuoteFilters;
 import com.alfanse.author.Models.ReportReason;
 import com.alfanse.author.R;
+import com.alfanse.author.Utilities.ApiUtils;
 import com.alfanse.author.Utilities.CommonView;
+import com.alfanse.author.Utilities.Constants;
 import com.alfanse.author.Utilities.SharedManagement;
 import com.alfanse.author.Utilities.Utils;
 import com.bumptech.glide.Glide;
@@ -58,13 +64,9 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.alfanse.author.Utilities.Constants.ASSETS_FILE_QUOTE;
-import static com.alfanse.author.Utilities.Constants.ASSETS_FILE_REPORTS;
+import static com.alfanse.author.CustomViews.DialogBuilder.SUCCESS;
 import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_AUTHOR_ID;
-import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_CATEGORY_ID;
-import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_LANGUAGE_ID;
 import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_QUOTE_ID;
-import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_SEARCH_KEYWORD;
 
 public class QuoteActivity extends BaseActivity {
 
@@ -120,7 +122,7 @@ public class QuoteActivity extends BaseActivity {
     private FirebaseAuth mAuth;
     private Activity mActivity;
     private Context mContext;
-    private Author mAuthor;
+    private Author mLoggedAuthor;
     private Quote mQuote;
     private String mQuoteId;
     private FirebaseUser firebaseUser;
@@ -136,9 +138,14 @@ public class QuoteActivity extends BaseActivity {
                 Category category = (Category) categoryTag.getTag();
 
                 Intent quotesIntent = new Intent(mActivity, QuotesActivity.class);
-                quotesIntent.putExtra(BUNDLE_KEY_CATEGORY_ID, category.getId());
-                startActivity(quotesIntent);
+                quotesIntent.putExtra(Constants.BUNDLE_KEY_TITLE, category.getName() + " " + getString(R.string.title_quotes));
 
+                QuoteFilters quoteFilters = new QuoteFilters();
+                ArrayList<Category> filterCategories = new ArrayList<Category>();
+                filterCategories.add(category);
+                quoteFilters.setCategories(filterCategories);
+                quotesIntent.putExtra(Constants.BUNDLE_KEY_QUOTES_FILTERS, quoteFilters);
+                startActivity(quotesIntent);
             }
         }
     };
@@ -153,7 +160,13 @@ public class QuoteActivity extends BaseActivity {
                 Language language = (Language) languageTag.getTag();
 
                 Intent quotesIntent = new Intent(mActivity, QuotesActivity.class);
-                quotesIntent.putExtra(BUNDLE_KEY_LANGUAGE_ID, language.getLanguageId());
+                quotesIntent.putExtra(Constants.BUNDLE_KEY_TITLE, language.getLanguageName() + " " + getString(R.string.title_quotes));
+
+                QuoteFilters quoteFilters = new QuoteFilters();
+                ArrayList<Language> filterLanguages = new ArrayList<Language>();
+                filterLanguages.add(language);
+                quoteFilters.setLanguages(filterLanguages);
+                quotesIntent.putExtra(Constants.BUNDLE_KEY_QUOTES_FILTERS, quoteFilters);
                 startActivity(quotesIntent);
 
             }
@@ -166,7 +179,12 @@ public class QuoteActivity extends BaseActivity {
 
             if (v instanceof TextView) {
                 Intent quotesIntent = new Intent(mActivity, QuotesActivity.class);
-                quotesIntent.putExtra(BUNDLE_KEY_SEARCH_KEYWORD, ((TextView) v).getText().toString().trim());
+                String searchKeyword = ((TextView) v).getText().toString().trim();
+                quotesIntent.putExtra(Constants.BUNDLE_KEY_TITLE, String.format(getString(R.string.text_quotes_on), "'" + searchKeyword + "'"));
+
+                QuoteFilters quoteFilters = new QuoteFilters();
+                quoteFilters.setSearchKeyword(searchKeyword);
+                quotesIntent.putExtra(Constants.BUNDLE_KEY_QUOTES_FILTERS, quoteFilters);
                 startActivity(quotesIntent);
             }
         }
@@ -193,11 +211,8 @@ public class QuoteActivity extends BaseActivity {
                 finish();
             }
         }
-
-        mAuth = FirebaseAuth.getInstance();
-        mAuthor = SharedManagement.getInstance(mContext).getLoggedUser();
-        mQuote = new Gson().fromJson(Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_QUOTE), Quote.class);
-        renderView();
+        mLoggedAuthor = SharedManagement.getInstance(mContext).getLoggedUser();
+        getQuote();
     }
 
     private void initToolbar() {
@@ -299,7 +314,10 @@ public class QuoteActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent commentIntent = new Intent(mActivity, CommentsActivity.class);
-                commentIntent.putExtra(BUNDLE_KEY_QUOTE_ID, mQuote.getId());
+
+                CommentFilters commentFilters = new CommentFilters();
+                commentFilters.setQuoteID(mQuoteId);
+                commentIntent.putExtra(Constants.BUNDLE_KEY_COMMENTS_FILTERS, commentFilters);
                 startActivity(commentIntent);
             }
         });
@@ -334,6 +352,40 @@ public class QuoteActivity extends BaseActivity {
             }
         });
 
+    }
+
+    private void getQuote() {
+        CommonView.getInstance(mContext).showTransparentProgressDialog(mActivity, null);
+        //region API_CALL_START
+        HashMap<String, String> param = new HashMap<>();
+        param.put(Constants.API_PARAM_KEY_QUOTE_ID, mQuoteId);
+        param.put(Constants.API_PARAM_KEY_LOGGED_AUTHOR_ID, mLoggedAuthor.getId());
+        ApiUtils api = new ApiUtils(mContext)
+                .setActivity(mActivity)
+                .setUrl(Constants.API_URL_GET_QUOTE)
+                .setParams(param)
+                .setMessage("QuoteActivity.java|getQuote")
+                .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
+                    @Override
+                    public void onSuccessCallBack(String stringResponse) {
+                        parseGetQuoteResponse(stringResponse);
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onFailureCallBack(Exception e) {
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+                });
+
+        api.call();
+        //endregion API_CALL_END
+
+    }
+
+    private void parseGetQuoteResponse(String stringResponse) {
+        mQuote = new Gson().fromJson(stringResponse, Quote.class);
+        renderView();
     }
 
     private void renderView() {
@@ -467,15 +519,15 @@ public class QuoteActivity extends BaseActivity {
                 Drawable mRoundBorderDrawable = Utils.getInstance(mContext).getDrawable(R.drawable.round_border);
                 mRoundBorderDrawable.setColorFilter(new PorterDuffColorFilter(randomTagColor, PorterDuff.Mode.SRC_IN));
 
-                TextView categoryTag = new TextView(mContext);
-                categoryTag.setText(tag);
-                categoryTag.setTypeface(null, Typeface.BOLD);
-                categoryTag.setTag(tag);
-                categoryTag.setTextColor(Utils.getInstance(mContext).getColor(R.color.colorWhite));
-                categoryTag.setBackground(mRoundBorderDrawable);
-                categoryTag.setPadding((int) getResources().getDimension(R.dimen.spacing_normal), (int) getResources().getDimension(R.dimen.spacing_xsmall), (int) getResources().getDimension(R.dimen.spacing_normal), (int) getResources().getDimension(R.dimen.spacing_xsmall));
-                categoryTag.setOnClickListener(searchTagOnClickListener);
-                addTag(quoteTagsContainer, categoryTag);
+                TextView searchTag = new TextView(mContext);
+                searchTag.setText(tag);
+                searchTag.setTypeface(null, Typeface.BOLD);
+                searchTag.setTag(tag);
+                searchTag.setTextColor(Utils.getInstance(mContext).getColor(R.color.colorWhite));
+                searchTag.setBackground(mRoundBorderDrawable);
+                searchTag.setPadding((int) getResources().getDimension(R.dimen.spacing_normal), (int) getResources().getDimension(R.dimen.spacing_xsmall), (int) getResources().getDimension(R.dimen.spacing_normal), (int) getResources().getDimension(R.dimen.spacing_xsmall));
+                searchTag.setOnClickListener(searchTagOnClickListener);
+                addTag(quoteTagsContainer, searchTag);
             }
         } else {
             parentQuoteTagsContainer.setVisibility(View.GONE);
@@ -570,7 +622,7 @@ public class QuoteActivity extends BaseActivity {
                         checkPermissionAndDownloadQuote(mQuote);
                         break;
                     case R.id.action_report_quote_item_quote:
-                        showReportReasonsDialog();
+                        getReportReasonsAndShowDialog();
                         break;
                     default:
                         break;
@@ -582,14 +634,41 @@ public class QuoteActivity extends BaseActivity {
         popupMenu.show();
     }
 
-    private void showReportReasonsDialog() {
+    private void getReportReasonsAndShowDialog() {
 
-        String reportReasonsJson = Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_REPORTS);
+        CommonView.getInstance(mContext).showTransparentProgressDialog(mActivity, null);
+        //region API_CALL_START
+        HashMap<String, String> param = new HashMap<>();
+        ApiUtils api = new ApiUtils(mContext)
+                .setActivity(mActivity)
+                .setUrl(Constants.API_URL_GET_REPORT_REASONS)
+                .setParams(param)
+                .setMessage("QuoteActivity.java|getReportReasons")
+                .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
+                    @Override
+                    public void onSuccessCallBack(String stringResponse) {
+                        parseGetReportReasonsResponse(stringResponse);
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onFailureCallBack(Exception e) {
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+                });
+
+        api.call();
+        //endregion API_CALL_END
+    }
+
+    private void parseGetReportReasonsResponse(String stringResponse) {
+
+        //String reportReasonsJson = Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_REPORTS);
 
         Type reportListType = new TypeToken<ArrayList<ReportReason>>() {
         }.getType();
 
-        ArrayList<ReportReason> listReportReasons = new Gson().fromJson(reportReasonsJson, reportListType);
+        ArrayList<ReportReason> listReportReasons = new Gson().fromJson(stringResponse, reportListType);
 
         final HashMap<String, String> hashReportReasons = new HashMap<String, String>();
         ArrayList<String> listReportReasonsTitle = new ArrayList<String>();
@@ -600,11 +679,51 @@ public class QuoteActivity extends BaseActivity {
         CommonView.getInstance(mContext).showReportDialog(listReportReasonsTitle, mActivity, new onReportItemSubmitListener() {
             @Override
             public void onReportItemSubmit(String titleReport) {
-
                 String reportId = hashReportReasons.get(titleReport);
+                submitQuoteReport(reportId);
             }
         });
     }
+
+    private void submitQuoteReport(String reportId) {
+
+        CommonView.getInstance(mContext).showProgressDialog(mActivity, getString(R.string.text_loading_submitting_report), null);
+        //region API_CALL_START
+        HashMap<String, String> param = new HashMap<>();
+        param.put(Constants.API_PARAM_KEY_REPORT_ID, reportId);
+        param.put(Constants.API_PARAM_KEY_QUOTE_ID, mQuoteId);
+        ApiUtils api = new ApiUtils(mContext)
+                .setActivity(mActivity)
+                .setUrl(Constants.API_URL_REPORT_QUOTE)
+                .setParams(param)
+                .setMessage("QuoteActivity.java|submitQuoteReport")
+                .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
+                    @Override
+                    public void onSuccessCallBack(String stringResponse) {
+                        parseSubmitReportResponse(stringResponse);
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onFailureCallBack(Exception e) {
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+                });
+
+        api.call();
+        //endregion API_CALL_END
+    }
+
+    private void parseSubmitReportResponse(String stringResponse) {
+
+        CommonView.getInstance(mContext).showDialog(
+                new CustomDialog().setActivity(mActivity)
+                        .setDialogType(SUCCESS)
+                        .setTitle(getString(R.string.success_quote_reported))
+                        .setMessage(getString(R.string.msg_post_quote_report_submit))
+        );
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {

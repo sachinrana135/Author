@@ -12,7 +12,11 @@ import android.view.View;
 import android.widget.Button;
 
 import com.alfanse.author.Fragments.QuotesFragment;
+import com.alfanse.author.Models.Author;
+import com.alfanse.author.Models.QuoteFilters;
 import com.alfanse.author.R;
+import com.alfanse.author.Utilities.Constants;
+import com.alfanse.author.Utilities.SharedManagement;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,6 +33,7 @@ public class HomeActivity extends BaseActivity {
     private Activity mActivity;
     private QuotesFragment mQuotesFragment;
     private android.support.v4.app.FragmentManager mFragmentManager;
+    private Author mAuthor;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -67,14 +72,21 @@ public class HomeActivity extends BaseActivity {
 
         mContext = getApplicationContext();
         mActivity = HomeActivity.this;
-
+        mAuthor = SharedManagement.getInstance(mContext).getLoggedUser();
         initToolbar();
         initListener();
         loadQuotesFragment();
     }
 
     private void loadQuotesFragment() {
+
         mQuotesFragment = new QuotesFragment();
+
+        QuoteFilters quoteFilters = new QuoteFilters();
+        quoteFilters.setAuthorID(mAuthor.getId());
+        quoteFilters.setFilterType(Constants.QUOTE_FILTER_TYPE_FEED);
+        mQuotesFragment.setQuoteFilters(quoteFilters);
+
         mFragmentManager = getSupportFragmentManager();
 
         mFragmentManager.beginTransaction()

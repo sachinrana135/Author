@@ -432,7 +432,7 @@ public class SignInActivity extends BaseActivity implements
 
     private void showForgotPasswordLayout() {
         layout_forgot_password.setVisibility(View.VISIBLE);
-        Animation bottomUp = AnimationUtils.loadAnimation(mContext, R.anim.bottom_up);
+        Animation bottomUp = AnimationUtils.loadAnimation(mContext, R.anim.slide_up);
         layout_forgot_password.startAnimation(bottomUp);
         bottomUp.setDuration(Constants.ANIMATION_DELAY_SEC);
 
@@ -441,7 +441,7 @@ public class SignInActivity extends BaseActivity implements
     private void hideForgotPasswordLayout() {
         Utils.getInstance(mContext).hideSoftKeyboard(mActivity);
         layout_forgot_password.setVisibility(View.GONE);
-        Animation bottomDown = AnimationUtils.loadAnimation(mContext, R.anim.bottom_down);
+        Animation bottomDown = AnimationUtils.loadAnimation(mContext, R.anim.slide_down);
         layout_forgot_password.startAnimation(bottomDown);
         bottomDown.setDuration(Constants.ANIMATION_DELAY_SEC);
     }

@@ -25,6 +25,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -107,6 +108,13 @@ public class NewQuoteActivity extends BaseActivity implements
             FontHelper.getInstance(mContext);
         }
     };
+    private ViewTreeObserver.OnGlobalLayoutListener quoteCanvasLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+        @Override
+        public void onGlobalLayout() {
+            mQuoteCanvas.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            getDefaultCanvasTheme();
+        }
+    };
 
 
     @Override
@@ -121,7 +129,8 @@ public class NewQuoteActivity extends BaseActivity implements
         mActivity = NewQuoteActivity.this;
         mFragmentManager = getSupportFragmentManager();
 
-        getDefaultCanvasTheme();
+        mQuoteCanvas.getViewTreeObserver().addOnGlobalLayoutListener(quoteCanvasLayoutListener);
+
         fontsLoaderTask.run();
 
         mQuoteCanvas.setOnTouchListener(new CanvasTouchListener());
@@ -176,25 +185,7 @@ public class NewQuoteActivity extends BaseActivity implements
 
     @Override
     public void onBackPressed() {
-        DialogBuilder builder = new DialogBuilder(mActivity);
-        // Add the buttons
-        builder.setPositiveButton(R.string.action_ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                finish();
-            }
-        });
-        builder.setNegativeButton(R.string.action_cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // User cancelled the dialog
-            }
-        });
-        // Set other dialog properties
-        builder.setMessage(R.string.msg_exit_confirm);
-        builder.setDialogType(DialogBuilder.WARNING);
-
-        // Create the AlertDialog
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        showResetWarningDialog();
     }
 
     public void loadComponentImageViewOptionsFragment() {
@@ -342,6 +333,7 @@ public class NewQuoteActivity extends BaseActivity implements
 
                         Quote quote = new Quote();
                         quote.setLocalImagePath(localImagePath);
+                        quote.setContent(getQuoteContent());
 
                         Author author = new Author();
                         author.setId(FirebaseAuth.getInstance().getCurrentUser().getUid());
@@ -362,6 +354,29 @@ public class NewQuoteActivity extends BaseActivity implements
                 return super.onOptionsItemSelected(menuItem);
 
         }
+    }
+
+    private ArrayList<String> getQuoteContent() {
+
+        ArrayList<String> quoteContent = new ArrayList<String>();
+
+        try {
+
+            for (int index = 0; index < mQuoteCanvas.getChildCount(); ++index) {
+
+                View view = mQuoteCanvas.getChildAt(index);
+
+                if ((view instanceof ComponentTextView)) {
+
+                    ComponentTextView componentTextView = (ComponentTextView) view;
+
+                    quoteContent.add(componentTextView.getText());
+                }
+            }
+        } catch (Exception e) {
+
+        }
+        return quoteContent;
     }
 
     private String saveCanvasIntoImage() {

@@ -1,0 +1,127 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    tools:context="com.alfanse.author.Fragments.QuoteFiltersFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_small"
+            card_view:cardCornerRadius="@dimen/card_view_radius">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_small">
+
+                <LinearLayout
+                    android:id="@+id/layout_select_language_filters_quote"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_small"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    android:background="@color/colorGrey"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/spacing_normal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="70"
+                        android:drawableLeft="@drawable/ic_language_accent_24dp"
+                        android:drawablePadding="@dimen/spacing_small"
+                        android:gravity="center_vertical"
+                        android:text="@string/text_select_language"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/font_normal" />
+
+                    <TextView
+                        android:id="@+id/text_total_selected_languages"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="30"
+                        android:gravity="right"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="@dimen/font_normal" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_select_category_filters_quote"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_small"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    android:background="@color/colorGrey"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/spacing_normal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="70"
+                        android:drawableLeft="@drawable/ic_stars_accent_24dp"
+                        android:drawablePadding="@dimen/spacing_small"
+                        android:gravity="center_vertical"
+                        android:text="@string/text_select_category"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/font_normal" />
+
+                    <TextView
+                        android:id="@+id/text_total_selected_categories"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="30"
+                        android:gravity="right"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="@dimen/font_normal" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/fullscreen_content_controls"
+                    style="?metaButtonBarStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginTop="@dimen/spacing_large"
+                    android:orientation="horizontal"
+                    tools:ignore="UselessParent">
+
+                    <TextView
+                        android:id="@+id/text_reset_filters_quote"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="30"
+                        android:gravity="center"
+                        android:text="@string/action_reset"
+                        android:textColor="@color/colorPrimaryDark" />
+
+                    <Button
+                        android:id="@+id/button_apply_filters_quote"
+                        style="?metaButtonBarButtonStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="70"
+                        android:background="@color/colorAccent"
+                        android:text="@string/button_apply"
+                        android:textColor="@color/colorWhite" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+    </ScrollView>
+
+
+</RelativeLayout>

@@ -48,7 +48,8 @@
                 <ImageView
                     android:id="@+id/image_quote_quote"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:transitionName="image_quote" />
 
             </com.alfanse.author.CustomViews.SquareFrameLayout>
 
@@ -277,10 +278,8 @@
                         </com.alfanse.author.CustomViews.FlowLayout>
 
                     </LinearLayout>
-
-
                     <LinearLayout
-                        android:id="@+id/parent_quote_tag_container_quote"
+                        android:id="@+id/parent_category_tag_container_quote"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
@@ -293,18 +292,16 @@
                             android:textStyle="bold" />
 
                         <com.alfanse.author.CustomViews.FlowLayout
-                            android:id="@+id/quote_tag_container_quote"
+                            android:id="@+id/category_tag_container_quote"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
 
 
                         </com.alfanse.author.CustomViews.FlowLayout>
-
                     </LinearLayout>
 
-
                     <LinearLayout
-                        android:id="@+id/parent_category_tag_container_quote"
+                        android:id="@+id/parent_quote_tag_container_quote"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
@@ -317,13 +314,15 @@
                             android:textStyle="bold" />
 
                         <com.alfanse.author.CustomViews.FlowLayout
-                            android:id="@+id/category_tag_container_quote"
+                            android:id="@+id/quote_tag_container_quote"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
 
 
                         </com.alfanse.author.CustomViews.FlowLayout>
+
                     </LinearLayout>
+
 
                 </LinearLayout>
             </android.support.v7.widget.CardView>

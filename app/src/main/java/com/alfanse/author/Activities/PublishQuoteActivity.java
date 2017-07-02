@@ -43,12 +43,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.alfanse.author.Utilities.Constants.ASSETS_FILE_LANGUAGES;
+import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_MAXIMUM_CATEGORY_SELECT_ALLOW;
 import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_QUOTE;
 import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_SELECTED_CATEGORIES;
 
 public class PublishQuoteActivity extends BaseActivity {
 
     private static final int REQUEST_CODE_CHOOSE_CATEGORY = 5345;
+    private final int maxCategoriesSelectionAllowed = 3;
     @BindView(R.id.toolbar_publish_quote)
     Toolbar mToolbar;
     @BindView(R.id.edit_text_quote_caption_publish_quote)
@@ -71,7 +73,6 @@ public class PublishQuoteActivity extends BaseActivity {
     EditText editTextQuoteSource;
     @BindView(R.id.button_publish_publish_quote)
     Button buttonPublishQuote;
-
     private Context mContext;
     private Activity mActivity;
     private Quote mQuote;
@@ -89,7 +90,7 @@ public class PublishQuoteActivity extends BaseActivity {
                 TextView categoryTag = (TextView) v;
                 Category category = (Category) categoryTag.getTag();
                 categoryTagsContainer.removeView(v);
-                mListCategories.remove(category.getId());
+                mListCategories.remove(category);
             }
         }
     };
@@ -239,6 +240,8 @@ public class PublishQuoteActivity extends BaseActivity {
             public void onClick(View v) {
 
                 Intent chooseCategoryIntent = new Intent(mActivity, ChooseCategoryActivity.class);
+                chooseCategoryIntent.putExtra(BUNDLE_KEY_MAXIMUM_CATEGORY_SELECT_ALLOW, maxCategoriesSelectionAllowed);
+                chooseCategoryIntent.putExtra(BUNDLE_KEY_SELECTED_CATEGORIES, mListCategories);
 
                 startActivityForResult(chooseCategoryIntent, REQUEST_CODE_CHOOSE_CATEGORY);
             }

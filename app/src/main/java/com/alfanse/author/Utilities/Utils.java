@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 import android.util.Base64;
 import android.view.View;
@@ -63,6 +64,34 @@ public class Utils {
         Long tsLong = System.currentTimeMillis() / 1000;
         String ts = tsLong.toString();
         return ts;
+    }
+
+    /**
+     * used to return a random string of 10 characters
+     *
+     * @return a string of alphanumeric characters
+     */
+    public static String getRandomString() {
+        String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890abcdefghijklmnopqrstuvwxyz";
+        StringBuilder salt = new StringBuilder();
+        Random rnd = new Random();
+        while (salt.length() < 10) { // length of the random string.
+            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
+            salt.append(SALTCHARS.charAt(index));
+        }
+        String saltStr = salt.toString();
+        return saltStr;
+
+    }
+
+    public static String getDeviceId(Context context) {
+        String deviceId = "";
+        try {
+            deviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+        } catch (Exception e) {
+            deviceId = "";
+        }
+        return deviceId;
     }
 
     public Drawable getDrawable(int id) {
@@ -272,5 +301,4 @@ public class Utils {
         return Uri.fromFile(file);
 
     }
-
 }

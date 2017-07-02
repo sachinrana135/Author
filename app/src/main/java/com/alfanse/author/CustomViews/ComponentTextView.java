@@ -89,7 +89,7 @@ public class ComponentTextView extends ComponentView {
     }
 
     public String getText() {
-        return mTextView.getText().toString();
+        return mTextView.getText().toString().trim();
     }
 
     public void setText(String text) {

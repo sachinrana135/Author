@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 
@@ -28,7 +27,7 @@ import butterknife.ButterKnife;
 
 import static com.alfanse.author.Utilities.Constants.ASSETS_FILE_COUNTRIES;
 
-public class ChooseCountryActivity extends AppCompatActivity {
+public class ChooseCountryActivity extends BaseActivity {
 
 
     @BindView(R.id.spinner_choose_country_choose_country)

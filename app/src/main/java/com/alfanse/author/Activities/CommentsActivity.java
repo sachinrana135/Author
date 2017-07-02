@@ -7,16 +7,14 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.alfanse.author.Fragments.CommentsFragment;
+import com.alfanse.author.Models.CommentFilters;
 import com.alfanse.author.R;
+import com.alfanse.author.Utilities.Constants;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_QUOTE;
-import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_QUOTE_ID;
 
 public class CommentsActivity extends AppCompatActivity {
 
@@ -28,6 +26,7 @@ public class CommentsActivity extends AppCompatActivity {
     private CommentsFragment mCommentsFragment;
     private android.support.v4.app.FragmentManager mFragmentManager;
     private String mQuoteId;
+    private CommentFilters mCommentFilters;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,14 +40,11 @@ public class CommentsActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (intent.getExtras() != null) {
-            if (intent.hasExtra(BUNDLE_KEY_QUOTE_ID)) {
-                mQuoteId = intent.getStringExtra(BUNDLE_KEY_QUOTE);
-            } else {
-                Toast.makeText(mActivity, getString(R.string.error_quote_not_found), Toast.LENGTH_LONG).show();
-                finish();
+            if (intent.hasExtra(Constants.BUNDLE_KEY_COMMENTS_FILTERS)) {
+                mCommentFilters = (CommentFilters) intent.getSerializableExtra(Constants.BUNDLE_KEY_COMMENTS_FILTERS);
             }
-        }
 
+        }
         initToolbar();
         loadCommentFragment();
 
@@ -64,7 +60,7 @@ public class CommentsActivity extends AppCompatActivity {
     private void loadCommentFragment() {
 
         mCommentsFragment = new CommentsFragment();
-        mCommentsFragment.setQuoteId(mQuoteId);
+        mCommentsFragment.setCommentFilters(mCommentFilters);
         mFragmentManager = getSupportFragmentManager();
 
         mFragmentManager.beginTransaction()

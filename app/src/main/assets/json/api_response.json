@@ -1,0 +1,11 @@
+{
+  "api_details": {
+    "status": "true",
+    "version": "1.0"
+  },
+  "data": {
+    "status": "true",
+    "udise_id": "11111111111"
+  },
+  "error": {}
+}

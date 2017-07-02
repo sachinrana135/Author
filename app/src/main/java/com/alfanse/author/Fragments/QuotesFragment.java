@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -20,13 +21,20 @@ import com.alfanse.author.Activities.AuthorsActivity;
 import com.alfanse.author.Activities.CommentsActivity;
 import com.alfanse.author.Activities.QuoteActivity;
 import com.alfanse.author.Adapters.QuotesAdapter;
+import com.alfanse.author.Interfaces.NetworkCallback;
+import com.alfanse.author.Interfaces.UpdatableFragment;
 import com.alfanse.author.Interfaces.bitmapRequestListener;
 import com.alfanse.author.Interfaces.onQuoteItemClickListener;
 import com.alfanse.author.Interfaces.onReportItemSubmitListener;
+import com.alfanse.author.Models.AuthorFilters;
+import com.alfanse.author.Models.CommentFilters;
 import com.alfanse.author.Models.Quote;
+import com.alfanse.author.Models.QuoteFilters;
 import com.alfanse.author.Models.ReportReason;
 import com.alfanse.author.R;
+import com.alfanse.author.Utilities.ApiUtils;
 import com.alfanse.author.Utilities.CommonView;
+import com.alfanse.author.Utilities.Constants;
 import com.alfanse.author.Utilities.EndlessRecyclerViewScrollListener;
 import com.alfanse.author.Utilities.Utils;
 import com.google.gson.Gson;
@@ -39,7 +47,6 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.alfanse.author.Utilities.Constants.ASSETS_FILE_QUOTES;
 import static com.alfanse.author.Utilities.Constants.ASSETS_FILE_REPORTS;
 import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_AUTHOR_ID;
 import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_QUOTE_ID;
@@ -47,10 +54,12 @@ import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_QUOTE_ID;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class QuotesFragment extends Fragment {
+public class QuotesFragment extends Fragment implements UpdatableFragment {
 
     private static final int DOWNLOAD_QUOTE_PERMISSION_REQUEST_CODE = 4704;
     private static final int SAVE_TEMP_QUOTE_PERMISSION_REQUEST_CODE = 7847;
+    @BindView(R.id.swipe_refresh_fragment_quote)
+    SwipeRefreshLayout layoutSwipeRefresh;
     @BindView(R.id.rv_quotes_fragment_quotes)
     RecyclerView recyclerViewQuotes;
     private Context mContext;
@@ -62,6 +71,7 @@ public class QuotesFragment extends Fragment {
     private EndlessRecyclerViewScrollListener mScrollListener;
     private int mFirstPage = 1;
     private int mVisibleThreshold = 5;
+    private QuoteFilters quoteFilters = new QuoteFilters();
 
     private onQuoteItemClickListener mOnQuoteItemClickListener = new onQuoteItemClickListener() {
 
@@ -72,6 +82,7 @@ public class QuotesFragment extends Fragment {
 
         @Override
         public void onQuoteClick(Quote quote) {
+
             Intent quoteIntent = new Intent(mActivity, QuoteActivity.class);
             quoteIntent.putExtra(BUNDLE_KEY_QUOTE_ID, quote.getId());
             startActivity(quoteIntent);
@@ -84,15 +95,22 @@ public class QuotesFragment extends Fragment {
 
         @Override
         public void onTotalLikesClick(Quote quote) {
-            Intent quoteIntent = new Intent(mActivity, AuthorsActivity.class);
-            quoteIntent.putExtra(BUNDLE_KEY_QUOTE_ID, quote.getId());
-            startActivity(quoteIntent);
+            Intent authorsIntent = new Intent(mActivity, AuthorsActivity.class);
+            authorsIntent.putExtra(Constants.BUNDLE_KEY_TITLE, getString(R.string.text_quote_liked_by));
+
+            AuthorFilters authorFilters = new AuthorFilters();
+            authorFilters.setQuoteID(quote.getId());
+            authorFilters.setFilterType(Constants.AUTHOR_FILTER_TYPE_QUOTE_LIKED_BY);
+            authorsIntent.putExtra(Constants.BUNDLE_KEY_AUTHORS_FILTERS, authorFilters);
+            startActivity(authorsIntent);
         }
 
         @Override
         public void onActionCommentClick(Quote quote) {
             Intent commentIntent = new Intent(mActivity, CommentsActivity.class);
-            commentIntent.putExtra(BUNDLE_KEY_QUOTE_ID, quote.getId());
+            CommentFilters commentFilters = new CommentFilters();
+            commentFilters.setQuoteID(quote.getId());
+            commentIntent.putExtra(Constants.BUNDLE_KEY_COMMENTS_FILTERS, commentFilters);
             startActivity(commentIntent);
         }
 
@@ -173,7 +191,6 @@ public class QuotesFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mListQuotes = new ArrayList<Quote>();
         mQuotesAdapter = new QuotesAdapter(mContext, mListQuotes, mOnQuoteItemClickListener);
-        loadMoreQuotes(mFirstPage);
     }
 
     @Override
@@ -187,29 +204,71 @@ public class QuotesFragment extends Fragment {
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(column, StaggeredGridLayoutManager.VERTICAL);
         recyclerViewQuotes.setLayoutManager(layoutManager);
         recyclerViewQuotes.setAdapter(mQuotesAdapter);
+
+        layoutSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mListQuotes.clear();
+                mQuotesAdapter.notifyDataSetChanged();
+                loadQuotes(mFirstPage);
+            }
+        });
+
+        loadQuotes(mFirstPage);
+
         mScrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to the bottom of the list
-                loadMoreQuotes(page);
+                loadQuotes(page);
             }
         };
+
         mScrollListener.setVisibleThreshold(mVisibleThreshold);
         // Adds the scroll listener to RecyclerView
         recyclerViewQuotes.addOnScrollListener(mScrollListener);
         return view;
     }
 
-    private void loadMoreQuotes(int page) {
+    private void loadQuotes(int page) {
 
-        String quotesJson = Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_QUOTES);
+        layoutSwipeRefresh.setRefreshing(true);
+
+        quoteFilters.setPage(Integer.toString(page));
+
+        //region API_CALL_START
+        HashMap<String, String> param = new HashMap<>();
+        param.put(Constants.API_PARAM_KEY_QUOTE_FILTERS, new Gson().toJson(quoteFilters));
+        ApiUtils api = new ApiUtils(mContext)
+                .setActivity(mActivity)
+                .setUrl(Constants.API_URL_GET_QUOTES)
+                .setParams(param)
+                .setMessage("QuotesFragment.java|loadQuotes")
+                .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
+                    @Override
+                    public void onSuccessCallBack(String stringResponse) {
+                        parseLoadQuotesResponse(stringResponse);
+                        layoutSwipeRefresh.setRefreshing(false);
+                    }
+
+                    @Override
+                    public void onFailureCallBack(Exception e) {
+                        layoutSwipeRefresh.setRefreshing(false);
+                    }
+                });
+
+        api.call();
+        //endregion API_CALL_END
+    }
+
+    private void parseLoadQuotesResponse(String stringResponse) {
 
         Type quoteListType = new TypeToken<ArrayList<Quote>>() {
         }.getType();
 
         ArrayList<Quote> listQuotes = new ArrayList<>();
-        listQuotes = new Gson().fromJson(quotesJson, quoteListType);
+        listQuotes = new Gson().fromJson(stringResponse, quoteListType);
 
         mListQuotes.addAll(listQuotes);
 
@@ -298,5 +357,20 @@ public class QuotesFragment extends Fragment {
                 break;
             }
         }
+    }
+
+    public QuoteFilters getQuoteFilters() {
+        return quoteFilters;
+    }
+
+    public void setQuoteFilters(QuoteFilters quoteFilters) {
+        this.quoteFilters = quoteFilters;
+    }
+
+    @Override
+    public void update() {
+        mListQuotes.clear();
+        mQuotesAdapter.notifyDataSetChanged();
+        loadQuotes(mFirstPage);
     }
 }

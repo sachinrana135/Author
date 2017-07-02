@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.Toolbar;
@@ -18,9 +17,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alfanse.author.Fragments.QuotesFragment;
+import com.alfanse.author.Interfaces.NetworkCallback;
 import com.alfanse.author.Models.Author;
+import com.alfanse.author.Models.AuthorFilters;
+import com.alfanse.author.Models.QuoteFilters;
 import com.alfanse.author.R;
+import com.alfanse.author.Utilities.ApiUtils;
 import com.alfanse.author.Utilities.CommonView;
+import com.alfanse.author.Utilities.Constants;
 import com.alfanse.author.Utilities.SharedManagement;
 import com.alfanse.author.Utilities.Utils;
 import com.bumptech.glide.Glide;
@@ -30,6 +34,9 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.gson.Gson;
+
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -76,6 +83,7 @@ public class AuthorActivity extends BaseActivity {
     private Context mContext;
     private Author mAuthor;
     private String mAuthorId;
+    private Author mLoggedAuthor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,12 +93,6 @@ public class AuthorActivity extends BaseActivity {
         mContext = getApplicationContext();
         mActivity = AuthorActivity.this;
         mAuth = FirebaseAuth.getInstance();
-
-        mAuthor = SharedManagement.getInstance(mContext).getLoggedUser();
-        // TODO API to get author details
-
-        initToolbar();
-        initListener();
 
         Intent intent = getIntent();
         if (intent.getExtras() != null) {
@@ -102,8 +104,45 @@ public class AuthorActivity extends BaseActivity {
             }
         }
 
-        renderView();
+        mLoggedAuthor = SharedManagement.getInstance(mContext).getLoggedUser();
+        getAuthor();
+        initListener();
         loadQuotesFragment();
+    }
+
+    private void getAuthor() {
+
+        CommonView.getInstance(mContext).showTransparentProgressDialog(mActivity, getString(R.string.text_loading));
+        //region API_CALL_START
+        HashMap<String, String> param = new HashMap<>();
+        param.put(Constants.API_PARAM_KEY_AUTHOR_ID, mAuthorId);
+        param.put(Constants.API_PARAM_KEY_LOGGED_AUTHOR_ID, mLoggedAuthor.getId());
+        ApiUtils api = new ApiUtils(mContext)
+                .setActivity(mActivity)
+                .setUrl(Constants.API_URL_GET_AUTHOR)
+                .setParams(param)
+                .setMessage("AuthorActivity.java|getAuthor")
+                .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
+                    @Override
+                    public void onSuccessCallBack(String stringResponse) {
+                        parseGetAuthorResponse(stringResponse);
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onFailureCallBack(Exception e) {
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+                });
+
+        api.call();
+        //endregion API_CALL_END
+    }
+
+    private void parseGetAuthorResponse(String stringResponse) {
+        mAuthor = new Gson().fromJson(stringResponse, Author.class);
+        initToolbar();
+        renderView();
     }
 
 
@@ -116,10 +155,15 @@ public class AuthorActivity extends BaseActivity {
     }
 
     private void initToolbar() {
+        mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
         collapsingToolbarLayout.setTitle(mAuthor.getName());
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
     }
 
     private void initListener() {
@@ -129,6 +173,11 @@ public class AuthorActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent quotesIntent = new Intent(mActivity, QuotesActivity.class);
+                quotesIntent.putExtra(Constants.BUNDLE_KEY_TITLE, mAuthor.getName() + " " + getString(R.string.title_quotes));
+                QuoteFilters quoteFilters = new QuoteFilters();
+                quoteFilters.setAuthorID(mAuthorId);
+                quoteFilters.setLoggedAuthorID(mLoggedAuthor.getId());
+                quotesIntent.putExtra(Constants.BUNDLE_KEY_QUOTES_FILTERS, quoteFilters);
                 startActivity(quotesIntent);
             }
         });
@@ -136,41 +185,73 @@ public class AuthorActivity extends BaseActivity {
         layoutTotalFollowers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent followersIntent = new Intent(mActivity, AuthorsActivity.class);
-                startActivity(followersIntent);
+                Intent authorsIntent = new Intent(mActivity, AuthorsActivity.class);
+                authorsIntent.putExtra(Constants.BUNDLE_KEY_TITLE, mAuthor.getName() + " " + getString(R.string.text_followers));
+
+                AuthorFilters authorFilters = new AuthorFilters();
+                authorFilters.setAuthorID(mAuthorId);
+                authorFilters.setLoggedAuthorID(mLoggedAuthor.getId());
+                authorFilters.setFilterType(Constants.AUTHOR_FILTER_TYPE_FOLLOWER);
+
+                authorsIntent.putExtra(Constants.BUNDLE_KEY_AUTHORS_FILTERS, authorFilters);
+                startActivity(authorsIntent);
             }
         });
 
         layoutTotalFollowing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent followersIntent = new Intent(mActivity, AuthorsActivity.class);
-                startActivity(followersIntent);
+                Intent authorsIntent = new Intent(mActivity, AuthorsActivity.class);
+                authorsIntent.putExtra(Constants.BUNDLE_KEY_TITLE, mAuthor.getName() + " " + getString(R.string.text_following));
+
+                AuthorFilters authorFilters = new AuthorFilters();
+                authorFilters.setAuthorID(mAuthorId);
+                authorFilters.setLoggedAuthorID(mLoggedAuthor.getId());
+                authorFilters.setFilterType(Constants.AUTHOR_FILTER_TYPE_FOLLOWING);
+
+                authorsIntent.putExtra(Constants.BUNDLE_KEY_AUTHORS_FILTERS, authorFilters);
+                startActivity(authorsIntent);
             }
         });
 
         textFollow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommonView.getInstance(mContext).showProgressDialog(mActivity, getString(R.string.text_loading), null);
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        CommonView.getInstance(mContext).dismissProgressDialog();
-                        if (mAuthor.isFollowingAuthor()) {
-                            textFollow.setText(mContext.getString(R.string.action_follow));
-                            mAuthor.setFollowingAuthor(false);
-                            textTotalFollowers.setText(Integer.toString(Integer.parseInt(mAuthor.getTotalFollowers()) - 1));
-                            mAuthor.setTotalFollowers(Integer.toString(Integer.parseInt(mAuthor.getTotalFollowers()) - 1));
-                        } else {
-                            textFollow.setText(mContext.getString(R.string.action_unfollow));
-                            mAuthor.setFollowingAuthor(true);
-                            textTotalFollowers.setText(Integer.toString(Integer.parseInt(mAuthor.getTotalFollowers()) + 1));
-                            mAuthor.setTotalFollowers(Integer.toString(Integer.parseInt(mAuthor.getTotalFollowers()) + 1));
-                        }
-                    }
-                }, 2000);
+                CommonView.getInstance(mContext).showProgressDialog(mActivity, getString(R.string.text_please_wait), null);
+                //region API_CALL_START
+                HashMap<String, String> param = new HashMap<>();
+                param.put(Constants.API_PARAM_KEY_LOGGED_AUTHOR_ID, mLoggedAuthor.getId());
+                param.put(Constants.API_PARAM_KEY_AUTHOR_ID, mAuthorId);
+                ApiUtils api = new ApiUtils(mContext)
+                        .setActivity(mActivity)
+                        .setUrl(Constants.API_URL_FOLLOW_AUTHOR)
+                        .setParams(param)
+                        .setMessage("AuthorActivity.java|initListener")
+                        .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
+                            @Override
+                            public void onSuccessCallBack(String stringResponse) {
+                                if (mAuthor.isFollowingAuthor()) {
+                                    textFollow.setText(mContext.getString(R.string.action_follow));
+                                    mAuthor.setFollowingAuthor(false);
+                                    textTotalFollowers.setText(Integer.toString(Integer.parseInt(mAuthor.getTotalFollowers()) - 1));
+                                    mAuthor.setTotalFollowers(Integer.toString(Integer.parseInt(mAuthor.getTotalFollowers()) - 1));
+                                } else {
+                                    textFollow.setText(mContext.getString(R.string.action_unfollow));
+                                    mAuthor.setFollowingAuthor(true);
+                                    textTotalFollowers.setText(Integer.toString(Integer.parseInt(mAuthor.getTotalFollowers()) + 1));
+                                    mAuthor.setTotalFollowers(Integer.toString(Integer.parseInt(mAuthor.getTotalFollowers()) + 1));
+                                }
+                                CommonView.getInstance(mContext).dismissProgressDialog();
+                            }
+
+                            @Override
+                            public void onFailureCallBack(Exception e) {
+                                CommonView.getInstance(mContext).dismissProgressDialog();
+                            }
+                        });
+
+                api.call();
+                //endregion API_CALL_END
             }
         });
     }

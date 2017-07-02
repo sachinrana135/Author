@@ -22,6 +22,7 @@ public class Quote implements Serializable {
     private Author author;
     private Boolean likeQuote;
     private ArrayList<String> tags;
+    private ArrayList<String> content;
     private ArrayList<Category> categories;
 
     public String getId() {
@@ -118,6 +119,14 @@ public class Quote implements Serializable {
 
     public void setCategories(ArrayList<Category> categories) {
         this.categories = categories;
+    }
+
+    public ArrayList<String> getContent() {
+        return content;
+    }
+
+    public void setContent(ArrayList<String> content) {
+        this.content = content;
     }
 
     public Boolean isLikeQuote() {

@@ -8,14 +8,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.alfanse.author.Fragments.QuotesFragment;
+import com.alfanse.author.Models.QuoteFilters;
 import com.alfanse.author.R;
+import com.alfanse.author.Utilities.Constants;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_CATEGORY_ID;
-import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_LANGUAGE_ID;
-import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_SEARCH_KEYWORD;
 
 public class QuotesActivity extends BaseActivity {
 
@@ -29,6 +27,8 @@ public class QuotesActivity extends BaseActivity {
     private String mCategoryID = null;
     private String mSearchKeyword = null;
     private String mLanguageId = null;
+    private String mTitle = null;
+    private QuoteFilters mQuoteFilters;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,16 +41,13 @@ public class QuotesActivity extends BaseActivity {
 
         Intent intent = getIntent();
         if (intent.getExtras() != null) {
-            if (intent.hasExtra(BUNDLE_KEY_CATEGORY_ID)) {
-                mCategoryID = intent.getStringExtra(BUNDLE_KEY_CATEGORY_ID);
+
+            if (intent.hasExtra(Constants.BUNDLE_KEY_TITLE)) {
+                mTitle = intent.getStringExtra(Constants.BUNDLE_KEY_TITLE);
             }
 
-            if (intent.hasExtra(BUNDLE_KEY_SEARCH_KEYWORD)) {
-                mSearchKeyword = intent.getStringExtra(BUNDLE_KEY_SEARCH_KEYWORD);
-            }
-
-            if (intent.hasExtra(BUNDLE_KEY_LANGUAGE_ID)) {
-                mLanguageId = intent.getStringExtra(BUNDLE_KEY_LANGUAGE_ID);
+            if (intent.hasExtra(Constants.BUNDLE_KEY_QUOTES_FILTERS)) {
+                mQuoteFilters = (QuoteFilters) intent.getSerializableExtra(Constants.BUNDLE_KEY_QUOTES_FILTERS);
             }
         }
         initToolbar();
@@ -59,6 +56,11 @@ public class QuotesActivity extends BaseActivity {
 
     private void loadQuotesFragment() {
         mQuotesFragment = new QuotesFragment();
+
+        if (mQuoteFilters != null) {
+            mQuotesFragment.setQuoteFilters(mQuoteFilters);
+        }
+
         mFragmentManager = getSupportFragmentManager();
 
         mFragmentManager.beginTransaction()
@@ -70,7 +72,11 @@ public class QuotesActivity extends BaseActivity {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle(R.string.title_quotes);
+        if (mTitle != null) {
+            getSupportActionBar().setTitle(mTitle);
+        } else {
+            getSupportActionBar().setTitle(R.string.title_quotes);
+        }
     }
 
     @Override

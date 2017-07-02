@@ -22,6 +22,7 @@
     <string name="title_latest">Latest</string>
     <string name="title_trending">Trending</string>
     <string name="title_popular">Popular</string>
+    <string name="title_authors">Authors</string>
 
 
     <!-- Menu -->
@@ -46,7 +47,7 @@
     <string name="text_language">Language: </string>
     <string name="text_tags">Tags</string>
     <string name="text_source">Source: </string>
-    <string name="text_select_language">Choose language</string>
+    <string name="text_select_language">Select language</string>
     <string name="text_select_country">Select country</string>
     <string name="text_select_category">Select category</string>
     <string name="text_select_category_hint">Choose maximum 3 categories</string>
@@ -73,6 +74,11 @@
     <string name="text_female">Female</string>
     <string name="text_share_quote">Share Quote</string>
     <string name="text_reason_for_report">Reason for Report</string>
+    <string name="text_filter_selected">%s selected</string>
+    <string name="text_quotes_on">Quotes on %s</string>
+    <string name="text_yours">Yours %s</string>
+    <string name="text_you">You %s</string>
+    <string name="text_quote_liked_by">Quote liked by</string>
 
     <!-- Loading messages -->
     <string name="text_please_wait">Please Wait...</string>
@@ -86,6 +92,7 @@
     <string name="text_loading_update_profile">Updating profile...</string>
     <string name="text_loading_update_password">Updating password...</string>
     <string name="text_loading_downloading_quote">Downloading Quote...</string>
+    <string name="text_loading_submitting_report">Submitting Report...</string>
 
 
     <!-- Button -->
@@ -100,6 +107,7 @@
     <string name="button_proceed">Proceed</string>
     <string name="button_update">Update</string>
     <string name="button_explore">Explore</string>
+    <string name="button_apply">Apply</string>
 
     <!-- Hint -->
     <string name="hint_email">Email*</string>
@@ -108,12 +116,13 @@
     <string name="hint_name">Your Name*</string>
     <string name="hint_password">Password*</string>
     <string name="hint_confirm_password">Confirm Password*</string>
-    <string name="hint_quote_caption">Write something about quote</string>
+    <string name="hint_quote_caption">Caption..</string>
     <string name="hint_author_status">Something about yourself..</string>
     <string name="hint_search_category">Search Category</string>
     <string name="hint_enter_tags">Enter Tags (Comma separated)</string>
     <string name="hint_enter_quote_source">Enter original source name</string>
     <string name="hint_enter_comment">Enter comment..</string>
+    <string name="hint_search">Search Quotes..</string>
 
     <!-- Options-->
     <string name="option_item_default_tag">option_tag_default</string>
@@ -140,6 +149,7 @@
     <string name="action_done">Done</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_reset">Reset</string>
+    <string name="action_search">Search</string>
     <string name="action_logout">Logout</string>
     <string name="action_yes">Yes</string>
     <string name="action_no">No</string>
@@ -156,6 +166,7 @@
     <string name="msg_reset_password_email_sent_success">An email to reset password has been successfully sent to your email. Kindly check the email and reset password.</string>
     <string name="msg_signup_success">An account verification email has been sent to you. Kindly verify your account before login.</string>
     <string name="msg_unverified_email">This email is not verified.</string>
+    <string name="msg_post_quote_report_submit">Thanks for the reporting. We will review this quote and take necessary action accordingly.</string>
     <string name="msg_dialog_success">Success</string>
     <string name="msg_dialog_warning">Warning</string>
     <string name="msg_dialog_error">Error</string>
@@ -166,6 +177,7 @@
     <string name="success_signup">Account created successfully</string>
     <string name="success_profile_updated">Profile updated successfully</string>
     <string name="success_password_updated">Password updated successfully</string>
+    <string name="success_quote_reported">Quote reported successfully</string>
 
     <!-- error messages -->
     <string name="error_bad_network">Cannot connect to Internet...Please check your connection!</string>

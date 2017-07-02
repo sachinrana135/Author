@@ -35,10 +35,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.alfanse.author.Utilities.Constants.ASSETS_FILE_CATEGORY;
+import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_MAXIMUM_CATEGORY_SELECT_ALLOW;
 import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_SELECTED_CATEGORIES;
 
 public class ChooseCategoryActivity extends BaseActivity {
 
+    public static final int UNLIMITED = -1;
     private static final int RESULT_CODE = 4234;
     @BindView(R.id.toolbar_choose_category)
     Toolbar mToolbar;
@@ -46,15 +48,12 @@ public class ChooseCategoryActivity extends BaseActivity {
     FlowLayout tagsContainer;
     @BindView(R.id.search_edit_choose_category)
     EditText searchBar;
-
     private Context mContext;
     private Activity mActivity;
-
     private ArrayList<Category> mSelectedCategories;
-    private int mMaximumSelectAllow = 3;
+    private ArrayList<Category> mPreSelectedCategories;
+    private int mMaximumSelectAllow;
     private ArrayList<Category> mCategories;
-
-
     private View.OnClickListener tagOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -65,10 +64,15 @@ public class ChooseCategoryActivity extends BaseActivity {
                 Category category = (Category) categoryTag.getTag();
 
                 if ((categoryTag).getCompoundDrawables()[2] == null) { // Right drawable
-                    if (mSelectedCategories.size() < mMaximumSelectAllow) {
+
+                    if (((mSelectedCategories.size() < mMaximumSelectAllow) && (mMaximumSelectAllow != UNLIMITED)) || (mMaximumSelectAllow == UNLIMITED)) {
                         categoryTag.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_check_circle_white_24dp, 0);
                         categoryTag.setCompoundDrawablePadding((int) getResources().getDimension(R.dimen.spacing_xsmall));
                         mSelectedCategories.add(category);
+                        // Set result on maximum category selected
+                        if ((mSelectedCategories.size() == mMaximumSelectAllow) && (mMaximumSelectAllow != UNLIMITED)) {
+                            setResult();
+                        }
                     }
                 } else {
                     categoryTag.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
@@ -123,9 +127,20 @@ public class ChooseCategoryActivity extends BaseActivity {
         mContext = getApplicationContext();
         mActivity = ChooseCategoryActivity.this;
 
-        initToolbar();
+        mMaximumSelectAllow = UNLIMITED;
 
+        Intent intent = getIntent();
         mSelectedCategories = new ArrayList<Category>();
+        if (intent.getExtras() != null) {
+            if (intent.hasExtra(BUNDLE_KEY_MAXIMUM_CATEGORY_SELECT_ALLOW)) {
+                mMaximumSelectAllow = intent.getIntExtra(BUNDLE_KEY_MAXIMUM_CATEGORY_SELECT_ALLOW, UNLIMITED);
+            }
+            if (intent.hasExtra(BUNDLE_KEY_SELECTED_CATEGORIES)) {
+                mPreSelectedCategories = (ArrayList<Category>) intent.getSerializableExtra(BUNDLE_KEY_SELECTED_CATEGORIES);
+            }
+        }
+
+        initToolbar();
         searchBar.addTextChangedListener(searchTextWatcher);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         loadCategoriesList();
@@ -160,6 +175,16 @@ public class ChooseCategoryActivity extends BaseActivity {
             categoryTag.setBackground(mRoundBorderDrawable);
             categoryTag.setPadding((int) getResources().getDimension(R.dimen.spacing_normal), (int) getResources().getDimension(R.dimen.spacing_xsmall), (int) getResources().getDimension(R.dimen.spacing_normal), (int) getResources().getDimension(R.dimen.spacing_xsmall));
             categoryTag.setOnClickListener(tagOnClickListener);
+
+            if (mPreSelectedCategories != null && mPreSelectedCategories.size() > 0) {
+                for (Category preSelectedCategory : mPreSelectedCategories) {
+                    if (preSelectedCategory.getId().equalsIgnoreCase(category.getId())) {
+                        mSelectedCategories.add(category);
+                        categoryTag.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_check_circle_white_24dp, 0);
+                        categoryTag.setCompoundDrawablePadding((int) getResources().getDimension(R.dimen.spacing_xsmall));
+                    }
+                }
+            }
 
             addTag(categoryTag);
 
@@ -204,10 +229,10 @@ public class ChooseCategoryActivity extends BaseActivity {
     }
 
     private void setResult() {
-            Intent intent = new Intent();
-            intent.putExtra(BUNDLE_KEY_SELECTED_CATEGORIES, mSelectedCategories);
+        Intent intent = new Intent();
+        intent.putExtra(BUNDLE_KEY_SELECTED_CATEGORIES, mSelectedCategories);
         setResult(RESULT_CODE, intent);
-            finish();//finishing activity
+        finish();//finishing activity
     }
 
     @Override

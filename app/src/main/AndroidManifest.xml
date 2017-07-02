@@ -86,7 +86,11 @@
             android:name=".Activities.AuthorActivity"
             android:label="@string/title_activity_author"
             android:theme="@style/AppTheme" />
-        <activity android:name=".Activities.ExploreQuotesActivity" />
+        <activity android:name=".Activities.ExploreQuotesActivity">
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
         <activity android:name=".Activities.ChooseCountryActivity"></activity>
     </application>
 

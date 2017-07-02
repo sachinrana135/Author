@@ -1,10 +1,12 @@
 package com.alfanse.author.Models;
 
+import java.io.Serializable;
+
 /**
  * Created by Velocity-1601 on 6/24/2017.
  */
 
-public class Language {
+public class Language implements Serializable {
 
     private String languageId;
     private String languageName;

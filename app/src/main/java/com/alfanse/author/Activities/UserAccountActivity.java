@@ -26,6 +26,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alfanse.author.Models.Author;
+import com.alfanse.author.Models.AuthorFilters;
+import com.alfanse.author.Models.QuoteFilters;
 import com.alfanse.author.R;
 import com.alfanse.author.Utilities.CommonView;
 import com.alfanse.author.Utilities.Constants;
@@ -177,6 +179,10 @@ public class UserAccountActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent quotesIntent = new Intent(mActivity, QuotesActivity.class);
+                quotesIntent.putExtra(Constants.BUNDLE_KEY_TITLE, String.format(getString(R.string.text_yours), getString(R.string.text_quotes)));
+                QuoteFilters quoteFilters = new QuoteFilters();
+                quoteFilters.setAuthorID(mAuthor.getId());
+                quotesIntent.putExtra(Constants.BUNDLE_KEY_QUOTES_FILTERS, quoteFilters);
                 startActivity(quotesIntent);
             }
         });
@@ -184,16 +190,33 @@ public class UserAccountActivity extends BaseActivity {
         layoutTotalFollowers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent followersIntent = new Intent(mActivity, AuthorsActivity.class);
-                startActivity(followersIntent);
+                Intent authorsIntent = new Intent(mActivity, AuthorsActivity.class);
+
+                authorsIntent.putExtra(Constants.BUNDLE_KEY_TITLE, String.format(getString(R.string.text_yours), getString(R.string.text_followers)));
+
+                AuthorFilters authorFilters = new AuthorFilters();
+                authorFilters.setAuthorID(mAuthor.getId());
+                authorFilters.setLoggedAuthorID(mAuthor.getId());
+                authorFilters.setFilterType(Constants.AUTHOR_FILTER_TYPE_FOLLOWER);
+                authorsIntent.putExtra(Constants.BUNDLE_KEY_AUTHORS_FILTERS, authorFilters);
+                startActivity(authorsIntent);
             }
         });
 
         layoutTotalFollowing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent followersIntent = new Intent(mActivity, AuthorsActivity.class);
-                startActivity(followersIntent);
+                Intent authorsIntent = new Intent(mActivity, AuthorsActivity.class);
+
+                authorsIntent.putExtra(Constants.BUNDLE_KEY_TITLE, String.format(getString(R.string.text_you), getString(R.string.text_following)));
+
+                AuthorFilters authorFilters = new AuthorFilters();
+                authorFilters.setAuthorID(mAuthor.getId());
+                authorFilters.setLoggedAuthorID(mAuthor.getId());
+                authorFilters.setFilterType(Constants.AUTHOR_FILTER_TYPE_FOLLOWING);
+
+                authorsIntent.putExtra(Constants.BUNDLE_KEY_AUTHORS_FILTERS, authorFilters);
+                startActivity(authorsIntent);
             }
         });
 

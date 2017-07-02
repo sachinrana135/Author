@@ -25,9 +25,12 @@ import com.alfanse.author.CustomViews.ComponentBoxView;
 import com.alfanse.author.CustomViews.ComponentImageView;
 import com.alfanse.author.CustomViews.ComponentTextView;
 import com.alfanse.author.CustomViews.QuoteCanvas;
+import com.alfanse.author.Interfaces.NetworkCallback;
 import com.alfanse.author.Interfaces.onCanvasThemeItemClickListener;
 import com.alfanse.author.Models.CanvasTheme;
 import com.alfanse.author.R;
+import com.alfanse.author.Utilities.ApiUtils;
+import com.alfanse.author.Utilities.CommonView;
 import com.alfanse.author.Utilities.Constants;
 import com.alfanse.author.Utilities.EndlessRecyclerViewScrollListener;
 import com.alfanse.author.Utilities.Utils;
@@ -39,11 +42,11 @@ import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.alfanse.author.Utilities.Constants.ASSETS_FILE_CANVAS_THEMES;
 import static com.theartofdev.edmodo.cropper.CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE;
 
 /**
@@ -109,7 +112,6 @@ public class CanvasOptionsFragment extends Fragment implements ColorPickerDialog
         super.onCreate(savedInstanceState);
         mListCanvasThemes = new ArrayList<CanvasTheme>();
         mCanvasThemesAdapter = new CanvasThemesAdapter(mContext, mListCanvasThemes, mOnCanvasThemeItemClickListener);
-        loadMoreThemes(mFirstPage);
     }
 
     @Override
@@ -122,30 +124,65 @@ public class CanvasOptionsFragment extends Fragment implements ColorPickerDialog
         mLinearLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
         recyclerViewCanvasThemes.setLayoutManager(mLinearLayoutManager);
         recyclerViewCanvasThemes.setAdapter(mCanvasThemesAdapter);
+        loadThemes(mFirstPage);
+        initListener();
+        return view;
+    }
+
+    private void initListener() {
+
         initOptionItemClickListener();
+
         mScrollListener = new EndlessRecyclerViewScrollListener(mLinearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to the bottom of the list
-                loadMoreThemes(page);
+                loadThemes(page);
             }
         };
         mScrollListener.setVisibleThreshold(mVisibleThreshold);
         // Adds the scroll listener to RecyclerView
         recyclerViewCanvasThemes.addOnScrollListener(mScrollListener);
-        return view;
     }
 
-    private void loadMoreThemes(int firstPage) {
+    private void loadThemes(int page) {
 
-        String themesJson = Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_CANVAS_THEMES);
+        CommonView.getInstance(mContext).showProgressDialog(mActivity, getString(R.string.text_loading), null);
+
+        //region API_CALL_START
+        HashMap<String, String> param = new HashMap<>();
+        param.put(Constants.API_PARAM_KEY_PAGE, Integer.toString(page));
+        ApiUtils api = new ApiUtils(mContext)
+                .setActivity(mActivity)
+                .setUrl(Constants.API_URL_GET_CANVAS_THEMES)
+                .setParams(param)
+                .setMessage("CanvasOptionsFragment.java|loadThemes")
+                .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
+                    @Override
+                    public void onSuccessCallBack(String stringResponse) {
+                        parseLoadThemesResponse(stringResponse);
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onFailureCallBack(Exception e) {
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+                });
+
+        api.call();
+        //endregion API_CALL_END
+    }
+
+    private void parseLoadThemesResponse(String stringResponse) {
+        //String themesJson = Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_CANVAS_THEMES);
 
         Type themeListType = new TypeToken<ArrayList<CanvasTheme>>() {
         }.getType();
 
         ArrayList<CanvasTheme> listThemes = new ArrayList<>();
-        listThemes = new Gson().fromJson(themesJson, themeListType);
+        listThemes = new Gson().fromJson(stringResponse, themeListType);
 
         mListCanvasThemes.addAll(listThemes);
 
