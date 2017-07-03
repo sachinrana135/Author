@@ -78,17 +78,23 @@ public class Constants {
     public static final String API_URL_REPORT_COMMENT = API_BASE_URL + "reportComment";
     public static final String API_URL_FOLLOW_AUTHOR = API_BASE_URL + "followAuthor";
     public static final String API_URL_LIKE_QUOTE = API_BASE_URL + "likeQuote";
+    public static final String API_URL_UPDATE_AUTHOR = API_BASE_URL + "updateAuthor";
 
     /***************************** API param keys  **************************/
     public static final String API_PARAM_KEY_QUOTE_FILTERS = "quoteFilters";
     public static final String API_PARAM_KEY_COMMENT_FILTERS = "commentFilters";
     public static final String API_PARAM_KEY_PAGE = "page";
+    public static final String API_PARAM_KEY_AUTHOR = "author";
+    public static final String API_PARAM_KEY_COMMENT = "comment";
+    public static final String API_PARAM_KEY_QUOTE = "quote";
     public static final String API_PARAM_KEY_AUTHOR_ID = "authorId";
     public static final String API_PARAM_KEY_REPORT_ID = "reportId";
-    public static final String API_PARAM_KEY_COMMENT_ID = "commentId";    public static final String API_PARAM_KEY_QUOTE_ID = "quoteId";
-    public static final String API_PARAM_KEY_LOGGED_AUTHOR_ID = "loggedAuthorId" ;    public static final String API_PARAM_KEY_COMMENT_ID = "commentId";
+    public static final String API_PARAM_KEY_COMMENT_ID = "commentId";
+    public static final String API_PARAM_KEY_QUOTE_ID = "quoteId";
+    public static final String API_PARAM_KEY_LOGGED_AUTHOR_ID = "loggedAuthorId";
     public static final String API_HEADER_PARAM_KEY_DEVICE_ID = "deviceId";
     public static final String API_HEADER_PARAM_KEY_CORRELATION_ID = "correlationId";
     public static final String API_HEADER_PARAM_KEY_CALL_SOURCE = "callSource";
-    public static int ANIMATION_DELAY_SEC = 500;
+    public static int ANIMATION_TOTAL_DURATION = 1000;
+    public static int ANIMATION_CYCLE_DURATION = 500;
 }

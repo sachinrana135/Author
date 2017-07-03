@@ -85,6 +85,7 @@
     <string name="text_loading">Loading...</string>
     <string name="text_loading_canvas_image">Loading Images...</string>
     <string name="text_loading_save_quote">Saving Quote...</string>
+    <string name="text_loading_save_comment">Saving Comment...</string>
     <string name="text_loading_user_login">Authenticating...</string>
     <string name="text_loading_reset_password_email">Sending email...</string>
     <string name="text_loading_verification_email">Sending verification email...</string>
@@ -167,6 +168,7 @@
     <string name="msg_signup_success">An account verification email has been sent to you. Kindly verify your account before login.</string>
     <string name="msg_unverified_email">This email is not verified.</string>
     <string name="msg_post_quote_report_submit">Thanks for the reporting. We will review this quote and take necessary action accordingly.</string>
+    <string name="msg_post_comment_report_submit">Thanks for the reporting. We will review this comment and take necessary action accordingly.</string>
     <string name="msg_dialog_success">Success</string>
     <string name="msg_dialog_warning">Warning</string>
     <string name="msg_dialog_error">Error</string>
@@ -178,6 +180,7 @@
     <string name="success_profile_updated">Profile updated successfully</string>
     <string name="success_password_updated">Password updated successfully</string>
     <string name="success_quote_reported">Quote reported successfully</string>
+    <string name="success_comment_reported">Comment reported successfully</string>
 
     <!-- error messages -->
     <string name="error_bad_network">Cannot connect to Internet...Please check your connection!</string>

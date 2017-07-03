@@ -15,12 +15,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alfanse.author.Activities.ChooseCategoryActivity;
+import com.alfanse.author.Interfaces.NetworkCallback;
 import com.alfanse.author.Interfaces.quoteFiltersUpdateListener;
 import com.alfanse.author.Models.Category;
 import com.alfanse.author.Models.Language;
 import com.alfanse.author.Models.QuoteFilters;
 import com.alfanse.author.R;
-import com.alfanse.author.Utilities.Utils;
+import com.alfanse.author.Utilities.ApiUtils;
+import com.alfanse.author.Utilities.CommonView;
+import com.alfanse.author.Utilities.Constants;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -32,7 +35,6 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.alfanse.author.Utilities.Constants.ASSETS_FILE_LANGUAGES;
 import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_MAXIMUM_CATEGORY_SELECT_ALLOW;
 import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_SELECTED_CATEGORIES;
 
@@ -96,7 +98,7 @@ public class QuoteFiltersFragment extends Fragment {
         layoutSelectLanguages.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showLanguageDialog();
+                getLanguages();
             }
         });
         layoutSelectCategories.setOnClickListener(new View.OnClickListener() {
@@ -148,14 +150,46 @@ public class QuoteFiltersFragment extends Fragment {
         super.onDetach();
     }
 
-    public void showLanguageDialog() {
+    public void getLanguages() {
 
-        String languageJson = Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_LANGUAGES);
+        //region API_CALL_START
+        CommonView.getInstance(mContext).showTransparentProgressDialog(mActivity, null);
+        HashMap<String, String> param = new HashMap<>();
+        ApiUtils api = new ApiUtils(mContext)
+                .setActivity(mActivity)
+                .setUrl(Constants.API_URL_GET_LANGUAGES)
+                .setParams(param)
+                .setMessage("PublishQuoteActivity.java|getLanguages")
+                .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
+                    @Override
+                    public void onSuccessCallBack(String stringResponse) {
+                        parseGetLanguagesResponse(stringResponse);
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onFailureCallBack(Exception e) {
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+                });
+
+        api.call();
+        //endregion API_CALL_END
+    }
+
+    private void parseGetLanguagesResponse(String stringResponse) {
+
+        // String languageJson = Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_LANGUAGES);
 
         Type languageListType = new TypeToken<ArrayList<Language>>() {
         }.getType();
 
-        languages = new Gson().fromJson(languageJson, languageListType);
+        languages = new Gson().fromJson(stringResponse, languageListType);
+        showLanguageDialog();
+    }
+
+    private void showLanguageDialog() {
+
         hashLanguages = new HashMap<String, Language>();
         listLanguagesNames = new ArrayList<String>();
 
@@ -226,6 +260,7 @@ public class QuoteFiltersFragment extends Fragment {
         // Create the AlertDialog
         AlertDialog dialog = builder.create();
         dialog.show();
+
     }
 
     @Override

@@ -8,9 +8,13 @@ import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.widget.ArrayAdapter;
 
+import com.alfanse.author.Interfaces.NetworkCallback;
 import com.alfanse.author.Models.Author;
 import com.alfanse.author.Models.Country;
 import com.alfanse.author.R;
+import com.alfanse.author.Utilities.ApiUtils;
+import com.alfanse.author.Utilities.CommonView;
+import com.alfanse.author.Utilities.Constants;
 import com.alfanse.author.Utilities.SharedManagement;
 import com.alfanse.author.Utilities.Utils;
 import com.google.gson.Gson;
@@ -25,7 +29,6 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.alfanse.author.Utilities.Constants.ASSETS_FILE_COUNTRIES;
 
 public class ChooseCountryActivity extends BaseActivity {
 
@@ -73,25 +76,50 @@ public class ChooseCountryActivity extends BaseActivity {
         mContext = getApplicationContext();
         mActivity = ChooseCountryActivity.this;
 
-        fillCountrySpinner();
+        getCountries();
         fabContinue.setOnClickListener(continueClickListener);
 
 
     }
 
-    private void fillCountrySpinner() {
+    private void getCountries() {
 
-        //TODO get language API
+        //region API_CALL_START
+        CommonView.getInstance(mContext).showTransparentProgressDialog(mActivity, null);
+        HashMap<String, String> param = new HashMap<>();
+        ApiUtils api = new ApiUtils(mContext)
+                .setActivity(mActivity)
+                .setUrl(Constants.API_URL_GET_COUNTRIES)
+                .setParams(param)
+                .setMessage("ChooseCountryActivity.java|getCountries")
+                .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
+                    @Override
+                    public void onSuccessCallBack(String stringResponse) {
+                        parseGetCountriesResponse(stringResponse);
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onFailureCallBack(Exception e) {
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+                });
+
+        api.call();
+        //endregion API_CALL_END
+    }
+
+    private void parseGetCountriesResponse(String stringResponse) {
 
         Locale locale = Utils.getInstance(mContext).getCurrentLocale();
 
         String countryISO3Code = locale.getISO3Country();
 
-        String countryJson = Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_COUNTRIES);
+        // String countryJson = Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_COUNTRIES);
 
         Type countryListType = new TypeToken<ArrayList<Country>>() {
         }.getType();
-        mCountries = new Gson().fromJson(countryJson, countryListType);
+        mCountries = new Gson().fromJson(stringResponse, countryListType);
 
         for (Country country : mCountries) {
             mHashCountries.put(country.getCountryName(), country.getIsoCode3());
@@ -110,6 +138,7 @@ public class ChooseCountryActivity extends BaseActivity {
         if (index != -1) {
             spinnerCountries.setSelection(index);
         }
+
 
     }
 

@@ -19,15 +19,17 @@ import com.alfanse.author.Adapters.CommentsAdapter;
 import com.alfanse.author.Interfaces.NetworkCallback;
 import com.alfanse.author.Interfaces.onCommentItemClickListener;
 import com.alfanse.author.Interfaces.onReportItemSubmitListener;
+import com.alfanse.author.Models.Author;
 import com.alfanse.author.Models.Comment;
 import com.alfanse.author.Models.CommentFilters;
+import com.alfanse.author.Models.CustomDialog;
 import com.alfanse.author.Models.ReportReason;
 import com.alfanse.author.R;
 import com.alfanse.author.Utilities.ApiUtils;
 import com.alfanse.author.Utilities.CommonView;
 import com.alfanse.author.Utilities.Constants;
 import com.alfanse.author.Utilities.EndlessRecyclerViewScrollListener;
-import com.alfanse.author.Utilities.Utils;
+import com.alfanse.author.Utilities.SharedManagement;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -38,7 +40,7 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.alfanse.author.Utilities.Constants.ASSETS_FILE_REPORTS;
+import static com.alfanse.author.CustomViews.DialogBuilder.SUCCESS;
 import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_AUTHOR_ID;
 
 /**
@@ -64,34 +66,14 @@ public class CommentsFragment extends Fragment {
     private int mVisibleThreshold = 10;
     private EndlessRecyclerViewScrollListener mScrollListener;
     private CommentFilters commentFilters = new CommentFilters();
+    private Comment activeComment = null;
+    private Author mLoggedAuthor;
     private onCommentItemClickListener mOnCommentItemClickListener = new onCommentItemClickListener() {
 
         @Override
         public void onActionReportClick(Comment comment) {
-
-            String reportReasonsJson = Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_REPORTS);
-
-            Type reportListType = new TypeToken<ArrayList<ReportReason>>() {
-            }.getType();
-
-            ArrayList<ReportReason> listReportReasons = new Gson().fromJson(reportReasonsJson, reportListType);
-
-            final HashMap<String, String> hashReportReasons = new HashMap<String, String>();
-            ArrayList<String> listReportReasonsTitle = new ArrayList<String>();
-            for (ReportReason reportReason : listReportReasons) {
-                hashReportReasons.put(reportReason.getTitle(), reportReason.getId());
-                listReportReasonsTitle.add(reportReason.getTitle());
-            }
-            CommonView.getInstance(mContext).showReportDialog(listReportReasonsTitle, mActivity, new onReportItemSubmitListener() {
-                @Override
-                public void onReportItemSubmit(String titleReport) {
-
-                    String reportId = hashReportReasons.get(titleReport);
-
-                }
-            });
-
-
+            activeComment = comment;
+            getReportReasonsAndShowDialog();
         }
 
         @Override
@@ -102,13 +84,14 @@ public class CommentsFragment extends Fragment {
             startActivity(authorIntent);
         }
     };
+
     private View.OnClickListener commentSubmitOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             if (!editTextEnterComment.getText().toString().trim().equalsIgnoreCase(null)
                     && !editTextEnterComment.getText().toString().trim().equalsIgnoreCase("")
                     && !editTextEnterComment.getText().toString().trim().isEmpty()) {
-                // TODO Submit comment API
+                saveComment();
             }
 
         }
@@ -123,6 +106,7 @@ public class CommentsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mListComments = new ArrayList<Comment>();
         mCommentsAdapter = new CommentsAdapter(mContext, mListComments, mOnCommentItemClickListener);
+        mLoggedAuthor = SharedManagement.getInstance(mContext).getLoggedUser();
     }
 
     @Override
@@ -145,6 +129,7 @@ public class CommentsFragment extends Fragment {
                 loadComments(mFirstPage);
             }
         });
+        fabSubmitComment.setOnClickListener(commentSubmitOnClickListener);
 
         loadComments(mFirstPage);
 
@@ -165,7 +150,6 @@ public class CommentsFragment extends Fragment {
     private void loadComments(int page) {
 
         layoutSwipeRefresh.setRefreshing(true);
-
         commentFilters.setPage(Integer.toString(page));
 
         //region API_CALL_START
@@ -205,6 +189,134 @@ public class CommentsFragment extends Fragment {
         listComments = new Gson().fromJson(stringResponse, commentListType);
         mListComments.addAll(listComments);
         mCommentsAdapter.notifyDataSetChanged();
+    }
+
+    private void getReportReasonsAndShowDialog() {
+        //region API_CALL_START
+        CommonView.getInstance(mContext).showTransparentProgressDialog(mActivity, null);
+        HashMap<String, String> param = new HashMap<>();
+        ApiUtils api = new ApiUtils(mContext)
+                .setActivity(mActivity)
+                .setUrl(Constants.API_URL_GET_REPORT_REASONS)
+                .setParams(param)
+                .setMessage("CommentsFragment.java|getReportReasonsAndShowDialog")
+                .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
+                    @Override
+                    public void onSuccessCallBack(String stringResponse) {
+                        parseGetReportReasonsResponse(stringResponse);
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onFailureCallBack(Exception e) {
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+                });
+
+        api.call();
+        //endregion API_CALL_END
+    }
+
+    private void parseGetReportReasonsResponse(String stringResponse) {
+
+        //  String reportReasonsJson = Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_REPORTS);
+
+        Type reportListType = new TypeToken<ArrayList<ReportReason>>() {
+        }.getType();
+
+        ArrayList<ReportReason> listReportReasons = new Gson().fromJson(stringResponse, reportListType);
+
+        final HashMap<String, String> hashReportReasons = new HashMap<String, String>();
+        ArrayList<String> listReportReasonsTitle = new ArrayList<String>();
+        for (ReportReason reportReason : listReportReasons) {
+            hashReportReasons.put(reportReason.getTitle(), reportReason.getId());
+            listReportReasonsTitle.add(reportReason.getTitle());
+        }
+        CommonView.getInstance(mContext).showReportDialog(listReportReasonsTitle, mActivity, new onReportItemSubmitListener() {
+            @Override
+            public void onReportItemSubmit(String titleReport) {
+
+                String reportId = hashReportReasons.get(titleReport);
+                submitCommentReport(reportId);
+
+            }
+        });
+
+    }
+
+    private void submitCommentReport(String reportId) {
+        //region API_CALL_START
+        CommonView.getInstance(mContext).showProgressDialog(mActivity, getString(R.string.text_loading_submitting_report), null);
+        HashMap<String, String> param = new HashMap<>();
+        param.put(Constants.API_PARAM_KEY_REPORT_ID, reportId);
+        param.put(Constants.API_PARAM_KEY_COMMENT_ID, activeComment.getId());
+        ApiUtils api = new ApiUtils(mContext)
+                .setActivity(mActivity)
+                .setUrl(Constants.API_URL_REPORT_COMMENT)
+                .setParams(param)
+                .setMessage("CommentsFragment.java|submitCommentReport")
+                .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
+                    @Override
+                    public void onSuccessCallBack(String stringResponse) {
+                        parseSubmitReportResponse(stringResponse);
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onFailureCallBack(Exception e) {
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+                });
+
+        api.call();
+        //endregion API_CALL_END
+    }
+
+    private void parseSubmitReportResponse(String stringResponse) {
+
+        CommonView.getInstance(mContext).showDialog(
+                new CustomDialog().setActivity(mActivity)
+                        .setDialogType(SUCCESS)
+                        .setTitle(getString(R.string.success_comment_reported))
+                        .setMessage(getString(R.string.msg_post_comment_report_submit))
+        );
+    }
+
+    private void saveComment() {
+
+        //region API_CALL_START
+        CommonView.getInstance(mContext).showProgressDialog(mActivity, getString(R.string.text_loading_save_comment), null);
+        HashMap<String, String> param = new HashMap<>();
+
+        Comment comment = new Comment();
+        comment.setAuthor(mLoggedAuthor);
+        comment.setComment(editTextEnterComment.getText().toString().trim());
+        param.put(Constants.API_PARAM_KEY_COMMENT, new Gson().toJson(comment));
+        ApiUtils api = new ApiUtils(mContext)
+                .setActivity(mActivity)
+                .setUrl(Constants.API_URL_SAVE_COMMENT)
+                .setParams(param)
+                .setMessage("CommentsFragment.java|saveComment")
+                .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
+                    @Override
+                    public void onSuccessCallBack(String stringResponse) {
+                        parseSaveCommentResponse(stringResponse);
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onFailureCallBack(Exception e) {
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+                });
+
+        api.call();
+        //endregion API_CALL_END
+    }
+
+    private void parseSaveCommentResponse(String stringResponse) {
+
+        loadComments(mFirstPage);
     }
 
     @Override

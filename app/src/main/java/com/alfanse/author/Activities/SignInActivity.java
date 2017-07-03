@@ -28,9 +28,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alfanse.author.CustomViews.DialogBuilder;
+import com.alfanse.author.Interfaces.NetworkCallback;
 import com.alfanse.author.Models.Author;
 import com.alfanse.author.Models.CustomDialog;
 import com.alfanse.author.R;
+import com.alfanse.author.Utilities.ApiUtils;
 import com.alfanse.author.Utilities.CommonView;
 import com.alfanse.author.Utilities.Constants;
 import com.alfanse.author.Utilities.SharedManagement;
@@ -67,6 +69,7 @@ import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -76,7 +79,6 @@ import io.fabric.sdk.android.Fabric;
 
 import static com.alfanse.author.CustomViews.DialogBuilder.ERROR;
 import static com.alfanse.author.CustomViews.DialogBuilder.SUCCESS;
-import static com.alfanse.author.Utilities.Constants.ASSETS_FILE_AUTHOR;
 
 public class SignInActivity extends BaseActivity implements
         GoogleApiClient.OnConnectionFailedListener {
@@ -434,7 +436,7 @@ public class SignInActivity extends BaseActivity implements
         layout_forgot_password.setVisibility(View.VISIBLE);
         Animation bottomUp = AnimationUtils.loadAnimation(mContext, R.anim.slide_up);
         layout_forgot_password.startAnimation(bottomUp);
-        bottomUp.setDuration(Constants.ANIMATION_DELAY_SEC);
+        bottomUp.setDuration(Constants.ANIMATION_CYCLE_DURATION);
 
     }
 
@@ -443,7 +445,7 @@ public class SignInActivity extends BaseActivity implements
         layout_forgot_password.setVisibility(View.GONE);
         Animation bottomDown = AnimationUtils.loadAnimation(mContext, R.anim.slide_down);
         layout_forgot_password.startAnimation(bottomDown);
-        bottomDown.setDuration(Constants.ANIMATION_DELAY_SEC);
+        bottomDown.setDuration(Constants.ANIMATION_CYCLE_DURATION);
     }
 
     private void signInAction() {
@@ -503,10 +505,48 @@ public class SignInActivity extends BaseActivity implements
     }
 
     private void postSignInAction() {
+        addOrUpdateAuthor();
+    }
 
-        //TODO get user API
+    private void addOrUpdateAuthor() {
+        //region API_CALL_START
+        CommonView.getInstance(mContext).showTransparentProgressDialog(mActivity, null);
+        Author author = new Author();
+        author.setEmail(mAuth.getCurrentUser().getEmail());
+        author.setFirebaseId(mAuth.getCurrentUser().getUid());
+        author.setName(mAuth.getCurrentUser().getDisplayName());
+        if (mAuth.getCurrentUser().getPhotoUrl() != null) {
+            author.setProfileImage(mAuth.getCurrentUser().getPhotoUrl().toString());
+        }
 
-        mLoggedAuthor = new Gson().fromJson(Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_AUTHOR), Author.class);
+        HashMap<String, String> param = new HashMap<>();
+        param.put(Constants.API_PARAM_KEY_AUTHOR, new Gson().toJson(author));
+        ApiUtils api = new ApiUtils(mContext)
+                .setActivity(mActivity)
+                .setUrl(Constants.API_URL_SAVE_AUTHOR)
+                .setParams(param)
+                .setMessage("AuthorActivity.java|addOrUpdateAuthor")
+                .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
+                    @Override
+                    public void onSuccessCallBack(String stringResponse) {
+                        parseAddOrUpdateAuthorResponse(stringResponse);
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onFailureCallBack(Exception e) {
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+                });
+
+        api.call();
+        //endregion API_CALL_END
+    }
+
+    private void parseAddOrUpdateAuthorResponse(String stringResponse) {
+
+        //mLoggedAuthor = new Gson().fromJson(Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_AUTHOR), Author.class);
+        mLoggedAuthor = new Gson().fromJson(stringResponse, Author.class);
 
         SharedManagement.getInstance(mContext).setLoggedUser(mLoggedAuthor);
 
@@ -517,8 +557,6 @@ public class SignInActivity extends BaseActivity implements
             Intent homeIntent = new Intent(mActivity, HomeActivity.class);
             startActivity(homeIntent);
         }
-
-
     }
 
     private void sendVerificationEmail() {
@@ -593,7 +631,7 @@ public class SignInActivity extends BaseActivity implements
                             FirebaseUser currentUser = mAuth.getCurrentUser();
                             if (currentUser != null) {
                                 // User is signed in.
-                                addSocialLoginUser();
+                                postSignInAction();
                             } else {
                                 Toast.makeText(mActivity, getString(R.string.error_exception), Toast.LENGTH_LONG).show();
                             }
@@ -632,7 +670,7 @@ public class SignInActivity extends BaseActivity implements
                             FirebaseUser currentUser = mAuth.getCurrentUser();
                             if (currentUser != null) {
                                 // User is signed in.
-                                addSocialLoginUser();
+                                postSignInAction();
                             } else {
                                 Toast.makeText(mActivity, getString(R.string.error_exception), Toast.LENGTH_LONG).show();
                             }
@@ -663,7 +701,7 @@ public class SignInActivity extends BaseActivity implements
                             FirebaseUser currentUser = mAuth.getCurrentUser();
                             if (currentUser != null) {
                                 // User is signed in.
-                                addSocialLoginUser();
+                                postSignInAction();
                             } else {
                                 Toast.makeText(mActivity, getString(R.string.error_exception), Toast.LENGTH_LONG).show();
                             }
@@ -678,23 +716,6 @@ public class SignInActivity extends BaseActivity implements
                         }
                     }
                 });
-    }
-
-    private void addSocialLoginUser() {
-
-        Author author = new Author();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        author.setFirebaseId(currentUser.getUid());
-        author.setName(currentUser.getDisplayName());
-        author.setEmail(currentUser.getEmail());
-        author.setProfileImage(currentUser.getPhotoUrl() == null ? null : currentUser.getPhotoUrl().toString());
-
-        String authorData = new Gson().toJson(author);
-
-        // TODO Call API to add or update user
-
-        postSignInAction();
-
     }
 
     @Override

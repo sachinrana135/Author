@@ -636,14 +636,14 @@ public class QuoteActivity extends BaseActivity {
 
     private void getReportReasonsAndShowDialog() {
 
-        CommonView.getInstance(mContext).showTransparentProgressDialog(mActivity, null);
         //region API_CALL_START
+        CommonView.getInstance(mContext).showTransparentProgressDialog(mActivity, null);
         HashMap<String, String> param = new HashMap<>();
         ApiUtils api = new ApiUtils(mContext)
                 .setActivity(mActivity)
                 .setUrl(Constants.API_URL_GET_REPORT_REASONS)
                 .setParams(param)
-                .setMessage("QuoteActivity.java|getReportReasons")
+                .setMessage("QuoteActivity.java|getReportReasonsAndShowDialog")
                 .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
                     @Override
                     public void onSuccessCallBack(String stringResponse) {
@@ -687,8 +687,8 @@ public class QuoteActivity extends BaseActivity {
 
     private void submitQuoteReport(String reportId) {
 
-        CommonView.getInstance(mContext).showProgressDialog(mActivity, getString(R.string.text_loading_submitting_report), null);
         //region API_CALL_START
+        CommonView.getInstance(mContext).showProgressDialog(mActivity, getString(R.string.text_loading_submitting_report), null);
         HashMap<String, String> param = new HashMap<>();
         param.put(Constants.API_PARAM_KEY_REPORT_ID, reportId);
         param.put(Constants.API_PARAM_KEY_QUOTE_ID, mQuoteId);

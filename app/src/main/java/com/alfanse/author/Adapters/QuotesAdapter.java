@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.alfanse.author.Interfaces.onQuoteItemClickListener;
 import com.alfanse.author.Models.Quote;
 import com.alfanse.author.R;
+import com.alfanse.author.Utilities.Constants;
 import com.alfanse.author.Utilities.Utils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -246,7 +247,6 @@ public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.QuoteViewH
                 @Override
                 public void onClick(View v) {
                     listener.onActionLikeClick(quote);
-
                     int dest = 0;
                     if (quote.isLikeQuote()) {
                         dest = -360;// rotate anti-clockwise
@@ -260,7 +260,7 @@ public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.QuoteViewH
                     }
                     mObjectAnimator = ObjectAnimator.ofFloat(imageLikeQuote,
                             "rotation", dest);
-                    mObjectAnimator.setDuration(500);
+                    mObjectAnimator.setDuration(Constants.ANIMATION_CYCLE_DURATION);
                     mObjectAnimator.setRepeatCount(ValueAnimator.INFINITE);
                     mObjectAnimator.setRepeatMode(ValueAnimator.RESTART);
 
@@ -285,7 +285,7 @@ public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.QuoteViewH
                                 quote.setTotalLikes(Integer.toString(Integer.parseInt(quote.getTotalLikes()) + 1));
                             }
                         }
-                    }, 2000);
+                    }, Constants.ANIMATION_TOTAL_DURATION);
 
                 }
             });

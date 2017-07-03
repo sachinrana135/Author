@@ -112,8 +112,8 @@ public class AuthorActivity extends BaseActivity {
 
     private void getAuthor() {
 
-        CommonView.getInstance(mContext).showTransparentProgressDialog(mActivity, getString(R.string.text_loading));
         //region API_CALL_START
+        CommonView.getInstance(mContext).showTransparentProgressDialog(mActivity, getString(R.string.text_loading));
         HashMap<String, String> param = new HashMap<>();
         param.put(Constants.API_PARAM_KEY_AUTHOR_ID, mAuthorId);
         param.put(Constants.API_PARAM_KEY_LOGGED_AUTHOR_ID, mLoggedAuthor.getId());
@@ -217,8 +217,8 @@ public class AuthorActivity extends BaseActivity {
         textFollow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommonView.getInstance(mContext).showProgressDialog(mActivity, getString(R.string.text_please_wait), null);
                 //region API_CALL_START
+                CommonView.getInstance(mContext).showProgressDialog(mActivity, getString(R.string.text_please_wait), null);
                 HashMap<String, String> param = new HashMap<>();
                 param.put(Constants.API_PARAM_KEY_LOGGED_AUTHOR_ID, mLoggedAuthor.getId());
                 param.put(Constants.API_PARAM_KEY_AUTHOR_ID, mAuthorId);

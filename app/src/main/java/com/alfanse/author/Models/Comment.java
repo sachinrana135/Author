@@ -6,12 +6,18 @@ package com.alfanse.author.Models;
 
 public class Comment {
 
+    private String id;
     private Author author;
     private String comment;
-    private String totalLikes;
-    private Boolean likeComment;
     private String dateAdded;
-    private Boolean isAbusive;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public Author getAuthor() {
         return author;
@@ -29,14 +35,6 @@ public class Comment {
         this.comment = comment;
     }
 
-    public Boolean isLikeComment() {
-        return likeComment;
-    }
-
-    public void setLikeComment(Boolean likeComment) {
-        this.likeComment = likeComment;
-    }
-
     public String getDateAdded() {
         return dateAdded;
     }
@@ -45,19 +43,4 @@ public class Comment {
         this.dateAdded = dateAdded;
     }
 
-    public Boolean isAbusive() {
-        return isAbusive;
-    }
-
-    public void setAbusive(Boolean abusive) {
-        isAbusive = abusive;
-    }
-
-    public String getTotalLikes() {
-        return totalLikes;
-    }
-
-    public void setTotalLikes(String totalLikes) {
-        this.totalLikes = totalLikes;
-    }
 }

@@ -40,10 +40,12 @@ import com.alfanse.author.Fragments.CanvasOptionsFragment;
 import com.alfanse.author.Fragments.ComponentBoxViewOptionsFragment;
 import com.alfanse.author.Fragments.ComponentImageViewOptionsFragment;
 import com.alfanse.author.Fragments.ComponentTextViewOptionsFragment;
+import com.alfanse.author.Interfaces.NetworkCallback;
 import com.alfanse.author.Models.Author;
 import com.alfanse.author.Models.CanvasTheme;
 import com.alfanse.author.Models.Quote;
 import com.alfanse.author.R;
+import com.alfanse.author.Utilities.ApiUtils;
 import com.alfanse.author.Utilities.CommonView;
 import com.alfanse.author.Utilities.Constants;
 import com.alfanse.author.Utilities.FontHelper;
@@ -59,6 +61,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -66,8 +69,8 @@ import butterknife.ButterKnife;
 import static com.alfanse.author.Fragments.CanvasOptionsFragment.CANVAS_OPTIONS_COLOR_PICKER_DIALOG_ID;
 import static com.alfanse.author.Fragments.ComponentBoxViewOptionsFragment.COMPONENT_BOXVIEW_OPTIONS_BG_COLOR_PICKER_DIALOG_ID;
 import static com.alfanse.author.Fragments.ComponentTextViewOptionsFragment.COMPONENT_TEXTVIEW_OPTIONS_COLOR_PICKER_DIALOG_ID;
-import static com.alfanse.author.Utilities.Constants.ASSETS_FILE_CANVAS_THEMES;
 import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_QUOTE;
+import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_QUOTE_ID;
 
 public class NewQuoteActivity extends BaseActivity implements
         CanvasOptionsFragment.OnFragmentInteractionListener,
@@ -77,7 +80,8 @@ public class NewQuoteActivity extends BaseActivity implements
         ColorPickerDialogListener,
         ComponentView.onComponentViewInteractionListener {
 
-    private static final int REQUEST_CODE_WRITE_EXTERNAL_STORAGE = 32423;
+    private static final int REQUEST_CODE_WRITE_EXTERNAL_STORAGE = 3242;
+    private static final int REQUEST_CODE_PUBLISH_QUOTE = 5235;
     @BindView(R.id.toolbar_new_quote)
     Toolbar mToolbar;
     @BindView(R.id.SquareFrameLayoutWriteQuoteCanvas)
@@ -148,20 +152,44 @@ public class NewQuoteActivity extends BaseActivity implements
     }
 
     private void getDefaultCanvasTheme() {
-        CommonView.getInstance(mContext).showTransparentProgressDialog(mActivity, getString(R.string.text_loading_canvas_image));
-        String themesJson = Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_CANVAS_THEMES);
+        CommonView.getInstance(mContext).showTransparentProgressDialog(mActivity, null);
+        //region API_CALL_START
+        HashMap<String, String> param = new HashMap<>();
+        ApiUtils api = new ApiUtils(mContext)
+                .setActivity(mActivity)
+                .setUrl(Constants.API_URL_GET_CANVAS_THEMES)
+                .setParams(param)
+                .setMessage("NewQuoteActivity.java|getDefaultCanvasTheme")
+                .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
+                    @Override
+                    public void onSuccessCallBack(String stringResponse) {
+                        parseGetDefaultCanvasThemeResponse(stringResponse);
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onFailureCallBack(Exception e) {
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+                });
+
+        api.call();
+        //endregion API_CALL_END
+    }
+
+    private void parseGetDefaultCanvasThemeResponse(String stringResponse) {
+        // String themesJson = Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_CANVAS_THEMES);
 
         Type themeListType = new TypeToken<ArrayList<CanvasTheme>>() {
         }.getType();
 
-        mListCanvasThemes = new Gson().fromJson(themesJson, themeListType);
+        mListCanvasThemes = new Gson().fromJson(stringResponse, themeListType);
         for (CanvasTheme canvasTheme : mListCanvasThemes) {
             mQuoteCanvas.setBackground(canvasTheme.getImageUrl());
             mQuoteCanvas.getBackground();
             addComponentTextView(canvasTheme);
             break;
         }
-        CommonView.getInstance(mContext).dismissProgressDialog();
     }
 
     private void initToolbar() {
@@ -341,7 +369,7 @@ public class NewQuoteActivity extends BaseActivity implements
 
                         Intent publishQuoteIntent = new Intent(mActivity, PublishQuoteActivity.class);
                         publishQuoteIntent.putExtra(BUNDLE_KEY_QUOTE, quote);
-                        startActivity(publishQuoteIntent);
+                        startActivityForResult(publishQuoteIntent, REQUEST_CODE_PUBLISH_QUOTE);
                     } else {
                         Intent signInIntent = new Intent(mActivity, SignInActivity.class);
                         startActivity(signInIntent);
@@ -469,6 +497,27 @@ public class NewQuoteActivity extends BaseActivity implements
             container.setOrientation(LinearLayout.HORIZONTAL);
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             container.setOrientation(LinearLayout.VERTICAL);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_CODE_PUBLISH_QUOTE: {
+                if (data.getExtras() != null) {
+                    if (data.hasExtra(BUNDLE_KEY_QUOTE_ID)) {
+                        String quoteId = data.getStringExtra(BUNDLE_KEY_QUOTE_ID);
+                        Intent quoteIntent = new Intent(mActivity, QuoteActivity.class);
+                        quoteIntent.putExtra(BUNDLE_KEY_QUOTE_ID, quoteId);
+                        startActivity(quoteIntent);
+                        finish();
+                    }
+
+                } else {
+                    //TODO catch Exception
+                }
+
+            }
         }
     }
 

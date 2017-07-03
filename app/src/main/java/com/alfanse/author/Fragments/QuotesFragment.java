@@ -26,8 +26,10 @@ import com.alfanse.author.Interfaces.UpdatableFragment;
 import com.alfanse.author.Interfaces.bitmapRequestListener;
 import com.alfanse.author.Interfaces.onQuoteItemClickListener;
 import com.alfanse.author.Interfaces.onReportItemSubmitListener;
+import com.alfanse.author.Models.Author;
 import com.alfanse.author.Models.AuthorFilters;
 import com.alfanse.author.Models.CommentFilters;
+import com.alfanse.author.Models.CustomDialog;
 import com.alfanse.author.Models.Quote;
 import com.alfanse.author.Models.QuoteFilters;
 import com.alfanse.author.Models.ReportReason;
@@ -36,6 +38,7 @@ import com.alfanse.author.Utilities.ApiUtils;
 import com.alfanse.author.Utilities.CommonView;
 import com.alfanse.author.Utilities.Constants;
 import com.alfanse.author.Utilities.EndlessRecyclerViewScrollListener;
+import com.alfanse.author.Utilities.SharedManagement;
 import com.alfanse.author.Utilities.Utils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -47,7 +50,7 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.alfanse.author.Utilities.Constants.ASSETS_FILE_REPORTS;
+import static com.alfanse.author.CustomViews.DialogBuilder.SUCCESS;
 import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_AUTHOR_ID;
 import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_QUOTE_ID;
 
@@ -72,6 +75,8 @@ public class QuotesFragment extends Fragment implements UpdatableFragment {
     private int mFirstPage = 1;
     private int mVisibleThreshold = 5;
     private QuoteFilters quoteFilters = new QuoteFilters();
+    private Quote activeQuote = null;
+    private Author mLoggedAuthor;
 
     private onQuoteItemClickListener mOnQuoteItemClickListener = new onQuoteItemClickListener() {
 
@@ -90,7 +95,8 @@ public class QuotesFragment extends Fragment implements UpdatableFragment {
 
         @Override
         public void onActionLikeClick(Quote quote) {
-            // Nothing to do, event handled in QuotesAdapter
+            activeQuote = quote;
+            likeQuote();
         }
 
         @Override
@@ -152,26 +158,8 @@ public class QuotesFragment extends Fragment implements UpdatableFragment {
         @Override
         public void onActionReportClick(Quote quote) {
 
-            String reportReasonsJson = Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_REPORTS);
-
-            Type reportListType = new TypeToken<ArrayList<ReportReason>>() {
-            }.getType();
-
-            ArrayList<ReportReason> listReportReasons = new Gson().fromJson(reportReasonsJson, reportListType);
-
-            final HashMap<String, String> hashReportReasons = new HashMap<String, String>();
-            ArrayList<String> listReportReasonsTitle = new ArrayList<String>();
-            for (ReportReason reportReason : listReportReasons) {
-                hashReportReasons.put(reportReason.getTitle(), reportReason.getId());
-                listReportReasonsTitle.add(reportReason.getTitle());
-            }
-            CommonView.getInstance(mContext).showReportDialog(listReportReasonsTitle, mActivity, new onReportItemSubmitListener() {
-                @Override
-                public void onReportItemSubmit(String titleReport) {
-
-                    String reportId = hashReportReasons.get(titleReport);
-                }
-            });
+            activeQuote = quote;
+            getReportReasonsAndShowDialog();
         }
 
         @Override
@@ -186,11 +174,126 @@ public class QuotesFragment extends Fragment implements UpdatableFragment {
         // Required empty public constructor
     }
 
+    private void likeQuote() {
+        //region API_CALL_START
+        HashMap<String, String> param = new HashMap<>();
+        param.put(Constants.API_PARAM_KEY_QUOTE_ID, activeQuote.getId());
+        param.put(Constants.API_PARAM_KEY_AUTHOR_ID, mLoggedAuthor.getId());
+        ApiUtils api = new ApiUtils(mContext)
+                .setActivity(mActivity)
+                .setUrl(Constants.API_URL_LIKE_QUOTE)
+                .setParams(param)
+                .setMessage("QuotesFragment.java|likeQuote")
+                .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
+                    @Override
+                    public void onSuccessCallBack(String stringResponse) {
+                        // Do nothing
+                    }
+
+                    @Override
+                    public void onFailureCallBack(Exception e) {
+                        // Do nothing
+                    }
+                });
+
+        api.call();
+        //endregion API_CALL_END
+    }
+
+    private void getReportReasonsAndShowDialog() {
+        //region API_CALL_START
+        CommonView.getInstance(mContext).showTransparentProgressDialog(mActivity, null);
+        HashMap<String, String> param = new HashMap<>();
+        ApiUtils api = new ApiUtils(mContext)
+                .setActivity(mActivity)
+                .setUrl(Constants.API_URL_GET_REPORT_REASONS)
+                .setParams(param)
+                .setMessage("QuotesFragment.java|getReportReasonsAndShowDialog")
+                .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
+                    @Override
+                    public void onSuccessCallBack(String stringResponse) {
+                        parseGetReportReasonsResponse(stringResponse);
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onFailureCallBack(Exception e) {
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+                });
+
+        api.call();
+        //endregion API_CALL_END
+    }
+
+    private void parseGetReportReasonsResponse(String stringResponse) {
+
+        //String reportReasonsJson = Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_REPORTS);
+
+        Type reportListType = new TypeToken<ArrayList<ReportReason>>() {
+        }.getType();
+
+        ArrayList<ReportReason> listReportReasons = new Gson().fromJson(stringResponse, reportListType);
+
+        final HashMap<String, String> hashReportReasons = new HashMap<String, String>();
+        ArrayList<String> listReportReasonsTitle = new ArrayList<String>();
+        for (ReportReason reportReason : listReportReasons) {
+            hashReportReasons.put(reportReason.getTitle(), reportReason.getId());
+            listReportReasonsTitle.add(reportReason.getTitle());
+        }
+        CommonView.getInstance(mContext).showReportDialog(listReportReasonsTitle, mActivity, new onReportItemSubmitListener() {
+            @Override
+            public void onReportItemSubmit(String titleReport) {
+                String reportId = hashReportReasons.get(titleReport);
+                submitQuoteReport(reportId);
+            }
+        });
+    }
+
+    private void submitQuoteReport(String reportId) {
+        //region API_CALL_START
+        CommonView.getInstance(mContext).showProgressDialog(mActivity, getString(R.string.text_loading_submitting_report), null);
+        HashMap<String, String> param = new HashMap<>();
+        param.put(Constants.API_PARAM_KEY_REPORT_ID, reportId);
+        param.put(Constants.API_PARAM_KEY_QUOTE_ID, activeQuote.getId());
+        ApiUtils api = new ApiUtils(mContext)
+                .setActivity(mActivity)
+                .setUrl(Constants.API_URL_REPORT_QUOTE)
+                .setParams(param)
+                .setMessage("QuotesFragment.java|submitQuoteReport")
+                .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
+                    @Override
+                    public void onSuccessCallBack(String stringResponse) {
+                        parseSubmitReportResponse(stringResponse);
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onFailureCallBack(Exception e) {
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+                });
+
+        api.call();
+        //endregion API_CALL_END
+    }
+
+    private void parseSubmitReportResponse(String stringResponse) {
+
+        CommonView.getInstance(mContext).showDialog(
+                new CustomDialog().setActivity(mActivity)
+                        .setDialogType(SUCCESS)
+                        .setTitle(getString(R.string.success_quote_reported))
+                        .setMessage(getString(R.string.msg_post_quote_report_submit))
+        );
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mListQuotes = new ArrayList<Quote>();
         mQuotesAdapter = new QuotesAdapter(mContext, mListQuotes, mOnQuoteItemClickListener);
+        mLoggedAuthor = SharedManagement.getInstance(mContext).getLoggedUser();
     }
 
     @Override

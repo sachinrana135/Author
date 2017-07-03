@@ -26,10 +26,14 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.alfanse.author.CustomViews.FlowLayout;
+import com.alfanse.author.Interfaces.NetworkCallback;
 import com.alfanse.author.Models.Category;
 import com.alfanse.author.Models.Language;
 import com.alfanse.author.Models.Quote;
 import com.alfanse.author.R;
+import com.alfanse.author.Utilities.ApiUtils;
+import com.alfanse.author.Utilities.CommonView;
+import com.alfanse.author.Utilities.Constants;
 import com.alfanse.author.Utilities.Utils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -42,14 +46,15 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.alfanse.author.Utilities.Constants.ASSETS_FILE_LANGUAGES;
 import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_MAXIMUM_CATEGORY_SELECT_ALLOW;
 import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_QUOTE;
+import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_QUOTE_ID;
 import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_SELECTED_CATEGORIES;
 
 public class PublishQuoteActivity extends BaseActivity {
 
     private static final int REQUEST_CODE_CHOOSE_CATEGORY = 5345;
+    private static final int RESULT_CODE = 5252;
     private final int maxCategoriesSelectionAllowed = 3;
     @BindView(R.id.toolbar_publish_quote)
     Toolbar mToolbar;
@@ -200,18 +205,43 @@ public class PublishQuoteActivity extends BaseActivity {
         }
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        fillLanguageSpinner();
+        getLanguages();
     }
 
-    private void fillLanguageSpinner() {
+    private void getLanguages() {
 
-        //TODO get language API
+        //region API_CALL_START
+        CommonView.getInstance(mContext).showTransparentProgressDialog(mActivity, null);
+        HashMap<String, String> param = new HashMap<>();
+        ApiUtils api = new ApiUtils(mContext)
+                .setActivity(mActivity)
+                .setUrl(Constants.API_URL_GET_LANGUAGES)
+                .setParams(param)
+                .setMessage("PublishQuoteActivity.java|getLanguages")
+                .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
+                    @Override
+                    public void onSuccessCallBack(String stringResponse) {
+                        parseGetLanguagesResponse(stringResponse);
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
 
-        String languageJson = Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_LANGUAGES);
+                    @Override
+                    public void onFailureCallBack(Exception e) {
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+                });
+
+        api.call();
+        //endregion API_CALL_END
+    }
+
+    private void parseGetLanguagesResponse(String stringResponse) {
+
+        //String languageJson = Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_LANGUAGES);
 
         Type languageListType = new TypeToken<ArrayList<Language>>() {
         }.getType();
-        mLanguages = new Gson().fromJson(languageJson, languageListType);
+        mLanguages = new Gson().fromJson(stringResponse, languageListType);
 
         for (Language language : mLanguages) {
             mHashLanguages.put(language.getLanguageName(), language.getLanguageId());
@@ -221,6 +251,7 @@ public class PublishQuoteActivity extends BaseActivity {
         mLanguageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerLanguages.setTitle(getString(R.string.text_select_language));
         spinnerLanguages.setAdapter(mLanguageAdapter);
+
     }
 
     private void initToolbar() {
@@ -260,10 +291,7 @@ public class PublishQuoteActivity extends BaseActivity {
                 mQuote.setSource(editTextQuoteSource.getText().toString().trim());
                 mQuote.setTags(mListTags);
                 mQuote.setCategories(mListCategories);
-
-                String quoteJson = new Gson().toJson(mQuote);
-                saveQuote(quoteJson);
-                //TODO save quote and upload image
+                saveQuote();
 
             }
         });
@@ -283,8 +311,40 @@ public class PublishQuoteActivity extends BaseActivity {
         });
     }
 
-    private void saveQuote(String quoteJson) {
+    private void saveQuote() {
 
+        //region API_CALL_START
+        CommonView.getInstance(mContext).showProgressDialog(mActivity, getString(R.string.text_loading_save_quote), null);
+        HashMap<String, String> param = new HashMap<>();
+        param.put(Constants.API_PARAM_KEY_QUOTE, new Gson().toJson(mQuote));
+        ApiUtils api = new ApiUtils(mContext)
+                .setActivity(mActivity)
+                .setUrl(Constants.API_URL_SAVE_QUOTE)
+                .setParams(param)
+                .setMessage("PublishQuoteActivity.java|saveQuote")
+                .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
+                    @Override
+                    public void onSuccessCallBack(String stringResponse) {
+                        parseSaveQuoteResponse(stringResponse);
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onFailureCallBack(Exception e) {
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+                });
+
+        api.call();
+        //endregion API_CALL_END
+    }
+
+    private void parseSaveQuoteResponse(String stringResponse) {
+        Quote quote = new Gson().fromJson(stringResponse, Quote.class);
+        Intent intent = new Intent();
+        intent.putExtra(BUNDLE_KEY_QUOTE_ID, quote.getId());
+        setResult(RESULT_CODE, intent);
+        finish();//finishing activity
     }
 
     @Override
@@ -359,5 +419,12 @@ public class PublishQuoteActivity extends BaseActivity {
                 return super.onOptionsItemSelected(menuItem);
 
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        setResult(RESULT_CODE, intent);
+        finish();//finishing activity
     }
 }

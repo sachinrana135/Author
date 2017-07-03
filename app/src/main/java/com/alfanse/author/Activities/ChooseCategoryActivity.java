@@ -21,20 +21,24 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.alfanse.author.CustomViews.FlowLayout;
+import com.alfanse.author.Interfaces.NetworkCallback;
 import com.alfanse.author.Models.Category;
 import com.alfanse.author.R;
+import com.alfanse.author.Utilities.ApiUtils;
+import com.alfanse.author.Utilities.CommonView;
+import com.alfanse.author.Utilities.Constants;
 import com.alfanse.author.Utilities.Utils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.alfanse.author.Utilities.Constants.ASSETS_FILE_CATEGORY;
 import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_MAXIMUM_CATEGORY_SELECT_ALLOW;
 import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_SELECTED_CATEGORIES;
 
@@ -143,7 +147,7 @@ public class ChooseCategoryActivity extends BaseActivity {
         initToolbar();
         searchBar.addTextChangedListener(searchTextWatcher);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        loadCategoriesList();
+        getCategories();
 
     }
 
@@ -154,12 +158,38 @@ public class ChooseCategoryActivity extends BaseActivity {
         getSupportActionBar().setTitle(getString(R.string.title_choose_category));
     }
 
-    private void loadCategoriesList() {
-        String categoryJson = Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_CATEGORY);
+    private void getCategories() {
+        CommonView.getInstance(mContext).showTransparentProgressDialog(mActivity, null);
+        //region API_CALL_START
+        HashMap<String, String> param = new HashMap<>();
+        ApiUtils api = new ApiUtils(mContext)
+                .setActivity(mActivity)
+                .setUrl(Constants.API_URL_GET_CATEGORIES)
+                .setParams(param)
+                .setMessage("ChooseCategoryActivity.java|getCategories")
+                .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
+                    @Override
+                    public void onSuccessCallBack(String stringResponse) {
+                        parseGetCategoriesResponse(stringResponse);
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onFailureCallBack(Exception e) {
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+                });
+
+        api.call();
+        //endregion API_CALL_END
+    }
+
+    private void parseGetCategoriesResponse(String stringResponse) {
+        // String categoryJson = Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_CATEGORY);
 
         Type categoryListType = new TypeToken<ArrayList<Category>>() {
         }.getType();
-        mCategories = new Gson().fromJson(categoryJson, categoryListType);
+        mCategories = new Gson().fromJson(stringResponse, categoryListType);
 
         for (Category category : mCategories) {
 
@@ -185,9 +215,7 @@ public class ChooseCategoryActivity extends BaseActivity {
                     }
                 }
             }
-
             addTag(categoryTag);
-
         }
     }
 
