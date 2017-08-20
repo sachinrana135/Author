@@ -12,6 +12,7 @@ import com.alfanse.author.Fragments.CommentsFragment;
 import com.alfanse.author.Models.CommentFilters;
 import com.alfanse.author.R;
 import com.alfanse.author.Utilities.Constants;
+import com.alfanse.author.Utilities.FontHelper;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -54,7 +55,7 @@ public class CommentsActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle(R.string.title_comments);
+        getSupportActionBar().setTitle(FontHelper.getCustomTypefaceTitle(getString(R.string.title_comments)));
     }
 
     private void loadCommentFragment() {

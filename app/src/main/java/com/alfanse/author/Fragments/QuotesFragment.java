@@ -8,13 +8,16 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.Pair;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.alfanse.author.Activities.AuthorActivity;
 import com.alfanse.author.Activities.AuthorsActivity;
@@ -86,11 +89,15 @@ public class QuotesFragment extends Fragment implements UpdatableFragment {
         }
 
         @Override
-        public void onQuoteClick(Quote quote) {
+        public void onQuoteClick(Quote quote, ImageView quoteImage, ImageView authorImage) {
 
             Intent quoteIntent = new Intent(mActivity, QuoteActivity.class);
+            Pair<View, String> p1 = Pair.create((View) quoteImage, getString(R.string.quote_image_shared_element_name));
+            Pair<View, String> p2 = Pair.create((View) authorImage, getString(R.string.author_image_shared_element_name));
+            ActivityOptionsCompat options = ActivityOptionsCompat.
+                    makeSceneTransitionAnimation(mActivity, p1, p2);
             quoteIntent.putExtra(BUNDLE_KEY_QUOTE_ID, quote.getId());
-            startActivity(quoteIntent);
+            startActivity(quoteIntent, options.toBundle());
         }
 
         @Override

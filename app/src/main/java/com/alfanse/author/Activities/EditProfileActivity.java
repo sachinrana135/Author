@@ -22,6 +22,7 @@ import com.alfanse.author.Models.Author;
 import com.alfanse.author.R;
 import com.alfanse.author.Utilities.CommonView;
 import com.alfanse.author.Utilities.Constants;
+import com.alfanse.author.Utilities.FontHelper;
 import com.alfanse.author.Utilities.SharedManagement;
 import com.alfanse.author.Utilities.Utils;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -108,7 +109,7 @@ public class EditProfileActivity extends BaseActivity {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle(R.string.title_edit_profile);
+        getSupportActionBar().setTitle(FontHelper.getCustomTypefaceTitle(getString(R.string.title_edit_profile)));
     }
 
 

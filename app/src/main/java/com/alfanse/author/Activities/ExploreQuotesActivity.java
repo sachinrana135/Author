@@ -15,7 +15,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.alfanse.author.Adapters.ExploreQuotesPagerAdapter;
 import com.alfanse.author.Fragments.QuoteFiltersFragment;
@@ -24,6 +26,7 @@ import com.alfanse.author.Interfaces.quoteFiltersUpdateListener;
 import com.alfanse.author.Models.QuoteFilters;
 import com.alfanse.author.R;
 import com.alfanse.author.Utilities.Constants;
+import com.alfanse.author.Utilities.FontHelper;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -117,7 +120,7 @@ public class ExploreQuotesActivity extends BaseActivity {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle(R.string.title_explore);
+        getSupportActionBar().setTitle(FontHelper.getCustomTypefaceTitle(getString(R.string.title_explore)));
     }
 
 
@@ -129,6 +132,24 @@ public class ExploreQuotesActivity extends BaseActivity {
         //Adding onTabSelectedListener to swipe views
         mTabLayout.addOnTabSelectedListener(mExploreQuotesOnTabSelectedListener);
         mTabLayout.setupWithViewPager(mPager);
+
+        changeTabsFont();
+    }
+
+    private void changeTabsFont() {
+
+        ViewGroup vg = (ViewGroup) mTabLayout.getChildAt(0);
+        int tabsCount = vg.getChildCount();
+        for (int j = 0; j < tabsCount; j++) {
+            ViewGroup vgTab = (ViewGroup) vg.getChildAt(j);
+            int tabChildsCount = vgTab.getChildCount();
+            for (int i = 0; i < tabChildsCount; i++) {
+                View tabViewChild = vgTab.getChildAt(i);
+                if (tabViewChild instanceof TextView) {
+                    ((TextView) tabViewChild).setTypeface(FontHelper.getInstance(mContext).getAppCustomTypeface());
+                }
+            }
+        }
     }
 
     private void initPager() {

@@ -103,7 +103,7 @@ public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.QuoteViewH
                                     quote.getAuthor().setFollowingAuthor(true);
                                 }
                             }
-                        }, 2000);
+                        }, 1000);
 
                         break;
                     case R.id.action_download_quote_item_quote:
@@ -126,7 +126,7 @@ public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.QuoteViewH
 
         @BindView(R.id.progress_bar_author_image_item_quote)
         ProgressBar progressBarLoadingAuthorImage;
-        @BindView(R.id.image_author_item_quote)
+        @BindView(R.id.image_author_shared)
         ImageView imageAuthor;
         @BindView(R.id.text_author_name_item_quote)
         TextView textAuthorName;
@@ -136,7 +136,7 @@ public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.QuoteViewH
         TextView textCaptionQuote;
         @BindView(R.id.progress_bar_quote_item_quote)
         ProgressBar progressBarLoadingQuoteImage;
-        @BindView(R.id.image_quote_item_quote)
+        @BindView(R.id.image_quote_shared)
         ImageView imageQuote;
         @BindView(R.id.text_total_likes_item_quote)
         TextView textTotalLikes;
@@ -314,7 +314,7 @@ public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.QuoteViewH
             imageQuote.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onQuoteClick(quote);
+                    listener.onQuoteClick(quote, imageQuote, imageAuthor);
                 }
             });
 

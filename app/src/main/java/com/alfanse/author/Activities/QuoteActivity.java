@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -44,6 +43,7 @@ import com.alfanse.author.R;
 import com.alfanse.author.Utilities.ApiUtils;
 import com.alfanse.author.Utilities.CommonView;
 import com.alfanse.author.Utilities.Constants;
+import com.alfanse.author.Utilities.FontHelper;
 import com.alfanse.author.Utilities.SharedManagement;
 import com.alfanse.author.Utilities.Utils;
 import com.bumptech.glide.Glide;
@@ -78,7 +78,7 @@ public class QuoteActivity extends BaseActivity {
     LinearLayout layoutAuthorDetails;
     @BindView(R.id.progress_bar_author_image_quote)
     ProgressBar progressBarLoadingAuthorImage;
-    @BindView(R.id.image_author_quote)
+    @BindView(R.id.image_author_shared)
     ImageView imageAuthor;
     @BindView(R.id.text_author_name_quote)
     TextView textAuthorName;
@@ -92,7 +92,7 @@ public class QuoteActivity extends BaseActivity {
     LinearLayout layoutCaptionQuote;
     @BindView(R.id.progress_bar_quote_quote)
     ProgressBar progressBarLoadingQuoteImage;
-    @BindView(R.id.image_quote_quote)
+    @BindView(R.id.image_quote_shared)
     ImageView imageQuote;
     @BindView(R.id.text_total_likes_quote)
     TextView textTotalLikes;
@@ -211,6 +211,7 @@ public class QuoteActivity extends BaseActivity {
                 finish();
             }
         }
+        supportPostponeEnterTransition();//To temporarily prevent the shared element transition from starting
         mLoggedAuthor = SharedManagement.getInstance(mContext).getLoggedUser();
         getQuote();
     }
@@ -219,7 +220,7 @@ public class QuoteActivity extends BaseActivity {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle(R.string.title_quote);
+        getSupportActionBar().setTitle(FontHelper.getCustomTypefaceTitle(getString(R.string.title_quote)));
     }
 
     private void initListener() {
@@ -247,21 +248,7 @@ public class QuoteActivity extends BaseActivity {
         textFollow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommonView.getInstance(mContext).showProgressDialog(mActivity, getString(R.string.text_loading), null);
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        CommonView.getInstance(mContext).dismissProgressDialog();
-                        if (mQuote.getAuthor().isFollowingAuthor()) {
-                            textFollow.setText(mContext.getString(R.string.action_follow));
-                            mQuote.getAuthor().setFollowingAuthor(false);
-                        } else {
-                            textFollow.setText(mContext.getString(R.string.action_unfollow));
-                            mQuote.getAuthor().setFollowingAuthor(true);
-                        }
-                    }
-                }, 2000);
+                followAuthor();
             }
         });
 
@@ -306,7 +293,7 @@ public class QuoteActivity extends BaseActivity {
                             mQuote.setTotalLikes(Integer.toString(Integer.parseInt(mQuote.getTotalLikes()) + 1));
                         }
                     }
-                }, 2000);
+                }, 1000);
             }
         });
 
@@ -351,6 +338,50 @@ public class QuoteActivity extends BaseActivity {
                 showMenuPopup(v);
             }
         });
+    }
+
+    private void followAuthor() {
+        //region API_CALL_START
+        CommonView.getInstance(mContext).showProgressDialog(mActivity, getString(R.string.text_please_wait), null);
+        HashMap<String, String> param = new HashMap<>();
+        param.put(Constants.API_PARAM_KEY_LOGGED_AUTHOR_ID, mLoggedAuthor.getId());
+        param.put(Constants.API_PARAM_KEY_AUTHOR_ID, mQuote.getAuthor().getId());
+        ApiUtils api = new ApiUtils(mContext)
+                .setActivity(mActivity)
+                .setUrl(Constants.API_URL_FOLLOW_AUTHOR)
+                .setParams(param)
+                .setMessage("QuoteActivity.java|followAuthor")
+                .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
+                    @Override
+                    public void onSuccessCallBack(String stringResponse) {
+
+                        PopupMenu popupMenu = new PopupMenu(mActivity, textFollow);
+                        MenuInflater inflater = popupMenu.getMenuInflater();
+                        inflater.inflate(R.menu.menu_item_quote, popupMenu.getMenu());
+                        MenuItem followItem = popupMenu.getMenu().findItem(R.id.action_follow_author_item_quote);
+
+                        if (mQuote.getAuthor().isFollowingAuthor()) {
+                            textFollow.setText(mContext.getString(R.string.action_follow));
+                            followItem.setTitle(mContext.getString(R.string.action_follow));
+                            mQuote.getAuthor().setFollowingAuthor(false);
+
+                        } else {
+                            textFollow.setText(mContext.getString(R.string.action_unfollow));
+                            followItem.setTitle(mContext.getString(R.string.action_unfollow));
+                            mQuote.getAuthor().setFollowingAuthor(true);
+                        }
+
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onFailureCallBack(Exception e) {
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+                });
+
+        api.call();
+        //endregion API_CALL_END
 
     }
 
@@ -392,6 +423,7 @@ public class QuoteActivity extends BaseActivity {
 
         RequestOptions quoteImageOptions = new RequestOptions()
                 .fitCenter()
+                .dontAnimate()
                 .error(Utils.getInstance(mContext).getDrawable(R.drawable.ic_gallery_grey_24dp))
                 .centerCrop();
 
@@ -402,12 +434,14 @@ public class QuoteActivity extends BaseActivity {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                         progressBarLoadingQuoteImage.setVisibility(View.GONE);
+                        supportStartPostponedEnterTransition();
                         return false;
                     }
 
                     @Override
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                         progressBarLoadingQuoteImage.setVisibility(View.GONE);
+                        supportStartPostponedEnterTransition();
                         return false;
                     }
                 })
@@ -415,6 +449,7 @@ public class QuoteActivity extends BaseActivity {
 
         RequestOptions authorImageOptions = new RequestOptions()
                 .fitCenter()
+                .dontAnimate()
                 .error(Utils.getInstance(mContext).getDrawable(R.drawable.ic_gallery_grey_24dp))
                 .circleCrop();
 
@@ -425,12 +460,14 @@ public class QuoteActivity extends BaseActivity {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                         progressBarLoadingAuthorImage.setVisibility(View.GONE);
+                        supportStartPostponedEnterTransition();
                         return false;
                     }
 
                     @Override
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                         progressBarLoadingAuthorImage.setVisibility(View.GONE);
+                        supportStartPostponedEnterTransition();
                         return false;
                     }
                 })
@@ -474,7 +511,7 @@ public class QuoteActivity extends BaseActivity {
 
         TextView languageTag = new TextView(mContext);
         languageTag.setText(mQuote.getLanguage().getLanguageName());
-        languageTag.setTypeface(null, Typeface.BOLD);
+        languageTag.setTypeface(FontHelper.getInstance(mContext).getAppCustomMediumTypeface());
         languageTag.setTag(mQuote.getLanguage());
         languageTag.setTextColor(Utils.getInstance(mContext).getColor(R.color.colorWhite));
         languageTag.setBackground(mRoundBorderDrawable);
@@ -496,7 +533,7 @@ public class QuoteActivity extends BaseActivity {
 
                 TextView categoryTag = new TextView(mContext);
                 categoryTag.setText(category.getName());
-                categoryTag.setTypeface(null, Typeface.BOLD);
+                categoryTag.setTypeface(FontHelper.getInstance(mContext).getAppCustomMediumTypeface());
                 categoryTag.setTag(category);
                 categoryTag.setTextColor(Utils.getInstance(mContext).getColor(R.color.colorWhite));
                 categoryTag.setBackground(mRoundBorderDrawable);
@@ -521,7 +558,7 @@ public class QuoteActivity extends BaseActivity {
 
                 TextView searchTag = new TextView(mContext);
                 searchTag.setText(tag);
-                searchTag.setTypeface(null, Typeface.BOLD);
+                searchTag.setTypeface(FontHelper.getInstance(mContext).getAppCustomMediumTypeface());
                 searchTag.setTag(tag);
                 searchTag.setTextColor(Utils.getInstance(mContext).getColor(R.color.colorWhite));
                 searchTag.setBackground(mRoundBorderDrawable);
@@ -604,19 +641,7 @@ public class QuoteActivity extends BaseActivity {
             public boolean onMenuItemClick(final MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_follow_author_item_quote:
-                        final Handler handler = new Handler();
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (mQuote.getAuthor().isFollowingAuthor()) {
-                                    item.setTitle(mContext.getString(R.string.action_follow));
-                                    mQuote.getAuthor().setFollowingAuthor(false);
-                                } else {
-                                    item.setTitle(mContext.getString(R.string.action_unfollow));
-                                    mQuote.getAuthor().setFollowingAuthor(true);
-                                }
-                            }
-                        }, 2000);
+                        followAuthor();
                         break;
                     case R.id.action_download_quote_item_quote:
                         checkPermissionAndDownloadQuote(mQuote);

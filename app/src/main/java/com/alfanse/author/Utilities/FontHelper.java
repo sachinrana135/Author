@@ -2,6 +2,10 @@ package com.alfanse.author.Utilities;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.TypefaceSpan;
+import android.util.Log;
 
 import com.alfanse.author.Models.Font;
 
@@ -9,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -73,6 +78,52 @@ public class FontHelper {
 
     public static Typeface getTypeface(Context context, String fileName) {
         return Typeface.createFromAsset(context.getAssets(), ASSETS_DIR_FONTS.concat(fileName));
+    }
+
+    /**
+     * Using reflection to override default typeface
+     * NOTICE: DO NOT FORGET TO SET TYPEFACE FOR APP THEME AS DEFAULT TYPEFACE WHICH WILL BE OVERRIDDEN
+     */
+    public static void overrideFont() {
+
+        try {
+            final Typeface customFontTypeface = Typeface.createFromAsset(mContext.getAssets(), ASSETS_DIR_FONTS.concat(Constants.APP_CUSTOM_FONT_FILE_NAME));
+
+            final Field defaultFontTypefaceField = Typeface.class.getDeclaredField(Constants.DEFAULT_FONT_NAME_TO_OVERRIDE);
+            defaultFontTypefaceField.setAccessible(true);
+            defaultFontTypefaceField.set(null, customFontTypeface);
+        } catch (Exception e) {
+            Log.e("Font error", "Can not set custom font " + Constants.APP_CUSTOM_FONT_FILE_NAME + " instead of " + Constants.DEFAULT_FONT_NAME_TO_OVERRIDE);
+        }
+    }
+
+    public static SpannableString getCustomTypefaceTitle(String titleString) {
+        SpannableString title = new SpannableString(titleString);
+        // Update the action bar title with the TypefaceSpan instance
+        title.setSpan(new TypefaceSpan(Constants.ASSETS_DIR_FONTS + Constants.APP_CUSTOM_FONT_FILE_NAME), 0, title.length(),
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        return title;
+    }
+
+    public Typeface getAppCustomTypeface() {
+        return Typeface.createFromAsset(mContext.getAssets(), ASSETS_DIR_FONTS.concat(Constants.APP_CUSTOM_FONT_FILE_NAME));
+    }
+
+    public Typeface getAppCustomLightTypeface() {
+        return Typeface.createFromAsset(mContext.getAssets(), ASSETS_DIR_FONTS.concat(Constants.APP_CUSTOM_LIGHT_FONT_FILE_NAME));
+    }
+
+    public Typeface getAppCustomMediumTypeface() {
+        return Typeface.createFromAsset(mContext.getAssets(), ASSETS_DIR_FONTS.concat(Constants.APP_CUSTOM_MEDIUM_FILE_NAME));
+    }
+
+    public Typeface getAppCustomRegularTypeface() {
+        return Typeface.createFromAsset(mContext.getAssets(), ASSETS_DIR_FONTS.concat(Constants.APP_CUSTOM_REGULAR_FONT_FILE_NAME));
+    }
+
+    public Typeface getAppCustomBoldTypeface() {
+        return Typeface.createFromAsset(mContext.getAssets(), ASSETS_DIR_FONTS.concat(Constants.APP_CUSTOM_BOLD_FONT_FILE_NAME));
     }
 
     public HashMap<String, Font> getFontsHashMap() {

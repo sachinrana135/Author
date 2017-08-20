@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -27,6 +26,7 @@ import com.alfanse.author.R;
 import com.alfanse.author.Utilities.ApiUtils;
 import com.alfanse.author.Utilities.CommonView;
 import com.alfanse.author.Utilities.Constants;
+import com.alfanse.author.Utilities.FontHelper;
 import com.alfanse.author.Utilities.Utils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -155,7 +155,7 @@ public class ChooseCategoryActivity extends BaseActivity {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle(getString(R.string.title_choose_category));
+        getSupportActionBar().setTitle(FontHelper.getCustomTypefaceTitle(getString(R.string.title_choose_category)));
     }
 
     private void getCategories() {
@@ -199,7 +199,7 @@ public class ChooseCategoryActivity extends BaseActivity {
 
             TextView categoryTag = new TextView(mContext);
             categoryTag.setText(category.getName());
-            categoryTag.setTypeface(null, Typeface.BOLD);
+            categoryTag.setTypeface(FontHelper.getInstance(mContext).getAppCustomMediumTypeface());
             categoryTag.setTag(category);
             categoryTag.setTextColor(Utils.getInstance(mContext).getColor(R.color.colorWhite));
             categoryTag.setBackground(mRoundBorderDrawable);

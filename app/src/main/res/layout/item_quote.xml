@@ -41,9 +41,10 @@
                             android:layout_gravity="center" />
 
                         <ImageView
-                            android:id="@+id/image_author_item_quote"
+                            android:id="@+id/image_author_shared"
                             android:layout_width="@dimen/profile_image_width_small"
-                            android:layout_height="@dimen/profile_image_height_small" />
+                            android:layout_height="@dimen/profile_image_height_small"
+                            android:transitionName="@string/author_image_shared_element_name" />
 
 
                     </FrameLayout>
@@ -95,9 +96,10 @@
                     android:layout_gravity="center" />
 
                 <ImageView
-                    android:id="@+id/image_quote_item_quote"
+                    android:id="@+id/image_quote_shared"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:transitionName="@string/quote_image_shared_element_name" />
 
             </com.alfanse.author.CustomViews.SquareFrameLayout>
 

@@ -31,6 +31,7 @@ import com.alfanse.author.Models.QuoteFilters;
 import com.alfanse.author.R;
 import com.alfanse.author.Utilities.CommonView;
 import com.alfanse.author.Utilities.Constants;
+import com.alfanse.author.Utilities.FontHelper;
 import com.alfanse.author.Utilities.SharedManagement;
 import com.alfanse.author.Utilities.Utils;
 import com.bumptech.glide.Glide;
@@ -129,7 +130,7 @@ public class UserAccountActivity extends BaseActivity {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        collapsingToolbarLayout.setTitle(mAuthor.getName());
+        collapsingToolbarLayout.setTitle(FontHelper.getCustomTypefaceTitle(mAuthor.getName()));
     }
 
     private void initListener() {

@@ -553,9 +553,11 @@ public class SignInActivity extends BaseActivity implements
         if (mLoggedAuthor.getCountry().getCountryId() == null) {
             Intent chooseCountryIntent = new Intent(mActivity, ChooseCountryActivity.class);
             startActivity(chooseCountryIntent);
+            finish();
         } else {
             Intent homeIntent = new Intent(mActivity, HomeActivity.class);
             startActivity(homeIntent);
+            finish();
         }
     }
 

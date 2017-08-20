@@ -1,5 +1,7 @@
 package com.alfanse.author.Interfaces;
 
+import android.widget.ImageView;
+
 import com.alfanse.author.Models.Quote;
 
 /**
@@ -9,7 +11,7 @@ import com.alfanse.author.Models.Quote;
 public interface onQuoteItemClickListener {
     void onItemClick(Quote quote);
 
-    void onQuoteClick(Quote quote);
+    void onQuoteClick(Quote quote, ImageView quoteImage, ImageView authorImage);
 
     void onActionLikeClick(Quote quote);
 

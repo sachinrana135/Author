@@ -42,7 +42,13 @@ public class Constants {
     public static final String AUTHOR_FILTER_TYPE_FOLLOWER = "follower";
     public static final String AUTHOR_FILTER_TYPE_QUOTE_LIKED_BY = "quoteLikedBy";
 
-    public static final String DEFAULT_APP_NAME_FONT_FILE_NAME = "Helvetica.ttf";
+    public static final String APP_CUSTOM_LIGHT_FONT_FILE_NAME = "DIN-Light.otf";
+    public static final String APP_CUSTOM_MEDIUM_FILE_NAME = "DIN-Medium.otf";
+    public static final String APP_CUSTOM_REGULAR_FONT_FILE_NAME = "DIN-Regular.otf";
+    public static final String APP_CUSTOM_BOLD_FONT_FILE_NAME = "DIN-Bold.otf";
+    public static final String APP_CUSTOM_FONT_FILE_NAME = APP_CUSTOM_LIGHT_FONT_FILE_NAME;
+    public static final String DEFAULT_FONT_NAME_TO_OVERRIDE = "SERIF";
+
     public final static String PATTERN_EMAIL = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
     public static final String ASSETS_DIR_FONTS = "fonts/";
     public static final String ASSETS_DIR_JSON = "json/";
@@ -95,6 +101,8 @@ public class Constants {
     public static final String API_HEADER_PARAM_KEY_DEVICE_ID = "deviceId";
     public static final String API_HEADER_PARAM_KEY_CORRELATION_ID = "correlationId";
     public static final String API_HEADER_PARAM_KEY_CALL_SOURCE = "callSource";
+    public static final String API_HEADER_PARAM_KEY_APP_VERSION_NAME = "appVersionName";
+    public static final String API_HEADER_PARAM_KEY_APP_VERSION_CODE = "appVersionCode";
     public static int ANIMATION_TOTAL_DURATION = 1000;
     public static int ANIMATION_CYCLE_DURATION = 500;
 }

@@ -198,18 +198,11 @@
     <string name="error_unverified_email">Unverified Email</string>
     <string name="error_quote_not_found">Quote not found!</string>
     <string name="error_author_not_found">Author not found!</string>
-    <string name="title_activity_scrolling">ScrollingActivity</string>
-    <string name="large_text">
-        "Material is the metaphor.\n\n"
-     </string>
-
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_author">AuthorActivity</string>
+    <string name="error_user_session_expired">Your session has expired! Please login again.</string>
     <string name="action_settings">Settings</string>
+
+    <string name="quote_image_shared_element_name">quoteImage</string>
+    <string name="author_image_shared_element_name">authorImage</string>
 
 
 </resources>

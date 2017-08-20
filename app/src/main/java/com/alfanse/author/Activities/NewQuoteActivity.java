@@ -193,10 +193,11 @@ public class NewQuoteActivity extends BaseActivity implements
     }
 
     private void initToolbar() {
+
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle(getString(R.string.title_new_quote));
+        getSupportActionBar().setTitle(FontHelper.getCustomTypefaceTitle(getString(R.string.title_new_quote)));
     }
 
     private void loadCanvasOptionsFragment() {
@@ -213,7 +214,7 @@ public class NewQuoteActivity extends BaseActivity implements
 
     @Override
     public void onBackPressed() {
-        showResetWarningDialog();
+        showExitWarningDialog();
     }
 
     public void loadComponentImageViewOptionsFragment() {
@@ -461,6 +462,28 @@ public class NewQuoteActivity extends BaseActivity implements
         dialog.show();
     }
 
+    private void showExitWarningDialog() {
+
+        DialogBuilder builder = new DialogBuilder(mActivity);
+        // Add the buttons
+        builder.setPositiveButton(R.string.action_ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                finish();
+            }
+        });
+        builder.setNegativeButton(R.string.action_cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+            }
+        });
+        // Set other dialog properties
+        builder.setMessage(R.string.msg_exit_confirm);
+        builder.setDialogType(DialogBuilder.WARNING);
+
+        // Create the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -470,6 +493,7 @@ public class NewQuoteActivity extends BaseActivity implements
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case REQUEST_CODE_WRITE_EXTERNAL_STORAGE: {
                 // If request is cancelled, the result arrays are empty.
@@ -502,6 +526,7 @@ public class NewQuoteActivity extends BaseActivity implements
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case REQUEST_CODE_PUBLISH_QUOTE: {
                 if (data.getExtras() != null) {
@@ -516,7 +541,7 @@ public class NewQuoteActivity extends BaseActivity implements
                 } else {
                     //TODO catch Exception
                 }
-
+                break;
             }
         }
     }

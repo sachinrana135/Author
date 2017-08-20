@@ -11,6 +11,7 @@ import com.alfanse.author.Fragments.QuotesFragment;
 import com.alfanse.author.Models.QuoteFilters;
 import com.alfanse.author.R;
 import com.alfanse.author.Utilities.Constants;
+import com.alfanse.author.Utilities.FontHelper;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -73,9 +74,9 @@ public class QuotesActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         if (mTitle != null) {
-            getSupportActionBar().setTitle(mTitle);
+            getSupportActionBar().setTitle(FontHelper.getCustomTypefaceTitle(mTitle));
         } else {
-            getSupportActionBar().setTitle(R.string.title_quotes);
+            getSupportActionBar().setTitle(FontHelper.getCustomTypefaceTitle(getString(R.string.title_quotes)));
         }
     }
 

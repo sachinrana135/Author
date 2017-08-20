@@ -103,6 +103,8 @@ public class ApiUtils {
         headerParam.put(Constants.API_HEADER_PARAM_KEY_CORRELATION_ID, correlationID);
         headerParam.put(Constants.API_HEADER_PARAM_KEY_DEVICE_ID, deviceId);
         headerParam.put(Constants.API_HEADER_PARAM_KEY_CALL_SOURCE, getMessage());
+        headerParam.put(Constants.API_HEADER_PARAM_KEY_APP_VERSION_CODE, Integer.toString(Utils.getInstance(context).getAppVersionCode()));
+        headerParam.put(Constants.API_HEADER_PARAM_KEY_APP_VERSION_NAME, Utils.getInstance(context).getAppVersionName());
 
         this.setHeaderParams(headerParam);
 

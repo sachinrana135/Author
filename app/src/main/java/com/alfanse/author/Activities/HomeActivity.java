@@ -16,6 +16,7 @@ import com.alfanse.author.Models.Author;
 import com.alfanse.author.Models.QuoteFilters;
 import com.alfanse.author.R;
 import com.alfanse.author.Utilities.Constants;
+import com.alfanse.author.Utilities.FontHelper;
 import com.alfanse.author.Utilities.SharedManagement;
 
 import butterknife.BindView;
@@ -95,10 +96,11 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void initToolbar() {
+
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle(R.string.title_home);
+        getSupportActionBar().setTitle(FontHelper.getCustomTypefaceTitle(getString(R.string.title_home)));
     }
 
     private void initListener() {

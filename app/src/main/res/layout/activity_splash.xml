@@ -1,0 +1,24 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.alfanse.author.Activities.SplashActivity">
+
+    <ImageView
+        android:id="@+id/fullscreen_content_splash"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:foreground="@color/black_overlay"
+        android:scaleType="centerCrop"
+        android:src="@drawable/splash_background" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_margin="@dimen/spacing_large"
+        android:text="@string/app_name"
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/font_xlarge" />
+
+</FrameLayout>
