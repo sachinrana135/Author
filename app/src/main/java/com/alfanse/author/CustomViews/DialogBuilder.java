@@ -9,6 +9,7 @@ import android.support.annotation.StyleRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.view.ContextThemeWrapper;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -27,6 +28,7 @@ public class DialogBuilder extends AlertDialog.Builder {
     public static final int ERROR = 1;
     public static final int SUCCESS = 2;
     public static final int WARNING = 3;
+    public static final int INFO = 4;
 
     private Context mContext;
     private View mView;
@@ -37,6 +39,7 @@ public class DialogBuilder extends AlertDialog.Builder {
     private View mHeaderLayout;
     private TextView mMessageView;
     private CharSequence mDialogMessage;
+    private Boolean isHtml;
 
 
 
@@ -95,6 +98,12 @@ public class DialogBuilder extends AlertDialog.Builder {
                 mHeaderLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorWarning));
                 break;
             }
+
+            case INFO: {
+                mIconView.setImageDrawable(Utils.getInstance(mContext).getDrawable(R.drawable.ic_info_white_24dp));
+                mHeaderLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorInfo));
+                break;
+            }
             default: {
                 mIconView.setImageDrawable(Utils.getInstance(mContext).getDrawable(R.drawable.ic_info_white_24dp));
                 mHeaderLayout.setBackgroundColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
@@ -111,7 +120,16 @@ public class DialogBuilder extends AlertDialog.Builder {
 
     @Override
     public AlertDialog.Builder setMessage(@Nullable CharSequence message) {
-        mMessageView.setText(message);
+        if (isHtml()) {
+
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                mMessageView.setText(Html.fromHtml(message.toString(), Html.FROM_HTML_MODE_LEGACY));
+            } else {
+                mMessageView.setText(Html.fromHtml(message.toString()));
+            }
+        } else {
+            mMessageView.setText(message);
+        }
         return this;
     }
 
@@ -137,5 +155,13 @@ public class DialogBuilder extends AlertDialog.Builder {
 
     public void setHeaderColor(int colorId) {
         mHeaderLayout.setBackgroundColor(colorId);
+    }
+
+    public Boolean isHtml() {
+        return isHtml;
+    }
+
+    public void setHtml(Boolean html) {
+        isHtml = html;
     }
 }

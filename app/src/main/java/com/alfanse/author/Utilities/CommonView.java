@@ -10,6 +10,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.TextView;
 
 import com.alfanse.author.CustomViews.DialogBuilder;
@@ -128,9 +130,13 @@ public class CommonView {
         if (customDialog.getTitle() != null) {
             builder.setTitle(customDialog.getTitle());
         }
+
+        builder.setHtml(customDialog.isHtml());
+
         if (customDialog.getMessage() != null) {
             builder.setMessage(customDialog.getMessage());
         }
+
         builder.setDialogType(customDialog.getDialogType());
 
         // Create the AlertDialog
@@ -163,6 +169,72 @@ public class CommonView {
             public void onClick(DialogInterface dialog, int id) {
             }
         });
+        // Create the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    public void showAppUpgradeDialog(Activity activity) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+
+        WebView wv = new WebView(activity);
+        wv.loadUrl(Constants.WEB_URL_UPGRADE_APP);
+        wv.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return true;
+            }
+        });
+
+        builder.setView(wv);
+        // Add the buttons
+        builder.setPositiveButton(R.string.action_upgrade, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                Utils.getInstance(mContext).goToPlayStore();
+            }
+        });
+
+        builder.setNegativeButton(R.string.action_cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+                Utils.getInstance(mContext).closeApplication();
+            }
+        });
+        // Set other dialog properties
+        builder.setCancelable(false);
+
+        // Create the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+    }
+
+    public void showMaintenanceDialog(Activity activity) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+
+        WebView wv = new WebView(activity);
+        wv.loadUrl(Constants.WEB_URL_WEBSERVICE_MAINTENANCE);
+        wv.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return true;
+            }
+        });
+
+        builder.setView(wv);
+        // Add the buttons
+        builder.setPositiveButton(R.string.action_ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                Utils.getInstance(mContext).closeApplication();
+            }
+        });
+        // Set other dialog properties
+        builder.setCancelable(false);
+
         // Create the AlertDialog
         AlertDialog dialog = builder.create();
         dialog.show();

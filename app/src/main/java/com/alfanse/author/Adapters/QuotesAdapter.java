@@ -4,7 +4,6 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -18,7 +17,9 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.alfanse.author.Interfaces.onAuthorFollowedListener;
 import com.alfanse.author.Interfaces.onQuoteItemClickListener;
+import com.alfanse.author.Interfaces.onQuoteLikedListener;
 import com.alfanse.author.Models.Quote;
 import com.alfanse.author.R;
 import com.alfanse.author.Utilities.Constants;
@@ -90,11 +91,9 @@ public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.QuoteViewH
             public boolean onMenuItemClick(final MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_follow_author_item_quote:
-                        listener.onActionFollowClick(quote);
-                        final Handler handler = new Handler();
-                        handler.postDelayed(new Runnable() {
+                        listener.onActionFollowClick(quote, new onAuthorFollowedListener() {
                             @Override
-                            public void run() {
+                            public void onAuthorFollowed() {
                                 if (quote.getAuthor().isFollowingAuthor()) {
                                     item.setTitle(mContext.getString(R.string.action_follow));
                                     quote.getAuthor().setFollowingAuthor(false);
@@ -103,8 +102,7 @@ public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.QuoteViewH
                                     quote.getAuthor().setFollowingAuthor(true);
                                 }
                             }
-                        }, 1000);
-
+                        });
                         break;
                     case R.id.action_download_quote_item_quote:
                         listener.onActionDownloadClick(quote);
@@ -246,7 +244,7 @@ public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.QuoteViewH
             imageLikeQuote.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onActionLikeClick(quote);
+
                     int dest = 0;
                     if (quote.isLikeQuote()) {
                         dest = -360;// rotate anti-clockwise
@@ -266,10 +264,10 @@ public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.QuoteViewH
 
                     mObjectAnimator.start();
                     imageLikeQuote.setClickable(false);
-                    final Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
+
+                    listener.onActionLikeClick(quote, new onQuoteLikedListener() {
                         @Override
-                        public void run() {
+                        public void onQuoteLiked() {
                             imageLikeQuote.setClickable(true);
                             if (quote.isLikeQuote()) {
                                 imageLikeQuote.setBackgroundResource(R.drawable.ic_favorite_border_accent_24dp);
@@ -285,8 +283,7 @@ public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.QuoteViewH
                                 quote.setTotalLikes(Integer.toString(Integer.parseInt(quote.getTotalLikes()) + 1));
                             }
                         }
-                    }, Constants.ANIMATION_TOTAL_DURATION);
-
+                    });
                 }
             });
 

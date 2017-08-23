@@ -13,7 +13,6 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
@@ -255,45 +254,7 @@ public class QuoteActivity extends BaseActivity {
         imageLikeQuote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int dest = 0;
-                if (mQuote.isLikeQuote()) {
-                    dest = -360;// rotate anti-clockwise
-
-                } else {
-                    dest = 360;// rotate clockwise
-                }
-
-                if (imageLikeQuote.getRotation() == 360 || imageLikeQuote.getRotation() == -360) {
-                    dest = 0;
-                }
-                mObjectAnimator = ObjectAnimator.ofFloat(imageLikeQuote,
-                        "rotation", dest);
-                mObjectAnimator.setDuration(500);
-                mObjectAnimator.setRepeatCount(ValueAnimator.INFINITE);
-                mObjectAnimator.setRepeatMode(ValueAnimator.RESTART);
-
-                mObjectAnimator.start();
-                imageLikeQuote.setClickable(false);
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        imageLikeQuote.setClickable(true);
-                        if (mQuote.isLikeQuote()) {
-                            imageLikeQuote.setBackgroundResource(R.drawable.ic_favorite_border_accent_24dp);
-                            mObjectAnimator.end();
-                            mQuote.setLikeQuote(false);
-                            textTotalLikes.setText(Integer.toString(Integer.parseInt(mQuote.getTotalLikes()) - 1));
-                            mQuote.setTotalLikes(Integer.toString(Integer.parseInt(mQuote.getTotalLikes()) - 1));
-                        } else {
-                            imageLikeQuote.setBackgroundResource(R.drawable.ic_favorite_accent_24dp);
-                            mObjectAnimator.end();
-                            mQuote.setLikeQuote(true);
-                            textTotalLikes.setText(Integer.toString(Integer.parseInt(mQuote.getTotalLikes()) + 1));
-                            mQuote.setTotalLikes(Integer.toString(Integer.parseInt(mQuote.getTotalLikes()) + 1));
-                        }
-                    }
-                }, 1000);
+                likeQuote();
             }
         });
 
@@ -338,6 +299,66 @@ public class QuoteActivity extends BaseActivity {
                 showMenuPopup(v);
             }
         });
+    }
+
+    private void likeQuote() {
+        int dest = 0;
+        if (mQuote.isLikeQuote()) {
+            dest = -360;// rotate anti-clockwise
+
+        } else {
+            dest = 360;// rotate clockwise
+        }
+
+        if (imageLikeQuote.getRotation() == 360 || imageLikeQuote.getRotation() == -360) {
+            dest = 0;
+        }
+        mObjectAnimator = ObjectAnimator.ofFloat(imageLikeQuote,
+                "rotation", dest);
+        mObjectAnimator.setDuration(500);
+        mObjectAnimator.setRepeatCount(ValueAnimator.INFINITE);
+        mObjectAnimator.setRepeatMode(ValueAnimator.RESTART);
+
+        mObjectAnimator.start();
+        imageLikeQuote.setClickable(false);
+
+        //region API_CALL_START
+        HashMap<String, String> param = new HashMap<>();
+        param.put(Constants.API_PARAM_KEY_QUOTE_ID, mQuote.getId());
+        param.put(Constants.API_PARAM_KEY_AUTHOR_ID, mLoggedAuthor.getId());
+        ApiUtils api = new ApiUtils(mContext)
+                .setActivity(mActivity)
+                .setUrl(Constants.API_URL_LIKE_QUOTE)
+                .setParams(param)
+                .setMessage("QuotesActivity.java|likeQuote")
+                .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
+                    @Override
+                    public void onSuccessCallBack(String stringResponse) {
+                        imageLikeQuote.setClickable(true);
+                        if (mQuote.isLikeQuote()) {
+                            imageLikeQuote.setBackgroundResource(R.drawable.ic_favorite_border_accent_24dp);
+                            mObjectAnimator.end();
+                            mQuote.setLikeQuote(false);
+                            textTotalLikes.setText(Integer.toString(Integer.parseInt(mQuote.getTotalLikes()) - 1));
+                            mQuote.setTotalLikes(Integer.toString(Integer.parseInt(mQuote.getTotalLikes()) - 1));
+                        } else {
+                            imageLikeQuote.setBackgroundResource(R.drawable.ic_favorite_accent_24dp);
+                            mObjectAnimator.end();
+                            mQuote.setLikeQuote(true);
+                            textTotalLikes.setText(Integer.toString(Integer.parseInt(mQuote.getTotalLikes()) + 1));
+                            mQuote.setTotalLikes(Integer.toString(Integer.parseInt(mQuote.getTotalLikes()) + 1));
+                        }
+                    }
+
+                    @Override
+                    public void onFailureCallBack(Exception e) {
+                        mObjectAnimator.end();
+                        // Do nothing
+                    }
+                });
+
+        api.call();
+        //endregion API_CALL_END
     }
 
     private void followAuthor() {

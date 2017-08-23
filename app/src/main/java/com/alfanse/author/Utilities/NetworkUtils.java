@@ -5,7 +5,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.widget.Toast;
 
-import com.alfanse.author.Models.ApiResponse;
+import com.alfanse.author.Models.Api.ApiError;
+import com.alfanse.author.Models.Api.ApiResponse;
+import com.alfanse.author.Models.CustomDialog;
 import com.alfanse.author.R;
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -25,6 +27,8 @@ import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.alfanse.author.CustomViews.DialogBuilder.ERROR;
 
 /**
  * @author Sachin Rana
@@ -133,8 +137,7 @@ public class NetworkUtils {
                      */
                     @Override
                     public void onResponse(String response) {
-                        // send the callback for the API request in the following class
-                        apiUtils.getStringResponseCallback().onSuccessCallBack(response);
+                        parseApiResponse(response, apiUtils);
                     }
                 },
                 new Response.ErrorListener() {
@@ -212,10 +215,56 @@ public class NetworkUtils {
     }
 
 
-    private void parseApiResponse(String response) {
+    private void parseApiResponse(String response, ApiUtils apiUtils) {
 
         ApiResponse apiResponse = new Gson().fromJson(response, ApiResponse.class);
 
+        // Checking if webservice is on maintenance
+        if (apiResponse.getConfig() != null) {
+            if (apiResponse.getConfig().getApiStatus() != null) {
+                if (apiResponse.getConfig().getApiStatus().equalsIgnoreCase("false")) {
+                    CommonView.getInstance(mContext).showMaintenanceDialog(apiUtils.getActivity());
+                    return;
+                }
+            }
+            // Checking if webservice supports app version
+            if (apiResponse.getConfig().getMinSupportVersion() != null) {
+                if (Utils.getInstance(mContext).getAppVersionCode() < Integer.parseInt(apiResponse.getConfig().getMinSupportVersion())) {
+                    CommonView.getInstance(mContext).showAppUpgradeDialog(apiUtils.getActivity());
+                    return;
+                }
+            }
+        }
+        // Checking if any error in webservice response
+        if (apiResponse.getError() != null) {
+            if (apiResponse.getError().getMessage() != null && !apiResponse.getError().getMessage().trim().isEmpty()) {
 
+                String errorType = null;
+                if (apiResponse.getError().getType() != null) {
+                    errorType = apiResponse.getError().getType();
+                } else {
+                    errorType = ApiError.TYPE_DIALOG;
+                }
+
+                if (errorType.equalsIgnoreCase(ApiError.TYPE_TOAST)) {
+                    CommonView.showToast(apiUtils.getActivity(), apiResponse.getError().getMessage(), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
+                } else if (errorType.equalsIgnoreCase(ApiError.TYPE_DIALOG)) {
+                    CommonView.getInstance(mContext).showDialog(
+                            new CustomDialog().setActivity(apiUtils.getActivity())
+                                    .setDialogType(ERROR)
+                                    .setTitle(mContext.getString(R.string.error_exception))
+                                    .setMessage(apiResponse.getError().getMessage())
+                    );
+                }
+                return;
+            }
+        }
+
+        // Everything is correct, let pass the response
+
+        // send the callback for the API request in the following class
+        if (apiResponse.getResponse() != null) {
+            apiUtils.getStringResponseCallback().onSuccessCallBack(apiResponse.getResponse().toString());
+        }
     }
 }

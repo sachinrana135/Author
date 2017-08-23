@@ -1,11 +1,210 @@
 {
-  "api_details": {
-    "status": "true",
-    "version": "1.0"
+  "config": {
+    "apiStatus": "false",
+    "minSupportVersion": "1",
+    "upgradeMessage": "Upgrade Message goes here.",
+    "maintenanceMessage": "<img id='myImg' src='https://www.w3schools.com/howto/img_fjords.jpg' width='300' height='200'><h2>Title</h2><br><p>description here</p>"
+
   },
-  "data": {
-    "status": "true",
-    "udise_id": "11111111111"
-  },
-  "error": {}
+  "data": [
+    {
+      "author": {
+        "id": "1",
+        "name": "Sachin Rana",
+        "followingAuthor": false,
+        "profileImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGjEbPQ0ve0Cg8SqI8v7hyVBdqoKnf_8B7K_JXiE4D24E9a6z6Pw"
+      },
+      "id": "5",
+      "totalLikes": "219",
+      "totalComments": "30",
+      "totalViews": "510",
+      "likeQuote": true,
+      "source": "Sarcasm Server",
+      "imageUrl": "https://image.freepik.com/free-vector/calligraphic-inspirational-quote_23-2147523840.jpg",
+      "caption": "",
+      "localImagePath": "",
+      "dateAdded": "10-Jan-2016",
+      "tags": [
+        "Best Quotes",
+        "New World"
+      ],
+      "categories": [
+        {
+          "id": "1",
+          "name": "Funny",
+          "sortOrder": "1"
+        },
+        {
+          "id": "2",
+          "name": "Emotional",
+          "sortOrder": "1"
+        },
+        {
+          "id": "3",
+          "name": "Life",
+          "sortOrder": "1"
+        }
+      ]
+    },
+    {
+      "author": {
+        "id": "1",
+        "name": "Sachin Rana",
+        "followingAuthor": true,
+        "profileImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGjEbPQ0ve0Cg8SqI8v7hyVBdqoKnf_8B7K_JXiE4D24E9a6z6Pw"
+      },
+      "id": "5",
+      "totalLikes": "219",
+      "totalComments": "30",
+      "likeQuote": false,
+      "totalViews": "510",
+      "source": "Sarcasm Server",
+      "imageUrl": "https://s-media-cache-ak0.pinimg.com/736x/3e/cb/1d/3ecb1d0b38ae3cf819e3b1416457ef77.jpg",
+      "caption": "My Attitude",
+      "localImagePath": "",
+      "dateAdded": "10-Jan-2016 03:02 PM",
+      "tags": [
+        "Best Quotes",
+        "New World"
+      ],
+      "categories": [
+        {
+          "id": "1",
+          "name": "Funny",
+          "sortOrder": "1"
+        },
+        {
+          "id": "2",
+          "name": "Emotional",
+          "sortOrder": "1"
+        },
+        {
+          "id": "3",
+          "name": "Life",
+          "sortOrder": "1"
+        }
+      ]
+    },
+    {
+      "author": {
+        "id": "1",
+        "name": "Sachin Rana",
+        "followingAuthor": true,
+        "profileImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGjEbPQ0ve0Cg8SqI8v7hyVBdqoKnf_8B7K_JXiE4D24E9a6z6Pw"
+      },
+      "id": "5",
+      "totalLikes": "219",
+      "totalComments": "30",
+      "likeQuote": true,
+      "totalViews": "510",
+      "source": "Sarcasm Server",
+      "imageUrl": "https://s-media-cache-ak0.pinimg.com/736x/fc/47/83/fc4783929a979f73df78abb2557dc461.jpg",
+      "caption": "My Attitude",
+      "localImagePath": "",
+      "dateAdded": "10-Jan-2016 03:02 PM",
+      "tags": [
+        "Best Quotes",
+        "New World"
+      ],
+      "categories": [
+        {
+          "id": "1",
+          "name": "Funny",
+          "sortOrder": "1"
+        },
+        {
+          "id": "2",
+          "name": "Emotional",
+          "sortOrder": "1"
+        },
+        {
+          "id": "3",
+          "name": "Life",
+          "sortOrder": "1"
+        }
+      ]
+    },
+    {
+      "author": {
+        "id": "1",
+        "name": "Sachin Rana",
+        "followingAuthor": false,
+        "profileImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGjEbPQ0ve0Cg8SqI8v7hyVBdqoKnf_8B7K_JXiE4D24E9a6z6Pw"
+      },
+      "id": "5",
+      "totalLikes": "219",
+      "totalComments": "30",
+      "likeQuote": true,
+      "totalViews": "510",
+      "source": "Sarcasm Server",
+      "imageUrl": "https://image.freepik.com/free-vector/cute-positive-quote-with-a-smiley-face_23-2147562024.jpg",
+      "caption": "My Attitude",
+      "localImagePath": "",
+      "dateAdded": "10-Jan-2016 03:02 PM",
+      "tags": [
+        "Best Quotes",
+        "New World"
+      ],
+      "categories": [
+        {
+          "id": "1",
+          "name": "Funny",
+          "sortOrder": "1"
+        },
+        {
+          "id": "2",
+          "name": "Emotional",
+          "sortOrder": "1"
+        },
+        {
+          "id": "3",
+          "name": "Life",
+          "sortOrder": "1"
+        }
+      ]
+    },
+    {
+      "author": {
+        "id": "1",
+        "name": "Sachin Rana",
+        "followingAuthor": false,
+        "profileImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGjEbPQ0ve0Cg8SqI8v7hyVBdqoKnf_8B7K_JXiE4D24E9a6z6Pw"
+      },
+      "id": "5",
+      "totalLikes": "219",
+      "totalComments": "30",
+      "likeQuote": false,
+      "totalViews": "510",
+      "source": "Sarcasm Server",
+      "imageUrl": "https://image.freepik.com/free-vector/calligraphic-inspirational-quote_23-2147523840.jpg",
+      "caption": "My Attitude",
+      "localImagePath": "",
+      "dateAdded": "10-Jan-2016 03:02 PM",
+      "tags": [
+        "Best Quotes",
+        "New World"
+      ],
+      "categories": [
+        {
+          "id": "1",
+          "name": "Funny",
+          "sortOrder": "1"
+        },
+        {
+          "id": "2",
+          "name": "Emotional",
+          "sortOrder": "1"
+        },
+        {
+          "id": "3",
+          "name": "Life",
+          "sortOrder": "1"
+        }
+      ]
+    }
+  ],
+  "error": {
+    "type": "toast",
+    "message": "This is toast error message"
+  }
 }

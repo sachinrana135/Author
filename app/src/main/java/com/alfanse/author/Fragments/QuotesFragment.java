@@ -28,7 +28,9 @@ import com.alfanse.author.Adapters.QuotesAdapter;
 import com.alfanse.author.Interfaces.NetworkCallback;
 import com.alfanse.author.Interfaces.UpdatableFragment;
 import com.alfanse.author.Interfaces.bitmapRequestListener;
+import com.alfanse.author.Interfaces.onAuthorFollowedListener;
 import com.alfanse.author.Interfaces.onQuoteItemClickListener;
+import com.alfanse.author.Interfaces.onQuoteLikedListener;
 import com.alfanse.author.Interfaces.onReportItemSubmitListener;
 import com.alfanse.author.Models.Author;
 import com.alfanse.author.Models.AuthorFilters;
@@ -102,9 +104,9 @@ public class QuotesFragment extends Fragment implements UpdatableFragment {
         }
 
         @Override
-        public void onActionLikeClick(Quote quote) {
+        public void onActionLikeClick(Quote quote, onQuoteLikedListener listener) {
             activeQuote = quote;
-            likeQuote();
+            likeQuote(listener);
         }
 
         @Override
@@ -153,8 +155,8 @@ public class QuotesFragment extends Fragment implements UpdatableFragment {
         }
 
         @Override
-        public void onActionFollowClick(Quote quote) {
-            // Nothing to do, event handled in QuotesAdapter
+        public void onActionFollowClick(Quote quote, onAuthorFollowedListener listener) {
+            followAuthor(quote, listener);
         }
 
         @Override
@@ -182,7 +184,7 @@ public class QuotesFragment extends Fragment implements UpdatableFragment {
         // Required empty public constructor
     }
 
-    private void likeQuote() {
+    private void likeQuote(final onQuoteLikedListener listener) {
         //region API_CALL_START
         HashMap<String, String> param = new HashMap<>();
         param.put(Constants.API_PARAM_KEY_QUOTE_ID, activeQuote.getId());
@@ -195,12 +197,40 @@ public class QuotesFragment extends Fragment implements UpdatableFragment {
                 .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
                     @Override
                     public void onSuccessCallBack(String stringResponse) {
-                        // Do nothing
+                        listener.onQuoteLiked();
                     }
 
                     @Override
                     public void onFailureCallBack(Exception e) {
                         // Do nothing
+                    }
+                });
+
+        api.call();
+        //endregion API_CALL_END
+    }
+
+    private void followAuthor(Quote quote, final onAuthorFollowedListener listener) {
+        //region API_CALL_START
+        CommonView.getInstance(mContext).showProgressDialog(mActivity, getString(R.string.text_please_wait), null);
+        HashMap<String, String> param = new HashMap<>();
+        param.put(Constants.API_PARAM_KEY_LOGGED_AUTHOR_ID, mLoggedAuthor.getId());
+        param.put(Constants.API_PARAM_KEY_AUTHOR_ID, quote.getAuthor().getId());
+        ApiUtils api = new ApiUtils(mContext)
+                .setActivity(mActivity)
+                .setUrl(Constants.API_URL_FOLLOW_AUTHOR)
+                .setParams(param)
+                .setMessage("QuotesFragment.java|followAuthor")
+                .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
+                    @Override
+                    public void onSuccessCallBack(String stringResponse) {
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                        listener.onAuthorFollowed();
+                    }
+
+                    @Override
+                    public void onFailureCallBack(Exception e) {
+                        CommonView.getInstance(mContext).dismissProgressDialog();
                     }
                 });
 

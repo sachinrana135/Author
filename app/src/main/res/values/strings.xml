@@ -151,6 +151,7 @@
 
     <!-- Action buttons -->
     <string name="action_ok">Ok</string>
+    <string name="action_upgrade">Ok</string>
     <string name="action_done">Done</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_reset">Reset</string>

@@ -1,7 +1,6 @@
 package com.alfanse.author.Adapters;
 
 import android.content.Context;
-import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alfanse.author.Interfaces.onAuthorFollowedListener;
 import com.alfanse.author.Interfaces.onAuthorItemClickListener;
 import com.alfanse.author.Models.Author;
 import com.alfanse.author.R;
@@ -100,23 +100,20 @@ public class AuthorsAdapter extends RecyclerView.Adapter<AuthorsAdapter.AuthorVi
             textAction.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onActionFollowClick(author);
                     textAction.setClickable(false);
-
-                    final Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
+                    listener.onActionFollowClick(author, new onAuthorFollowedListener() {
                         @Override
-                        public void run() {
+                        public void onAuthorFollowed() {
                             textAction.setClickable(true);
                             if (author.isFollowingAuthor()) {
                                 textAction.setText(mContext.getString(R.string.action_follow));
-                                author.setFollowingAuthor(true);
+                                author.setFollowingAuthor(false);
                             } else {
                                 textAction.setText(mContext.getString(R.string.action_unfollow));
-                                author.setFollowingAuthor(false);
+                                author.setFollowingAuthor(true);
                             }
                         }
-                    }, 2000);
+                    });
                 }
             });
 

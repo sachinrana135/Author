@@ -13,7 +13,7 @@ public interface onQuoteItemClickListener {
 
     void onQuoteClick(Quote quote, ImageView quoteImage, ImageView authorImage);
 
-    void onActionLikeClick(Quote quote);
+    void onActionLikeClick(Quote quote, onQuoteLikedListener listener);
 
     void onTotalLikesClick(Quote quote);
 
@@ -21,7 +21,7 @@ public interface onQuoteItemClickListener {
 
     void onActionShareClick(Quote quote);
 
-    void onActionFollowClick(Quote quote);
+    void onActionFollowClick(Quote quote, onAuthorFollowedListener listener);
 
     void onActionDownloadClick(Quote quote);
 

@@ -9,7 +9,7 @@ import com.alfanse.author.Models.Author;
 public interface onAuthorItemClickListener {
     void onItemClick(Author author);
 
-    void onActionFollowClick(Author author);
+    void onActionFollowClick(Author author, onAuthorFollowedListener listener);
 
     void onAuthorClick(Author author);
 }

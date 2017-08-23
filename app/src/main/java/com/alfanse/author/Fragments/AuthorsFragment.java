@@ -16,13 +16,16 @@ import android.view.ViewGroup;
 import com.alfanse.author.Activities.AuthorActivity;
 import com.alfanse.author.Adapters.AuthorsAdapter;
 import com.alfanse.author.Interfaces.NetworkCallback;
+import com.alfanse.author.Interfaces.onAuthorFollowedListener;
 import com.alfanse.author.Interfaces.onAuthorItemClickListener;
 import com.alfanse.author.Models.Author;
 import com.alfanse.author.Models.AuthorFilters;
 import com.alfanse.author.R;
 import com.alfanse.author.Utilities.ApiUtils;
+import com.alfanse.author.Utilities.CommonView;
 import com.alfanse.author.Utilities.Constants;
 import com.alfanse.author.Utilities.EndlessRecyclerViewScrollListener;
+import com.alfanse.author.Utilities.SharedManagement;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -53,18 +56,17 @@ public class AuthorsFragment extends Fragment {
     private int mFirstPage = 1;
     private int mVisibleThreshold = 5;
     private AuthorFilters authorFilters = new AuthorFilters();
+    private Author mLoggedAuthor;
 
     private onAuthorItemClickListener mOnAuthorItemClickListener = new onAuthorItemClickListener() {
         @Override
         public void onItemClick(Author author) {
-
-            String authorData = new Gson().toJson(author);
-
+            //Do nothing
         }
 
         @Override
-        public void onActionFollowClick(Author author) {
-            String authorData = new Gson().toJson(author);
+        public void onActionFollowClick(Author author, onAuthorFollowedListener listener) {
+            followAuthor(author, listener);
         }
 
         @Override
@@ -84,6 +86,7 @@ public class AuthorsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mListAuthors = new ArrayList<Author>();
         mAuthorsAdapter = new AuthorsAdapter(mContext, mListAuthors, mOnAuthorItemClickListener);
+        mLoggedAuthor = SharedManagement.getInstance(mContext).getLoggedUser();
     }
 
     @Override
@@ -125,9 +128,7 @@ public class AuthorsFragment extends Fragment {
 
     private void loadAuthors(int page) {
 
-        if (page == mFirstPage) {
-            layoutSwipeRefresh.setRefreshing(true);
-        }
+        layoutSwipeRefresh.setRefreshing(true);
 
         authorFilters.setPage(Integer.toString(page));
 
@@ -169,6 +170,34 @@ public class AuthorsFragment extends Fragment {
         mListAuthors.addAll(listAuthors);
 
         mAuthorsAdapter.notifyDataSetChanged();
+    }
+
+    private void followAuthor(Author author, final onAuthorFollowedListener listener) {
+        //region API_CALL_START
+        CommonView.getInstance(mContext).showProgressDialog(mActivity, getString(R.string.text_please_wait), null);
+        HashMap<String, String> param = new HashMap<>();
+        param.put(Constants.API_PARAM_KEY_LOGGED_AUTHOR_ID, mLoggedAuthor.getId());
+        param.put(Constants.API_PARAM_KEY_AUTHOR_ID, author.getId());
+        ApiUtils api = new ApiUtils(mContext)
+                .setActivity(mActivity)
+                .setUrl(Constants.API_URL_FOLLOW_AUTHOR)
+                .setParams(param)
+                .setMessage("AuthorsFragment.java|followAuthor")
+                .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
+                    @Override
+                    public void onSuccessCallBack(String stringResponse) {
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                        listener.onAuthorFollowed();
+                    }
+
+                    @Override
+                    public void onFailureCallBack(Exception e) {
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+                });
+
+        api.call();
+        //endregion API_CALL_END
     }
 
     @Override

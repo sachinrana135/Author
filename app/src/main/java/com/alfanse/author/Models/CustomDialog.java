@@ -12,6 +12,7 @@ public class CustomDialog {
     private int dialogType;
     private String title;
     private String message;
+    private Boolean isHtml = false;
 
     public Activity getActivity() {
         return activity;
@@ -47,6 +48,15 @@ public class CustomDialog {
 
     public CustomDialog setMessage(String message) {
         this.message = message;
+        return this;
+    }
+
+    public Boolean isHtml() {
+        return isHtml;
+    }
+
+    public CustomDialog setHtml(Boolean html) {
+        isHtml = html;
         return this;
     }
 }
