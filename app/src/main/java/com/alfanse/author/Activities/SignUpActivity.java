@@ -20,11 +20,14 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alfanse.author.CustomViews.DialogBuilder;
+import com.alfanse.author.Interfaces.NetworkCallback;
 import com.alfanse.author.Models.Author;
 import com.alfanse.author.Models.CustomDialog;
 import com.alfanse.author.R;
+import com.alfanse.author.Utilities.ApiUtils;
 import com.alfanse.author.Utilities.CommonView;
 import com.alfanse.author.Utilities.Constants;
 import com.alfanse.author.Utilities.Utils;
@@ -36,6 +39,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -102,7 +106,7 @@ public class SignUpActivity extends BaseActivity {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     addEmailAdapter();
                 } else {
-                    // TODO show message
+                    CommonView.showToast(mActivity, getString(R.string.warning_permission_denied), Toast.LENGTH_LONG, CommonView.ToastType.WARNING);
                 }
                 break;
             }
@@ -174,6 +178,32 @@ public class SignUpActivity extends BaseActivity {
         });
     }
 
+    private void sendVerificationEmail() {
+
+        CommonView.getInstance(mContext).showProgressDialog(mActivity, getString(R.string.text_loading_verification_email), getString(R.string.text_please_wait));
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        currentUser.sendEmailVerification()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        mAuth.signOut();
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                        if (task.isSuccessful()) {
+                            showAccountCreatedSuccessDialog();
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            CommonView.getInstance(mContext).showDialog(
+                                    new CustomDialog().setActivity(mActivity)
+                                            .setDialogType(ERROR)
+                                            .setTitle(getString(R.string.error_exception))
+                                            .setMessage(task.getException().getMessage())
+                            );
+                        }
+                    }
+                });
+
+    }
+
     private void addUser() {
 
         Author author = new Author();
@@ -181,10 +211,38 @@ public class SignUpActivity extends BaseActivity {
         author.setFirebaseId(currentUser.getUid());
         author.setName(currentUser.getDisplayName());
         author.setEmail(currentUser.getEmail());
+        addUserOnWeb(author);
+    }
 
-        String authorData = new Gson().toJson(author);
+    private void addUserOnWeb(Author author) {
 
-        // TODO Call API to add
+        //region API_CALL_START
+        CommonView.getInstance(mContext).showProgressDialog(mActivity, getString(R.string.text_loading_creating_new_account), null);
+        HashMap<String, String> param = new HashMap<>();
+        param.put(Constants.API_PARAM_KEY_AUTHOR, new Gson().toJson(author));
+        ApiUtils api = new ApiUtils(mContext)
+                .setActivity(mActivity)
+                .setUrl(Constants.API_URL_ADD_AUTHOR)
+                .setParams(param)
+                .setMessage("SignUpActivity.java|addUserOnWeb")
+                .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
+                    @Override
+                    public void onSuccessCallBack(String stringResponse) {
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                        sendVerificationEmail();
+                    }
+
+                    @Override
+                    public void onFailureCallBack(Exception e) {
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+                });
+
+        api.call();
+        //endregion API_CALL_END
+    }
+
+    private void showAccountCreatedSuccessDialog() {
 
         DialogBuilder builder = new DialogBuilder(mActivity);
         // Add the buttons
@@ -204,6 +262,7 @@ public class SignUpActivity extends BaseActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
 
     private boolean validateSignUpForm() {
         editTextName.setError(null);

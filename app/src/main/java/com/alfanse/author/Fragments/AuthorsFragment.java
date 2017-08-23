@@ -51,7 +51,7 @@ public class AuthorsFragment extends Fragment {
     private LinearLayoutManager mLinearLayoutManager;
     private EndlessRecyclerViewScrollListener mScrollListener;
     private int mFirstPage = 1;
-    private int mVisibleThreshold = 10;
+    private int mVisibleThreshold = 5;
     private AuthorFilters authorFilters = new AuthorFilters();
 
     private onAuthorItemClickListener mOnAuthorItemClickListener = new onAuthorItemClickListener() {
@@ -125,7 +125,9 @@ public class AuthorsFragment extends Fragment {
 
     private void loadAuthors(int page) {
 
-        layoutSwipeRefresh.setRefreshing(true);
+        if (page == mFirstPage) {
+            layoutSwipeRefresh.setRefreshing(true);
+        }
 
         authorFilters.setPage(Integer.toString(page));
 

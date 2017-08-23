@@ -21,6 +21,9 @@ import android.view.inputmethod.InputMethodManager;
 import com.alfanse.author.Interfaces.bitmapRequestListener;
 import com.alfanse.author.R;
 import com.bumptech.glide.Glide;
+import com.crashlytics.android.Crashlytics;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,6 +40,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
+
+import io.fabric.sdk.android.Fabric;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
 import static com.alfanse.author.Utilities.Constants.QUOTE_SHARE_TEMP_FILE_NAME;
@@ -93,6 +98,21 @@ public class Utils {
             deviceId = "";
         }
         return deviceId;
+    }
+
+    public static void logException(Exception exception) {
+
+        if (Fabric.isInitialized()) {
+            //Log user details
+            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                Crashlytics.setUserIdentifier(currentUser.getUid());
+                Crashlytics.setUserEmail(currentUser.getEmail());
+                Crashlytics.setUserName(currentUser.getDisplayName());
+            }
+            //Log exception
+            Crashlytics.logException(exception);
+        }
     }
 
     public Drawable getDrawable(int id) {

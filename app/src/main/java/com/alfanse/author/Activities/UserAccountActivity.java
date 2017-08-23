@@ -25,10 +25,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alfanse.author.Interfaces.NetworkCallback;
 import com.alfanse.author.Models.Author;
 import com.alfanse.author.Models.AuthorFilters;
 import com.alfanse.author.Models.QuoteFilters;
 import com.alfanse.author.R;
+import com.alfanse.author.Utilities.ApiUtils;
 import com.alfanse.author.Utilities.CommonView;
 import com.alfanse.author.Utilities.Constants;
 import com.alfanse.author.Utilities.FontHelper;
@@ -47,6 +49,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -90,12 +93,10 @@ public class UserAccountActivity extends BaseActivity {
     TextView textEditProfile;
     @BindView(R.id.text_update_password_account_user)
     TextView textUpdatePassword;
-    @BindView(R.id.text_view_settings_account_user)
-    TextView textSettings;
     @BindView(R.id.text_view_logout_account_user)
     TextView textLogout;
-    @BindView(R.id.text_view_invite_friends_account_user)
-    TextView textInviteFriends;
+    @BindView(R.id.text_view_share_app_account_user)
+    TextView textShareApp;
     @BindView(R.id.progress_bar_cover_image_account_user)
     ProgressBar progressBarCoverImage;
     @BindView(R.id.progress_bar_profile_image_account_user)
@@ -172,6 +173,7 @@ public class UserAccountActivity extends BaseActivity {
         textLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                CommonView.showToast(mActivity, getString(R.string.success_logout), Toast.LENGTH_LONG, CommonView.ToastType.SUCCESS);
                 SharedManagement.getInstance(mContext).logoutUser();
             }
         });
@@ -221,12 +223,28 @@ public class UserAccountActivity extends BaseActivity {
             }
         });
 
-        textSettings.setOnClickListener(new View.OnClickListener() {
+        textShareApp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                shareApp();
             }
         });
+    }
+
+    private void shareApp() {
+
+        Intent i = new Intent(Intent.ACTION_SEND);
+        //text type
+        i.setType("text/plain");
+        //extrs subject
+        i.putExtra(Intent.EXTRA_SUBJECT, getApplication().getApplicationInfo().name);
+        //share strings
+        String share = getString(R.string.msg_share_app);
+        share = share + "https://play.google.com/store/apps/details?id=" + getApplication().getPackageName();
+        //putExtra
+        i.putExtra(Intent.EXTRA_TEXT, share);
+        //start intent
+        startActivity(Intent.createChooser(i, getString(R.string.text_share_via)));
     }
 
     @SuppressLint("NewApi")
@@ -261,7 +279,7 @@ public class UserAccountActivity extends BaseActivity {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     startActivityForResult(CropImage.getPickImageChooserIntent(mContext), PICK_IMAGE_CHOOSER_REQUEST_CODE);
                 } else {
-                    // TODO show message
+                    CommonView.showToast(mActivity, getString(R.string.warning_permission_denied), Toast.LENGTH_LONG, CommonView.ToastType.WARNING);
                 }
                 break;
             }
@@ -270,7 +288,7 @@ public class UserAccountActivity extends BaseActivity {
                     // required permissions granted, start crop image activity
                     startCropImageActivity(mCropImageUri);
                 } else {
-                    // TODO show message
+                    CommonView.showToast(mActivity, getString(R.string.warning_permission_denied), Toast.LENGTH_LONG, CommonView.ToastType.WARNING);
                 }
                 break;
             }
@@ -331,7 +349,7 @@ public class UserAccountActivity extends BaseActivity {
                         updateProfileImage();
                     }
                 } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                    Toast.makeText(mActivity, "Cropping failed: " + result.getError(), Toast.LENGTH_LONG).show();
+                    CommonView.showToast(mActivity, "Cropping failed: " + result.getError(), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
                 }
                 break;
             }
@@ -340,17 +358,59 @@ public class UserAccountActivity extends BaseActivity {
 
     private void updateProfileImage() {
 
-        //TODO update cover photo API integration
+        //region API_CALL_START
+        HashMap<String, String> param = new HashMap<>();
+        param.put(Constants.API_PARAM_KEY_AUTHOR_ID, mAuthor.getId());
+        param.put(Constants.API_PARAM_KEY_PROFILE_IMAGE, Utils.getInstance(mContext).getStringImage(mImagePath));
+        ApiUtils api = new ApiUtils(mContext)
+                .setActivity(mActivity)
+                .setUrl(Constants.API_URL_UPDATE_PROFILE_IMAGE)
+                .setParams(param)
+                .setMessage("UserAccountActivity.java|updateProfileImage")
+                .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
+                    @Override
+                    public void onSuccessCallBack(String stringResponse) {
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                        CommonView.showToast(mActivity, getString(R.string.success_profile_image_updated), Toast.LENGTH_LONG, CommonView.ToastType.SUCCESS);
+                    }
 
-        String imageString = Utils.getInstance(mContext).getStringImage(mImagePath);
+                    @Override
+                    public void onFailureCallBack(Exception e) {
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+                });
+
+        api.call();
+        //endregion API_CALL_END
     }
 
 
     private void updateCoverImage() {
 
-        //TODO update cover photo API integration
+        //region API_CALL_START
+        HashMap<String, String> param = new HashMap<>();
+        param.put(Constants.API_PARAM_KEY_AUTHOR_ID, mAuthor.getId());
+        param.put(Constants.API_PARAM_KEY_COVER_IMAGE, Utils.getInstance(mContext).getStringImage(mImagePath));
+        ApiUtils api = new ApiUtils(mContext)
+                .setActivity(mActivity)
+                .setUrl(Constants.API_URL_UPDATE_COVER_IMAGE)
+                .setParams(param)
+                .setMessage("UserAccountActivity.java|updateCoverImage")
+                .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
+                    @Override
+                    public void onSuccessCallBack(String stringResponse) {
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                        CommonView.showToast(mActivity, getString(R.string.success_cover_image_updated), Toast.LENGTH_LONG, CommonView.ToastType.SUCCESS);
+                    }
 
-        String imageString = Utils.getInstance(mContext).getStringImage(mImagePath);
+                    @Override
+                    public void onFailureCallBack(Exception e) {
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+                });
+
+        api.call();
+        //endregion API_CALL_END
 
     }
 
@@ -371,7 +431,7 @@ public class UserAccountActivity extends BaseActivity {
             File dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), Constants.QUOTE_PUBLIC_OUTPUT_DIRECTORY);
 
             if (!dir.mkdirs()) {
-                //TODO exception handling
+                CommonView.showToast(mActivity, getString(R.string.error_exception), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
             }
 
             file = new File(dir.getAbsolutePath() + "/" + Utils.getTimeStamp() + Constants.QUOTE_OUTPUT_FORMAT);

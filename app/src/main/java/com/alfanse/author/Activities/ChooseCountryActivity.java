@@ -59,13 +59,41 @@ public class ChooseCountryActivity extends BaseActivity {
             author.setCountry(country);
             SharedManagement.getInstance(mContext).setLoggedUser(author);
 
-            //TODO update country API
-
-            Intent homeIntent = new Intent(mActivity, HomeActivity.class);
-            startActivity(homeIntent);
-            finish();
+            updateUserCountry();
         }
     };
+
+    private void updateUserCountry() {
+        //region API_CALL_START
+        CommonView.getInstance(mContext).showProgressDialog(mActivity, getString(R.string.text_loading_updating_country), null);
+        HashMap<String, String> param = new HashMap<>();
+        param.put(Constants.API_PARAM_KEY_AUTHOR, new Gson().toJson(SharedManagement.getInstance(mContext).getLoggedUser()));
+        ApiUtils api = new ApiUtils(mContext)
+                .setActivity(mActivity)
+                .setUrl(Constants.API_URL_UPDATE_USER_COUNTRY)
+                .setParams(param)
+                .setMessage("ChooseCountryActivity.java|updateUserCountry")
+                .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
+                    @Override
+                    public void onSuccessCallBack(String stringResponse) {
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                        Intent homeIntent = new Intent(mActivity, HomeActivity.class);
+                        startActivity(homeIntent);
+                        finish();
+                    }
+
+                    @Override
+                    public void onFailureCallBack(Exception e) {
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                        Intent homeIntent = new Intent(mActivity, HomeActivity.class);
+                        startActivity(homeIntent);
+                        finish();
+                    }
+                });
+
+        api.call();
+        //endregion API_CALL_END
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -207,7 +207,7 @@ public class QuoteActivity extends BaseActivity {
             if (intent.hasExtra(BUNDLE_KEY_QUOTE_ID)) {
                 mQuoteId = intent.getStringExtra(BUNDLE_KEY_QUOTE_ID);
             } else {
-                Toast.makeText(mActivity, getString(R.string.error_quote_not_found), Toast.LENGTH_LONG).show();
+                CommonView.showToast(mActivity, getString(R.string.error_quote_not_found), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
                 finish();
             }
         }

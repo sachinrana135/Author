@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.alfanse.author.Activities.AuthorActivity;
 import com.alfanse.author.Activities.AuthorsActivity;
@@ -453,7 +454,7 @@ public class QuotesFragment extends Fragment implements UpdatableFragment {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Utils.getInstance(mContext).downloadImageToDisk(quoteForDownload.getImageUrl());
                 } else {
-                    // TODO show message
+                    CommonView.showToast(mActivity, getString(R.string.warning_permission_denied), Toast.LENGTH_LONG, CommonView.ToastType.WARNING);
                 }
                 break;
             }
@@ -462,7 +463,7 @@ public class QuotesFragment extends Fragment implements UpdatableFragment {
                     Uri uri = Utils.getInstance(mContext).saveBitmapToDisk(quoteBitmapToSave);
                     openImageShareIntent(uri);
                 } else {
-                    // TODO show message
+                    CommonView.showToast(mActivity, getString(R.string.warning_permission_denied), Toast.LENGTH_LONG, CommonView.ToastType.WARNING);
                 }
                 break;
             }

@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alfanse.author.Activities.ChooseCategoryActivity;
 import com.alfanse.author.Interfaces.NetworkCallback;
@@ -76,7 +77,6 @@ public class QuoteFiltersFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        mSelectedCategories = new ArrayList<Category>();
         super.onCreate(savedInstanceState);
     }
 
@@ -278,7 +278,7 @@ public class QuoteFiltersFragment extends Fragment {
                     }
 
                 } else {
-                    //TODO catch Exception
+                    CommonView.showToast(mActivity, getString(R.string.error_exception), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
                 }
 
                 break;

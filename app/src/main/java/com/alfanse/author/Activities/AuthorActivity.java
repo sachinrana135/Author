@@ -99,7 +99,7 @@ public class AuthorActivity extends BaseActivity {
             if (intent.hasExtra(BUNDLE_KEY_AUTHOR_ID)) {
                 mAuthorId = intent.getStringExtra(BUNDLE_KEY_AUTHOR_ID);
             } else {
-                Toast.makeText(mActivity, getString(R.string.error_author_not_found), Toast.LENGTH_LONG).show();
+                CommonView.showToast(mActivity, getString(R.string.error_author_not_found), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
                 finish();
             }
         }

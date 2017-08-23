@@ -201,6 +201,7 @@ public class ChooseCategoryActivity extends BaseActivity {
             categoryTag.setText(category.getName());
             categoryTag.setTypeface(FontHelper.getInstance(mContext).getAppCustomMediumTypeface());
             categoryTag.setTag(category);
+            categoryTag.setGravity(Gravity.CENTER_VERTICAL);
             categoryTag.setTextColor(Utils.getInstance(mContext).getColor(R.color.colorWhite));
             categoryTag.setBackground(mRoundBorderDrawable);
             categoryTag.setPadding((int) getResources().getDimension(R.dimen.spacing_normal), (int) getResources().getDimension(R.dimen.spacing_xsmall), (int) getResources().getDimension(R.dimen.spacing_normal), (int) getResources().getDimension(R.dimen.spacing_xsmall));

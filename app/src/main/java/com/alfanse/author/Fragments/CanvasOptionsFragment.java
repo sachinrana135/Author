@@ -148,7 +148,6 @@ public class CanvasOptionsFragment extends Fragment implements ColorPickerDialog
 
     private void loadThemes(int page) {
 
-        CommonView.getInstance(mContext).showProgressDialog(mActivity, getString(R.string.text_loading), null);
 
         //region API_CALL_START
         HashMap<String, String> param = new HashMap<>();
@@ -157,17 +156,16 @@ public class CanvasOptionsFragment extends Fragment implements ColorPickerDialog
                 .setActivity(mActivity)
                 .setUrl(Constants.API_URL_GET_CANVAS_THEMES)
                 .setParams(param)
+                .setShouldCache(true)
                 .setMessage("CanvasOptionsFragment.java|loadThemes")
                 .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
                     @Override
                     public void onSuccessCallBack(String stringResponse) {
                         parseLoadThemesResponse(stringResponse);
-                        CommonView.getInstance(mContext).dismissProgressDialog();
                     }
 
                     @Override
                     public void onFailureCallBack(Exception e) {
-                        CommonView.getInstance(mContext).dismissProgressDialog();
                     }
                 });
 
@@ -303,7 +301,7 @@ public class CanvasOptionsFragment extends Fragment implements ColorPickerDialog
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     startActivityForResult(CropImage.getPickImageChooserIntent(mContext), PICK_IMAGE_CHOOSER_REQUEST_CODE);
                 } else {
-                    // TODO show message
+                    CommonView.showToast(mActivity, getString(R.string.warning_permission_denied), Toast.LENGTH_LONG, CommonView.ToastType.WARNING);
                 }
                 break;
             }
@@ -312,7 +310,7 @@ public class CanvasOptionsFragment extends Fragment implements ColorPickerDialog
                     // required permissions granted, start crop image activity
                     startCropImageActivity(mCropImageUri);
                 } else {
-                    // TODO show message
+                    CommonView.showToast(mActivity, getString(R.string.warning_permission_denied), Toast.LENGTH_LONG, CommonView.ToastType.WARNING);
                 }
                 break;
             }
@@ -353,7 +351,7 @@ public class CanvasOptionsFragment extends Fragment implements ColorPickerDialog
                         addComponentImageView(result.getUri());
                     }
                 } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                    Toast.makeText(mActivity, "Cropping failed: " + result.getError(), Toast.LENGTH_LONG).show();
+                    CommonView.showToast(mActivity, "Cropping failed: " + result.getError(), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
                 }
                 break;
             }
@@ -417,7 +415,6 @@ public class CanvasOptionsFragment extends Fragment implements ColorPickerDialog
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onComponentTextViewAdded(ComponentTextView componentTextView);
 
         void onComponentImageViewAdded(ComponentImageView componentImageView);

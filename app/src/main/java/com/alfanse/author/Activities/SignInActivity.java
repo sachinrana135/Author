@@ -161,7 +161,7 @@ public class SignInActivity extends BaseActivity implements
         }
 
         initListener();
-        checkGetAccountsPermission();
+        //checkGetAccountsPermission();
         setLastLoginEmail();
         initFacebookAuth();
         initGoogleAuth();
@@ -199,7 +199,7 @@ public class SignInActivity extends BaseActivity implements
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     addEmailAdapter();
                 } else {
-                    // TODO show message
+                    CommonView.showToast(mActivity, getString(R.string.warning_permission_denied), Toast.LENGTH_LONG, CommonView.ToastType.WARNING);
                 }
                 break;
             }
@@ -467,41 +467,51 @@ public class SignInActivity extends BaseActivity implements
                                 if (currentUser.isEmailVerified()) {
                                     postSignInAction();
                                 } else {
-
-                                    DialogBuilder builder = new DialogBuilder(mActivity);
-                                    // Add the buttons
-                                    builder.setPositiveButton(R.string.action_verify_now, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            sendVerificationEmail();
-                                        }
-                                    });
-
-                                    builder.setNegativeButton(R.string.action_ok, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            mAuth.signOut();
-                                        }
-                                    });
-
-                                    builder.setNegativeButton(R.string.action_cancel, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            // User cancelled the dialog
-                                        }
-                                    });
-                                    // Set other dialog properties
-                                    builder.setTitle(R.string.error_unverified_email);
-                                    builder.setMessage(R.string.msg_unverified_email);
-                                    builder.setDialogType(DialogBuilder.ERROR);
-
-                                    // Create the AlertDialog
-                                    AlertDialog dialog = builder.create();
-                                    dialog.show();
+                                    showEmailVerificationDialog();
                                 }
                             } else {
-                                Toast.makeText(mActivity, getString(R.string.error_signin_failed), Toast.LENGTH_LONG).show();
+                                // If sign in fails, display a message to the user.
+                                CommonView.getInstance(mContext).showDialog(
+                                        new CustomDialog().setActivity(mActivity)
+                                                .setDialogType(ERROR)
+                                                .setTitle(getString(R.string.error_exception))
+                                                .setMessage(task.getException().getMessage())
+                                );
                             }
                         }
                     });
         }
+    }
+
+    private void showEmailVerificationDialog() {
+
+        DialogBuilder builder = new DialogBuilder(mActivity);
+        // Add the buttons
+        builder.setPositiveButton(R.string.action_verify_now, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                sendVerificationEmail();
+            }
+        });
+
+        builder.setNegativeButton(R.string.action_ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                mAuth.signOut();
+            }
+        });
+
+        builder.setNegativeButton(R.string.action_cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+            }
+        });
+        // Set other dialog properties
+        builder.setTitle(R.string.error_unverified_email);
+        builder.setMessage(R.string.msg_unverified_email);
+        builder.setDialogType(DialogBuilder.ERROR);
+
+        // Create the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private void postSignInAction() {
@@ -580,7 +590,13 @@ public class SignInActivity extends BaseActivity implements
                                             .setMessage(getString(R.string.msg_signup_success))
                             );
                         } else {
-                            Toast.makeText(mActivity, getString(R.string.error_exception), Toast.LENGTH_LONG).show();
+                            // If sign in fails, display a message to the user.
+                            CommonView.getInstance(mContext).showDialog(
+                                    new CustomDialog().setActivity(mActivity)
+                                            .setDialogType(ERROR)
+                                            .setTitle(getString(R.string.error_exception))
+                                            .setMessage(task.getException().getMessage())
+                            );
                         }
                     }
                 });
@@ -635,7 +651,7 @@ public class SignInActivity extends BaseActivity implements
                                 // User is signed in.
                                 postSignInAction();
                             } else {
-                                Toast.makeText(mActivity, getString(R.string.error_exception), Toast.LENGTH_LONG).show();
+                                CommonView.showToast(mActivity, getString(R.string.error_exception), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
                             }
                         } else {
                             // If sign in fails, display a message to the user.
@@ -674,7 +690,7 @@ public class SignInActivity extends BaseActivity implements
                                 // User is signed in.
                                 postSignInAction();
                             } else {
-                                Toast.makeText(mActivity, getString(R.string.error_exception), Toast.LENGTH_LONG).show();
+                                CommonView.showToast(mActivity, getString(R.string.error_exception), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
                             }
 
                         } else {
@@ -705,7 +721,7 @@ public class SignInActivity extends BaseActivity implements
                                 // User is signed in.
                                 postSignInAction();
                             } else {
-                                Toast.makeText(mActivity, getString(R.string.error_exception), Toast.LENGTH_LONG).show();
+                                CommonView.showToast(mActivity, getString(R.string.error_exception), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
                             }
                         } else {
                             // If sign in fails, display a message to the user.

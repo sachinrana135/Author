@@ -29,6 +29,7 @@ import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.alfanse.author.CustomViews.ComponentBoxView;
 import com.alfanse.author.CustomViews.ComponentImageView;
@@ -209,6 +210,7 @@ public class NewQuoteActivity extends BaseActivity implements
 
         mFragmentManager.beginTransaction()
                 .replace(R.id.option_container_new_quote, mCanvasOptionsFragment)
+                .addToBackStack(null)
                 .commit();
     }
 
@@ -504,8 +506,7 @@ public class NewQuoteActivity extends BaseActivity implements
                     saveCanvasIntoImage();
 
                 } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
+                    CommonView.showToast(mActivity, getString(R.string.warning_permission_denied), Toast.LENGTH_LONG, CommonView.ToastType.WARNING);
                 }
 
                 return;
@@ -534,12 +535,12 @@ public class NewQuoteActivity extends BaseActivity implements
                         String quoteId = data.getStringExtra(BUNDLE_KEY_QUOTE_ID);
                         Intent quoteIntent = new Intent(mActivity, QuoteActivity.class);
                         quoteIntent.putExtra(BUNDLE_KEY_QUOTE_ID, quoteId);
+                        CommonView.showToast(mActivity, getString(R.string.success_quote_published), Toast.LENGTH_LONG, CommonView.ToastType.SUCCESS);
                         startActivity(quoteIntent);
                         finish();
                     }
 
                 } else {
-                    //TODO catch Exception
                 }
                 break;
             }

@@ -18,8 +18,11 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.alfanse.author.Interfaces.NetworkCallback;
 import com.alfanse.author.Models.Author;
+import com.alfanse.author.Models.CustomDialog;
 import com.alfanse.author.R;
+import com.alfanse.author.Utilities.ApiUtils;
 import com.alfanse.author.Utilities.CommonView;
 import com.alfanse.author.Utilities.Constants;
 import com.alfanse.author.Utilities.FontHelper;
@@ -30,12 +33,16 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.alfanse.author.CustomViews.DialogBuilder.ERROR;
 
 public class EditProfileActivity extends BaseActivity {
 
@@ -195,8 +202,6 @@ public class EditProfileActivity extends BaseActivity {
 
     private void updateProfile() {
 
-        // TODO  Update Profile API
-
         CommonView.getInstance(mContext).showProgressDialog(mActivity, getString(R.string.text_loading_update_profile), null);
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -245,7 +250,13 @@ public class EditProfileActivity extends BaseActivity {
                             }
 
                         } else {
-                            Toast.makeText(mActivity, getString(R.string.error_exception), Toast.LENGTH_LONG).show();
+                            // If sign in fails, display a message to the user.
+                            CommonView.getInstance(mContext).showDialog(
+                                    new CustomDialog().setActivity(mActivity)
+                                            .setDialogType(ERROR)
+                                            .setTitle(getString(R.string.error_exception))
+                                            .setMessage(task.getException().getMessage())
+                            );
                         }
                     }
                 });
@@ -254,7 +265,8 @@ public class EditProfileActivity extends BaseActivity {
     private void postProfileUpdateAction() {
 
         CommonView.getInstance(mContext).dismissProgressDialog();
-        Toast.makeText(mActivity, getString(R.string.success_profile_updated), Toast.LENGTH_LONG).show();
+        SharedManagement.getInstance(mContext).setLoggedUser(mAuthor);
+        CommonView.showToast(mActivity, getString(R.string.success_profile_updated), Toast.LENGTH_LONG, CommonView.ToastType.SUCCESS);
         Intent userAccountIntent = new Intent(mActivity, UserAccountActivity.class);
         startActivity(userAccountIntent);
         finish();
@@ -263,11 +275,31 @@ public class EditProfileActivity extends BaseActivity {
 
     private void updateProfileOnWeb() {
 
-        isWebProfileToBeUpdated = false;
-        if (!isWebProfileToBeUpdated && !isFirebaseNameToBeUpdated && !isFirebaseEmailToBeUpdated) {
-            postProfileUpdateAction();
-        }
+        //region API_CALL_START
+        HashMap<String, String> param = new HashMap<>();
+        param.put(Constants.API_PARAM_KEY_AUTHOR, new Gson().toJson(mAuthor));
+        ApiUtils api = new ApiUtils(mContext)
+                .setActivity(mActivity)
+                .setUrl(Constants.API_URL_UPDATE_AUTHOR)
+                .setParams(param)
+                .setMessage("EditProfileActivity.java|updateProfileOnWeb")
+                .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
+                    @Override
+                    public void onSuccessCallBack(String stringResponse) {
+                        isWebProfileToBeUpdated = false;
+                        if (!isWebProfileToBeUpdated && !isFirebaseNameToBeUpdated && !isFirebaseEmailToBeUpdated) {
+                            postProfileUpdateAction();
+                        }
+                    }
 
+                    @Override
+                    public void onFailureCallBack(Exception e) {
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+                });
+
+        api.call();
+        //endregion API_CALL_END
     }
 
     private void updateFirebaseUserName() {
@@ -288,7 +320,13 @@ public class EditProfileActivity extends BaseActivity {
                                 postProfileUpdateAction();
                             }
                         } else {
-                            Toast.makeText(mActivity, getString(R.string.error_exception), Toast.LENGTH_LONG).show();
+                            // If sign in fails, display a message to the user.
+                            CommonView.getInstance(mContext).showDialog(
+                                    new CustomDialog().setActivity(mActivity)
+                                            .setDialogType(ERROR)
+                                            .setTitle(getString(R.string.error_exception))
+                                            .setMessage(task.getException().getMessage())
+                            );
                         }
                     }
                 });

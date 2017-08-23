@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.alfanse.author.Models.CustomDialog;
 import com.alfanse.author.R;
 import com.alfanse.author.Utilities.CommonView;
 import com.alfanse.author.Utilities.Utils;
@@ -23,6 +24,7 @@ import com.google.firebase.auth.FirebaseUser;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.alfanse.author.CustomViews.DialogBuilder.ERROR;
 import static com.alfanse.author.Utilities.Constants.MINIMUM_PASSWORD_LENGTH;
 
 public class UpdatePasswordActivity extends BaseActivity {
@@ -70,13 +72,19 @@ public class UpdatePasswordActivity extends BaseActivity {
                                 public void onComplete(@NonNull Task<Void> task) {
                                     CommonView.getInstance(mContext).dismissProgressDialog();
                                     if (task.isSuccessful()) {
-                                        Toast.makeText(mActivity, getString(R.string.success_password_updated), Toast.LENGTH_LONG).show();
+                                        CommonView.showToast(mActivity, getString(R.string.success_password_updated), Toast.LENGTH_LONG, CommonView.ToastType.SUCCESS);
                                         Intent userAccountIntent = new Intent(mActivity, UserAccountActivity.class);
                                         startActivity(userAccountIntent);
                                         finish();
 
                                     } else {
-                                        Toast.makeText(mActivity, getString(R.string.error_exception), Toast.LENGTH_LONG).show();
+                                        // If sign in fails, display a message to the user.
+                                        CommonView.getInstance(mContext).showDialog(
+                                                new CustomDialog().setActivity(mActivity)
+                                                        .setDialogType(ERROR)
+                                                        .setTitle(getString(R.string.error_exception))
+                                                        .setMessage(task.getException().getMessage())
+                                        );
                                     }
                                 }
                             });

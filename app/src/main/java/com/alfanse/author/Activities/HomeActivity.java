@@ -18,9 +18,11 @@ import com.alfanse.author.R;
 import com.alfanse.author.Utilities.Constants;
 import com.alfanse.author.Utilities.FontHelper;
 import com.alfanse.author.Utilities.SharedManagement;
+import com.kila.apprater_dialog.lars.AppRater;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
 
 public class HomeActivity extends BaseActivity {
 
@@ -77,7 +79,9 @@ public class HomeActivity extends BaseActivity {
         initToolbar();
         initListener();
         loadQuotesFragment();
+        showAppRateDialog();
     }
+
 
     private void loadQuotesFragment() {
 
@@ -113,6 +117,15 @@ public class HomeActivity extends BaseActivity {
                 startActivity(exploreQuotesIntent);
             }
         });
+    }
+
+    public void showAppRateDialog() {
+
+        new AppRater.StarBuilder(this, getPackageName())
+                .showDefault()
+                .minimumNumberOfStars(Constants.MINIMUM_STAR_RATING)
+                .email(Constants.SUPPORT_EMAIL)
+                .appLaunched();
     }
 
     @Override

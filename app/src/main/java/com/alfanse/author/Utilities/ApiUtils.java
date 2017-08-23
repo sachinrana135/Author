@@ -18,6 +18,8 @@ public class ApiUtils {
     private Context context;
     private String message;
     private String url;
+    private Boolean shouldCache = false;
+    private Boolean showError = true;
     private HashMap<String, String> headerParams;
     private HashMap<String, String> params;
     private NetworkCallback.stringResponseCallback stringResponseCallback;
@@ -55,6 +57,24 @@ public class ApiUtils {
 
     public ApiUtils setUrl(String url) {
         this.url = url;
+        return this;
+    }
+
+    public Boolean shouldCache() {
+        return shouldCache;
+    }
+
+    public ApiUtils setShouldCache(Boolean shouldCache) {
+        this.shouldCache = shouldCache;
+        return this;
+    }
+
+    public Boolean showError() {
+        return showError;
+    }
+
+    public ApiUtils setShowError(Boolean showError) {
+        this.showError = showError;
         return this;
     }
 

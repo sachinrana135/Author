@@ -138,6 +138,7 @@ public class PublishQuoteActivity extends BaseActivity {
 
                     quoteTag.setTextColor(Utils.getInstance(mContext).getColor(R.color.colorWhite));
                     quoteTag.setBackground(mRoundBorderDrawable);
+                    quoteTag.setGravity(Gravity.CENTER_VERTICAL);
                     quoteTag.setPadding((int) getResources().getDimension(R.dimen.spacing_normal), (int) getResources().getDimension(R.dimen.spacing_xsmall), (int) getResources().getDimension(R.dimen.spacing_normal), (int) getResources().getDimension(R.dimen.spacing_xsmall));
                     quoteTag.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_delete_white_24dp, 0);
                     quoteTag.setCompoundDrawablePadding((int) getResources().getDimension(R.dimen.spacing_xsmall));
@@ -169,6 +170,7 @@ public class PublishQuoteActivity extends BaseActivity {
 
                 quoteTag.setTextColor(Utils.getInstance(mContext).getColor(R.color.colorWhite));
                 quoteTag.setBackground(mRoundBorderDrawable);
+                quoteTag.setGravity(Gravity.CENTER_VERTICAL);
                 quoteTag.setPadding((int) getResources().getDimension(R.dimen.spacing_normal), (int) getResources().getDimension(R.dimen.spacing_xsmall), (int) getResources().getDimension(R.dimen.spacing_normal), (int) getResources().getDimension(R.dimen.spacing_xsmall));
                 quoteTag.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_delete_white_24dp, 0);
                 quoteTag.setCompoundDrawablePadding((int) getResources().getDimension(R.dimen.spacing_xsmall));
@@ -362,7 +364,7 @@ public class PublishQuoteActivity extends BaseActivity {
                     }
 
                 } else {
-                    //TODO catch Exception
+
                 }
 
                 break;
@@ -384,6 +386,7 @@ public class PublishQuoteActivity extends BaseActivity {
             categoryTag.setText(category.getName());
             categoryTag.setTypeface(null, Typeface.BOLD);
             categoryTag.setTag(category);
+            categoryTag.setGravity(Gravity.CENTER_VERTICAL);
             categoryTag.setTextColor(Utils.getInstance(mContext).getColor(R.color.colorWhite));
             categoryTag.setBackground(mRoundBorderDrawable);
             categoryTag.setPadding((int) getResources().getDimension(R.dimen.spacing_normal), (int) getResources().getDimension(R.dimen.spacing_xsmall), (int) getResources().getDimension(R.dimen.spacing_normal), (int) getResources().getDimension(R.dimen.spacing_xsmall));

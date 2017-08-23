@@ -150,20 +150,22 @@ public class NetworkUtils {
                      */
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        if (volleyError instanceof TimeoutError) {
-                            Toast.makeText(mContext, mContext.getString(R.string.error_slow_network), Toast.LENGTH_LONG).show();
-                        } else if (volleyError instanceof ServerError) {
-                            Toast.makeText(mContext, mContext.getString(R.string.error_server_down), Toast.LENGTH_LONG).show();
-                        } else if (volleyError instanceof AuthFailureError) {
-                            Toast.makeText(mContext, mContext.getString(R.string.error_authentication_failed), Toast.LENGTH_LONG).show();
-                        } else if (volleyError instanceof NetworkError) {
-                            Toast.makeText(mContext, mContext.getString(R.string.error_bad_network), Toast.LENGTH_LONG).show();
-                        } else if (volleyError instanceof NoConnectionError) {
-                            Toast.makeText(mContext, mContext.getString(R.string.error_bad_network), Toast.LENGTH_LONG).show();
-                        } else if (volleyError instanceof ParseError) {
-                            Toast.makeText(mContext, mContext.getString(R.string.error_parsing), Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(mContext, mContext.getString(R.string.error_unknown_exception), Toast.LENGTH_LONG).show();
+                        if (apiUtils.showError()) {
+                            if (volleyError instanceof TimeoutError) {
+                                CommonView.showToast(mContext, mContext.getString(R.string.error_slow_network), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
+                            } else if (volleyError instanceof ServerError) {
+                                CommonView.showToast(mContext, mContext.getString(R.string.error_server_down), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
+                            } else if (volleyError instanceof AuthFailureError) {
+                                CommonView.showToast(mContext, mContext.getString(R.string.error_authentication_failed), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
+                            } else if (volleyError instanceof NetworkError) {
+                                CommonView.showToast(mContext, mContext.getString(R.string.error_bad_network), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
+                            } else if (volleyError instanceof NoConnectionError) {
+                                CommonView.showToast(mContext, mContext.getString(R.string.error_bad_network), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
+                            } else if (volleyError instanceof ParseError) {
+                                CommonView.showToast(mContext, mContext.getString(R.string.error_parsing), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
+                            } else {
+                                CommonView.showToast(mContext, mContext.getString(R.string.error_unknown_exception), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
+                            }
                         }
                         apiUtils.getStringResponseCallback().onFailureCallBack(volleyError);
                     }
@@ -202,6 +204,9 @@ public class NetworkUtils {
             }
 
         };
+        if (apiUtils.shouldCache()) {
+            stringRequest.setShouldCache(true);
+        }
         // add to the request queue that is used to hold all the reference for all the API calls
         addToRequestQueue(stringRequest);
     }

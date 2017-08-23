@@ -85,6 +85,10 @@ public class Constants {
     public static final String API_URL_FOLLOW_AUTHOR = API_BASE_URL + "followAuthor";
     public static final String API_URL_LIKE_QUOTE = API_BASE_URL + "likeQuote";
     public static final String API_URL_UPDATE_AUTHOR = API_BASE_URL + "updateAuthor";
+    public static final String API_URL_UPDATE_COVER_IMAGE = API_BASE_URL + "updateCoverImage";
+    public static final String API_URL_UPDATE_PROFILE_IMAGE = API_BASE_URL + "updateProfileImage";
+    public static final String API_URL_UPDATE_USER_COUNTRY = API_BASE_URL + "updateUserCountry";
+    public static final String API_URL_ADD_AUTHOR = API_BASE_URL + "AddAuthor";
 
     /***************************** API param keys  **************************/
     public static final String API_PARAM_KEY_QUOTE_FILTERS = "quoteFilters";
@@ -94,6 +98,8 @@ public class Constants {
     public static final String API_PARAM_KEY_COMMENT = "comment";
     public static final String API_PARAM_KEY_QUOTE = "quote";
     public static final String API_PARAM_KEY_AUTHOR_ID = "authorId";
+    public static final String API_PARAM_KEY_PROFILE_IMAGE = "profileImage";
+    public static final String API_PARAM_KEY_COVER_IMAGE = "coverImage";
     public static final String API_PARAM_KEY_REPORT_ID = "reportId";
     public static final String API_PARAM_KEY_COMMENT_ID = "commentId";
     public static final String API_PARAM_KEY_QUOTE_ID = "quoteId";
@@ -105,4 +111,7 @@ public class Constants {
     public static final String API_HEADER_PARAM_KEY_APP_VERSION_CODE = "appVersionCode";
     public static int ANIMATION_TOTAL_DURATION = 1000;
     public static int ANIMATION_CYCLE_DURATION = 500;
+
+    public static String SUPPORT_EMAIL = "support@alfanse.com";
+    public static int MINIMUM_STAR_RATING = 4;
 }

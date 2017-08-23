@@ -19,6 +19,9 @@ import com.alfanse.author.R;
 
 import java.util.ArrayList;
 
+import es.dmoral.toasty.Toasty;
+
+
 /**
  * Created by Velocity-1601 on 5/9/2017.
  */
@@ -38,6 +41,38 @@ public class CommonView {
             sInstance = new CommonView(context);
         }
         return sInstance;
+    }
+
+    public static void showToast(Context context, CharSequence text, int duration, int type) {
+        switch (type) {
+            case ToastType.DEFAULT: {
+                Toasty.normal(context, text, duration).show();
+                break;
+            }
+
+            case ToastType.ERROR: {
+                Toasty.error(context, text, duration, true).show();
+                break;
+            }
+
+            case ToastType.SUCCESS: {
+                Toasty.success(context, text, duration, true).show();
+                break;
+            }
+
+            case ToastType.WARNING: {
+                Toasty.warning(context, text, duration, true).show();
+                break;
+            }
+            case ToastType.INFO: {
+                Toasty.info(context, text, duration, true).show();
+                break;
+            }
+            default: {
+                Toasty.normal(context, text, duration).show();
+                break;
+            }
+        }
     }
 
     public void showTransparentProgressDialog(Activity activity, String message) {
@@ -131,5 +166,13 @@ public class CommonView {
         // Create the AlertDialog
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    public class ToastType {
+        public static final int DEFAULT = 0;
+        public static final int ERROR = 1;
+        public static final int SUCCESS = 2;
+        public static final int WARNING = 3;
+        public static final int INFO = 4;
     }
 }

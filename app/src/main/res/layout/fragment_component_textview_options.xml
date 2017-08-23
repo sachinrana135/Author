@@ -1,10 +1,10 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.alfanse.author.Fragments.ComponentTextViewOptionsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -44,7 +44,7 @@
                             android:id="@+id/image_format_left_align_fragment_component_textview_options"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/ic_format_align_left_white_24dp" />
+                            app:srcCompat="@drawable/ic_format_align_left_white_24dp" />
 
                     </LinearLayout>
 
@@ -62,7 +62,7 @@
                             android:id="@+id/image_format_center_align_fragment_component_textview_options"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/ic_format_align_center_white_24dp" />
+                            app:srcCompat="@drawable/ic_format_align_center_white_24dp" />
 
                     </LinearLayout>
 
@@ -80,7 +80,7 @@
                             android:id="@+id/image_format_right_align_fragment_component_textview_options"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/ic_format_align_right_white_24dp" />
+                            app:srcCompat="@drawable/ic_format_align_right_white_24dp" />
 
                     </LinearLayout>
 
@@ -98,7 +98,7 @@
                             android:id="@+id/image_format_bold_fragment_component_textview_options"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/ic_format_bold_white_24dp" />
+                            app:srcCompat="@drawable/ic_format_bold_white_24dp" />
 
                     </LinearLayout>
 
@@ -116,7 +116,7 @@
                             android:id="@+id/image_format_italic_fragment_component_textview_options"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/ic_format_italic_white_24dp" />
+                            app:srcCompat="@drawable/ic_format_italic_white_24dp" />
 
                     </LinearLayout>
 
@@ -134,7 +134,7 @@
                             android:id="@+id/image_format_underline_fragment_component_textview_options"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/ic_format_underlined_white_24dp" />
+                            app:srcCompat="@drawable/ic_format_underlined_white_24dp" />
 
                     </LinearLayout>
                 </LinearLayout>
@@ -167,7 +167,7 @@
                         android:id="@+id/image_copy_fragment_component_textview_options"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_content_copy_white_24dp" />
+                        app:srcCompat="@drawable/ic_content_copy_white_24dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -193,7 +193,7 @@
                         android:id="@+id/image_bring_to_front_fragment_component_textview_options"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_bring_to_front_white" />
+                        app:srcCompat="@drawable/ic_bring_to_front_white" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -219,7 +219,7 @@
                         android:id="@+id/image_colorize_fragment_component_textview_options"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_colorize_white_24dp" />
+                        app:srcCompat="@drawable/ic_colorize_white_24dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -316,8 +316,8 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_arrow_back_white_24dp"
-                    android:tag="@string/option_item_image_tag" />
+                    android:tag="@string/option_item_image_tag"
+                    app:srcCompat="@drawable/ic_arrow_back_white_24dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -343,8 +343,8 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_main_option_white"
-                    android:tag="@string/option_item_image_tag" />
+                    android:tag="@string/option_item_image_tag"
+                    app:srcCompat="@drawable/ic_main_option_white" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -370,8 +370,8 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_format_size_white_24dp"
-                    android:tag="@string/option_item_image_tag" />
+                    android:tag="@string/option_item_image_tag"
+                    app:srcCompat="@drawable/ic_format_size_white_24dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -397,8 +397,8 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_format_font_white"
-                    android:tag="@string/option_item_image_tag" />
+                    android:tag="@string/option_item_image_tag"
+                    app:srcCompat="@drawable/ic_format_font_white" />
 
                 <TextView
                     android:layout_width="wrap_content"

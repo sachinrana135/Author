@@ -168,8 +168,9 @@
                     android:layout_height="wrap_content"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:clickable="true"
-                    android:drawableLeft="@drawable/ic_edit_accent_24dp"
-                    android:drawablePadding="@dimen/font_normal"
+                    android:drawableLeft="@drawable/ic_edit_accent_48dp"
+                    android:drawablePadding="@dimen/font_xsmall"
+                    android:gravity="center_vertical"
                     android:padding="@dimen/spacing_normal"
                     android:text="@string/text_edit_profile"
                     android:textSize="@dimen/font_normal" />
@@ -184,7 +185,8 @@
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:clickable="true"
                     android:drawableLeft="@drawable/ic_security_accent_24dp"
-                    android:drawablePadding="@dimen/font_normal"
+                    android:drawablePadding="@dimen/font_xsmall"
+                    android:gravity="center_vertical"
                     android:padding="@dimen/spacing_normal"
                     android:text="@string/text_update_password"
                     android:textSize="@dimen/font_normal" />
@@ -192,20 +194,21 @@
                 <View style="@style/HorizontalDividerGrey" />
 
                 <TextView
-                    android:id="@+id/text_view_invite_friends_account_user"
+                    android:id="@+id/text_view_share_app_account_user"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:clickable="true"
-                    android:drawableLeft="@drawable/ic_people_add_accent_24dp"
-                    android:drawablePadding="@dimen/font_normal"
+                    android:drawableLeft="@drawable/ic_share_accent"
+                    android:drawablePadding="@dimen/font_xsmall"
+                    android:gravity="center_vertical"
                     android:padding="@dimen/spacing_normal"
-                    android:text="@string/text_invite_friends"
+                    android:text="@string/text_share_app"
                     android:textSize="@dimen/font_normal" />
 
                 <View style="@style/HorizontalDividerGrey" />
 
-                <TextView
+                <!--<TextView
                     android:id="@+id/text_view_settings_account_user"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -217,7 +220,7 @@
                     android:text="@string/text_settings"
                     android:textSize="@dimen/font_normal" />
 
-                <View style="@style/HorizontalDividerGrey" />
+                <View style="@style/HorizontalDividerGrey" />-->
 
                 <TextView
                     android:id="@+id/text_view_logout_account_user"
@@ -226,7 +229,8 @@
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:clickable="true"
                     android:drawableLeft="@drawable/ic_logout_accent_24dp"
-                    android:drawablePadding="@dimen/font_normal"
+                    android:drawablePadding="@dimen/font_xsmall"
+                    android:gravity="center_vertical"
                     android:padding="@dimen/spacing_normal"
                     android:text="@string/text_sign_out"
                     android:textSize="@dimen/font_normal" />

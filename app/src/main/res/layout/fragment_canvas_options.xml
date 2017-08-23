@@ -1,10 +1,10 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.alfanse.author.Fragments.CanvasOptionsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -41,7 +41,7 @@
                         android:id="@+id/image_colorize_fragment_canvas_options"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_colorize_white_24dp" />
+                        app:srcCompat="@drawable/ic_colorize_white_24dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -67,7 +67,7 @@
                         android:id="@+id/image_gallery_fragment_canvas_options"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_gallery_white_24dp" />
+                        app:srcCompat="@drawable/ic_gallery_white_24dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -93,7 +93,7 @@
                         android:id="@+id/image_add_photo_fragment_canvas_options"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_add_photo_white_24dp" />
+                        app:srcCompat="@drawable/ic_add_photo_white_24dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -119,7 +119,7 @@
                         android:id="@+id/image_add_text_fragment_canvas_options"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_add_text" />
+                        app:srcCompat="@drawable/ic_add_text" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -145,7 +145,7 @@
                         android:id="@+id/image_add_box_fragment_canvas_options"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_add_box_white_24dp" />
+                        app:srcCompat="@drawable/ic_add_box_white_48dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
