@@ -325,7 +325,6 @@ public class QuoteActivity extends BaseActivity {
         //region API_CALL_START
         HashMap<String, String> param = new HashMap<>();
         param.put(Constants.API_PARAM_KEY_QUOTE_ID, mQuote.getId());
-        param.put(Constants.API_PARAM_KEY_AUTHOR_ID, mLoggedAuthor.getId());
         ApiUtils api = new ApiUtils(mContext)
                 .setActivity(mActivity)
                 .setUrl(Constants.API_URL_LIKE_QUOTE)
@@ -365,7 +364,6 @@ public class QuoteActivity extends BaseActivity {
         //region API_CALL_START
         CommonView.getInstance(mContext).showProgressDialog(mActivity, getString(R.string.text_please_wait), null);
         HashMap<String, String> param = new HashMap<>();
-        param.put(Constants.API_PARAM_KEY_LOGGED_AUTHOR_ID, mLoggedAuthor.getId());
         param.put(Constants.API_PARAM_KEY_AUTHOR_ID, mQuote.getAuthor().getId());
         ApiUtils api = new ApiUtils(mContext)
                 .setActivity(mActivity)

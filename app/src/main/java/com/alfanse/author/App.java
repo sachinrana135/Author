@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatDelegate;
 
 import com.alfanse.author.Utilities.FontHelper;
 import com.crashlytics.android.Crashlytics;
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -29,7 +31,9 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Fabric.with(this, new Crashlytics());
+
+        TwitterAuthConfig authConfig = new TwitterAuthConfig(getString(R.string.twitter_consumer_key), getString(R.string.twitter_consumer_secret));
+        Fabric.with(this, new Twitter(authConfig), new Crashlytics());
         mInstance = this;
         mContext = getApplicationContext();
         FontHelper.getInstance(mContext).overrideFont();

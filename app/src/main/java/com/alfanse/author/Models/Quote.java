@@ -14,6 +14,7 @@ public class Quote implements Serializable {
     private String totalLikes;
     private String totalComments;
     private String totalViews;
+    private Boolean isCopyrighted;
     private String source;
     private String imageUrl;
     private String caption;
@@ -55,6 +56,14 @@ public class Quote implements Serializable {
 
     public void setTotalViews(String totalViews) {
         this.totalViews = totalViews;
+    }
+
+    public Boolean isCopyrighted() {
+        return isCopyrighted;
+    }
+
+    public void setCopyrighted(Boolean copyrighted) {
+        isCopyrighted = copyrighted;
     }
 
     public String getSource() {

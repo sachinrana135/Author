@@ -124,7 +124,7 @@
     <string name="hint_quote_caption">Caption..</string>
     <string name="hint_author_status">Something about yourself..</string>
     <string name="hint_search_category">Search Category</string>
-    <string name="hint_enter_tags">Enter Tags (Comma separated)</string>
+    <string name="hint_enter_tags">Tags (Comma separated)</string>
     <string name="hint_enter_quote_source">Enter original source name</string>
     <string name="hint_enter_comment">Enter comment..</string>
     <string name="hint_search">Search Quotes..</string>

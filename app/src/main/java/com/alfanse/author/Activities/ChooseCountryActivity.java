@@ -59,15 +59,16 @@ public class ChooseCountryActivity extends BaseActivity {
             author.setCountry(country);
             SharedManagement.getInstance(mContext).setLoggedUser(author);
 
-            updateUserCountry();
+            updateUserCountry(country);
         }
     };
 
-    private void updateUserCountry() {
+    private void updateUserCountry(Country country) {
         //region API_CALL_START
         CommonView.getInstance(mContext).showProgressDialog(mActivity, getString(R.string.text_loading_updating_country), null);
         HashMap<String, String> param = new HashMap<>();
-        param.put(Constants.API_PARAM_KEY_AUTHOR, new Gson().toJson(SharedManagement.getInstance(mContext).getLoggedUser()));
+        param.put(Constants.API_PARAM_KEY_AUTHOR_ID, SharedManagement.getInstance(mContext).getLoggedUser().getId());
+        param.put(Constants.API_PARAM_KEY_COUNTRY_ID, country.getCountryId());
         ApiUtils api = new ApiUtils(mContext)
                 .setActivity(mActivity)
                 .setUrl(Constants.API_URL_UPDATE_USER_COUNTRY)

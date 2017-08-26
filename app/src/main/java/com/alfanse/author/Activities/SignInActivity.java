@@ -60,10 +60,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.TwitterAuthProvider;
 import com.google.gson.Gson;
-import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
-import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
@@ -75,7 +73,6 @@ import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.fabric.sdk.android.Fabric;
 
 import static com.alfanse.author.CustomViews.DialogBuilder.ERROR;
 import static com.alfanse.author.CustomViews.DialogBuilder.SUCCESS;
@@ -150,11 +147,12 @@ public class SignInActivity extends BaseActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
         ButterKnife.bind(this);
-        TwitterAuthConfig authConfig = new TwitterAuthConfig(getString(R.string.twitter_consumer_key), getString(R.string.twitter_consumer_secret));
-        Fabric.with(this, new Twitter(authConfig));
+
         mContext = getApplicationContext();
         mActivity = SignInActivity.this;
         mAuth = FirebaseAuth.getInstance();
+
+        Utils.getInstance(mContext).printFacebookHashKey();
 
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             postSignInAction();
@@ -560,7 +558,7 @@ public class SignInActivity extends BaseActivity implements
 
         SharedManagement.getInstance(mContext).setLoggedUser(mLoggedAuthor);
 
-        if (mLoggedAuthor.getCountry().getCountryId() == null) {
+        if (mLoggedAuthor.getCountry() == null) {
             Intent chooseCountryIntent = new Intent(mActivity, ChooseCountryActivity.class);
             startActivity(chooseCountryIntent);
             finish();

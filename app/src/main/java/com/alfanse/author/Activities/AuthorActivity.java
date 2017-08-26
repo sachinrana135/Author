@@ -176,7 +176,6 @@ public class AuthorActivity extends BaseActivity {
                 quotesIntent.putExtra(Constants.BUNDLE_KEY_TITLE, mAuthor.getName() + " " + getString(R.string.title_quotes));
                 QuoteFilters quoteFilters = new QuoteFilters();
                 quoteFilters.setAuthorID(mAuthorId);
-                quoteFilters.setLoggedAuthorID(mLoggedAuthor.getId());
                 quotesIntent.putExtra(Constants.BUNDLE_KEY_QUOTES_FILTERS, quoteFilters);
                 startActivity(quotesIntent);
             }
@@ -190,7 +189,6 @@ public class AuthorActivity extends BaseActivity {
 
                 AuthorFilters authorFilters = new AuthorFilters();
                 authorFilters.setAuthorID(mAuthorId);
-                authorFilters.setLoggedAuthorID(mLoggedAuthor.getId());
                 authorFilters.setFilterType(Constants.AUTHOR_FILTER_TYPE_FOLLOWER);
 
                 authorsIntent.putExtra(Constants.BUNDLE_KEY_AUTHORS_FILTERS, authorFilters);
@@ -206,7 +204,6 @@ public class AuthorActivity extends BaseActivity {
 
                 AuthorFilters authorFilters = new AuthorFilters();
                 authorFilters.setAuthorID(mAuthorId);
-                authorFilters.setLoggedAuthorID(mLoggedAuthor.getId());
                 authorFilters.setFilterType(Constants.AUTHOR_FILTER_TYPE_FOLLOWING);
 
                 authorsIntent.putExtra(Constants.BUNDLE_KEY_AUTHORS_FILTERS, authorFilters);
@@ -220,7 +217,6 @@ public class AuthorActivity extends BaseActivity {
                 //region API_CALL_START
                 CommonView.getInstance(mContext).showProgressDialog(mActivity, getString(R.string.text_please_wait), null);
                 HashMap<String, String> param = new HashMap<>();
-                param.put(Constants.API_PARAM_KEY_LOGGED_AUTHOR_ID, mLoggedAuthor.getId());
                 param.put(Constants.API_PARAM_KEY_AUTHOR_ID, mAuthorId);
                 ApiUtils api = new ApiUtils(mContext)
                         .setActivity(mActivity)

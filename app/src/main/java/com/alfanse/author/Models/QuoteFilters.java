@@ -12,7 +12,6 @@ public class QuoteFilters implements Serializable {
     private String page;
     private String searchKeyword;
     private String authorID;
-    private String loggedAuthorID;
     private ArrayList<Category> categories;
     private ArrayList<Language> languages;
 
@@ -38,14 +37,6 @@ public class QuoteFilters implements Serializable {
 
     public void setAuthorID(String authorID) {
         this.authorID = authorID;
-    }
-
-    public String getLoggedAuthorID() {
-        return loggedAuthorID;
-    }
-
-    public void setLoggedAuthorID(String loggedAuthorID) {
-        this.loggedAuthorID = loggedAuthorID;
     }
 
     public ArrayList<Category> getCategories() {

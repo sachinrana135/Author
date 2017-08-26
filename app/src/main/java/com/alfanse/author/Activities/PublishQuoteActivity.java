@@ -291,6 +291,12 @@ public class PublishQuoteActivity extends BaseActivity {
 
                 mQuote.setCaption(editTextQuoteCaption.getText().toString().trim());
                 mQuote.setLanguage(language);
+
+                if (switchButtonCopyright.isChecked()) {
+                    mQuote.setCopyrighted(true);
+                } else {
+                    mQuote.setCopyrighted(false);
+                }
                 mQuote.setSource(editTextQuoteSource.getText().toString().trim());
                 mQuote.setTags(mListTags);
                 mQuote.setCategories(mListCategories);
@@ -320,6 +326,7 @@ public class PublishQuoteActivity extends BaseActivity {
         CommonView.getInstance(mContext).showProgressDialog(mActivity, getString(R.string.text_loading_save_quote), null);
         HashMap<String, String> param = new HashMap<>();
         param.put(Constants.API_PARAM_KEY_QUOTE, new Gson().toJson(mQuote));
+        param.put(Constants.API_PARAM_KEY_QUOTE_IMAGE, Utils.getInstance(mContext).getStringImage(mQuote.getLocalImagePath()));
         ApiUtils api = new ApiUtils(mContext)
                 .setActivity(mActivity)
                 .setUrl(Constants.API_URL_SAVE_QUOTE)

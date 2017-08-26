@@ -287,11 +287,9 @@ public class CommentsFragment extends Fragment {
         //region API_CALL_START
         CommonView.getInstance(mContext).showProgressDialog(mActivity, getString(R.string.text_loading_save_comment), null);
         HashMap<String, String> param = new HashMap<>();
-
-        Comment comment = new Comment();
-        comment.setAuthor(mLoggedAuthor);
-        comment.setComment(editTextEnterComment.getText().toString().trim());
-        param.put(Constants.API_PARAM_KEY_COMMENT, new Gson().toJson(comment));
+        param.put(Constants.API_PARAM_KEY_AUTHOR_ID, mLoggedAuthor.getId());
+        param.put(Constants.API_PARAM_KEY_QUOTE_ID, commentFilters.getQuoteID());
+        param.put(Constants.API_PARAM_KEY_COMMENT, editTextEnterComment.getText().toString().trim());
         ApiUtils api = new ApiUtils(mContext)
                 .setActivity(mActivity)
                 .setUrl(Constants.API_URL_SAVE_COMMENT)

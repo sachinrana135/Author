@@ -50,6 +50,7 @@ import com.alfanse.author.Utilities.ApiUtils;
 import com.alfanse.author.Utilities.CommonView;
 import com.alfanse.author.Utilities.Constants;
 import com.alfanse.author.Utilities.FontHelper;
+import com.alfanse.author.Utilities.SharedManagement;
 import com.alfanse.author.Utilities.Utils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
@@ -106,6 +107,7 @@ public class NewQuoteActivity extends BaseActivity implements
     private ComponentImageView mActiveComponentImageView;
     private ComponentBoxView mActiveComponentBoxView;
     private ArrayList<CanvasTheme> mListCanvasThemes = new ArrayList<CanvasTheme>();
+    private Author mLoggedAuthor;
 
     private Runnable fontsLoaderTask = new Runnable() {
         @Override
@@ -149,6 +151,7 @@ public class NewQuoteActivity extends BaseActivity implements
             container.setOrientation(LinearLayout.VERTICAL);
         }
 
+        mLoggedAuthor = SharedManagement.getInstance(mContext).getLoggedUser();
         loadCanvasOptionsFragment();
     }
 
@@ -367,7 +370,7 @@ public class NewQuoteActivity extends BaseActivity implements
                         quote.setContent(getQuoteContent());
 
                         Author author = new Author();
-                        author.setId(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                        author.setId(mLoggedAuthor.getId());
                         quote.setAuthor(author);
 
                         Intent publishQuoteIntent = new Intent(mActivity, PublishQuoteActivity.class);

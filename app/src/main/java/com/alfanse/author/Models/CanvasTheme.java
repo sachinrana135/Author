@@ -8,6 +8,7 @@ import com.alfanse.author.Utilities.Constants;
 
 public class CanvasTheme {
 
+    private String id;
     private String imageUrl;
     private String textSize;
     private String textFontFamily;
@@ -32,6 +33,14 @@ public class CanvasTheme {
         canvasTheme.setTextLocationY(Constants.DEFAULT_COMPONENT_TEXTVIEW_LOCATION_Y);
         return canvasTheme;
 
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getImageUrl() {

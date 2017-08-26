@@ -222,7 +222,7 @@ public class SignUpActivity extends BaseActivity {
         param.put(Constants.API_PARAM_KEY_AUTHOR, new Gson().toJson(author));
         ApiUtils api = new ApiUtils(mContext)
                 .setActivity(mActivity)
-                .setUrl(Constants.API_URL_ADD_AUTHOR)
+                .setUrl(Constants.API_URL_SAVE_AUTHOR)
                 .setParams(param)
                 .setMessage("SignUpActivity.java|addUserOnWeb")
                 .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {

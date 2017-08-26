@@ -125,9 +125,23 @@ public class ApiUtils {
         headerParam.put(Constants.API_HEADER_PARAM_KEY_CALL_SOURCE, getMessage());
         headerParam.put(Constants.API_HEADER_PARAM_KEY_APP_VERSION_CODE, Integer.toString(Utils.getInstance(context).getAppVersionCode()));
         headerParam.put(Constants.API_HEADER_PARAM_KEY_APP_VERSION_NAME, Utils.getInstance(context).getAppVersionName());
+        headerParam.put(Constants.API_HEADER_PARAM_KEY_API_TOKEN, Constants.API_TOKEN);
+
+        if (this.getHeaderParams() != null) {
+            headerParam.putAll(this.getHeaderParams());
+        }
 
         this.setHeaderParams(headerParam);
 
+        HashMap<String, String> requestParam = new HashMap<>();
+        if (SharedManagement.getInstance(context).getString(SharedManagement.LOGGED_USER) != null) {
+            headerParam.put(Constants.API_PARAM_KEY_LOGGED_AUTHOR_ID, SharedManagement.getInstance(context).getLoggedUser().getId());
+        }
+
+        if (this.getParams() != null) {
+            requestParam.putAll(this.getParams());
+        }
+        this.setParams(requestParam);
         NetworkUtils.getInstance(context).sendStringRequest(this);
 
     }

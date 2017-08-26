@@ -43,6 +43,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.gson.Gson;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.File;
@@ -111,6 +112,7 @@ public class UserAccountActivity extends BaseActivity {
     private Uri mCroppedImageUri;
     private String mImagePath;
     private ProgressDialog mProgressDialog;
+    private Author mLoggedAuthor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,13 +121,12 @@ public class UserAccountActivity extends BaseActivity {
         ButterKnife.bind(this);
         mContext = getApplicationContext();
         mActivity = UserAccountActivity.this;
-        mAuth = FirebaseAuth.getInstance();
-        mAuthor = SharedManagement.getInstance(mContext).getLoggedUser();
 
-        initToolbar();
+        mLoggedAuthor = SharedManagement.getInstance(mContext).getLoggedUser();
+        getAuthor();
         initListener();
-        renderView();
     }
+
 
     private void initToolbar() {
         setSupportActionBar(mToolbar);
@@ -199,7 +200,6 @@ public class UserAccountActivity extends BaseActivity {
 
                 AuthorFilters authorFilters = new AuthorFilters();
                 authorFilters.setAuthorID(mAuthor.getId());
-                authorFilters.setLoggedAuthorID(mAuthor.getId());
                 authorFilters.setFilterType(Constants.AUTHOR_FILTER_TYPE_FOLLOWER);
                 authorsIntent.putExtra(Constants.BUNDLE_KEY_AUTHORS_FILTERS, authorFilters);
                 startActivity(authorsIntent);
@@ -215,7 +215,6 @@ public class UserAccountActivity extends BaseActivity {
 
                 AuthorFilters authorFilters = new AuthorFilters();
                 authorFilters.setAuthorID(mAuthor.getId());
-                authorFilters.setLoggedAuthorID(mAuthor.getId());
                 authorFilters.setFilterType(Constants.AUTHOR_FILTER_TYPE_FOLLOWING);
 
                 authorsIntent.putExtra(Constants.BUNDLE_KEY_AUTHORS_FILTERS, authorFilters);
@@ -229,6 +228,42 @@ public class UserAccountActivity extends BaseActivity {
                 shareApp();
             }
         });
+    }
+
+    private void getAuthor() {
+
+        //region API_CALL_START
+        CommonView.getInstance(mContext).showTransparentProgressDialog(mActivity, getString(R.string.text_loading));
+        HashMap<String, String> param = new HashMap<>();
+        param.put(Constants.API_PARAM_KEY_AUTHOR_ID, mLoggedAuthor.getId());
+        param.put(Constants.API_PARAM_KEY_LOGGED_AUTHOR_ID, mLoggedAuthor.getId());
+        ApiUtils api = new ApiUtils(mContext)
+                .setActivity(mActivity)
+                .setUrl(Constants.API_URL_GET_AUTHOR)
+                .setParams(param)
+                .setMessage("AuthorActivity.java|getAuthor")
+                .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
+                    @Override
+                    public void onSuccessCallBack(String stringResponse) {
+                        parseGetAuthorResponse(stringResponse);
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onFailureCallBack(Exception e) {
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+                });
+
+        api.call();
+        //endregion API_CALL_END
+    }
+
+    private void parseGetAuthorResponse(String stringResponse) {
+        mAuthor = new Gson().fromJson(stringResponse, Author.class);
+        SharedManagement.getInstance(mContext).setLoggedUser(mAuthor);
+        initToolbar();
+        renderView();
     }
 
     private void shareApp() {

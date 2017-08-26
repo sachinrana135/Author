@@ -7,9 +7,8 @@ import java.io.Serializable;
  */
 
 public class AuthorFilters implements Serializable {
-    private String filterType;
+    private String filterType; // fetch followers or following
     private String authorID;
-    private String loggedAuthorID;
     private String quoteID;
     private String page;
 
@@ -27,14 +26,6 @@ public class AuthorFilters implements Serializable {
 
     public void setAuthorID(String authorID) {
         this.authorID = authorID;
-    }
-
-    public String getLoggedAuthorID() {
-        return loggedAuthorID;
-    }
-
-    public void setLoggedAuthorID(String loggedAuthorID) {
-        this.loggedAuthorID = loggedAuthorID;
     }
 
     public String getQuoteID() {

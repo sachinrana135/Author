@@ -24,53 +24,11 @@
     </android.support.design.widget.AppBarLayout>
 
     <FrameLayout
+        android:id="@+id/fragment_container_quotes_quotes"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/appbar_home"
         android:layout_marginBottom="@dimen/spacing_huge">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="@dimen/spacing_small">
-
-            <ImageView
-                android:layout_width="@dimen/spacing_xxhuge"
-                android:layout_height="@dimen/spacing_xxhuge"
-                android:src="@mipmap/ic_launcher" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_welcome_title_home"
-                android:textSize="@dimen/font_xxlarge" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:text="@string/text_welcome_body_home"
-                android:textSize="@dimen/font_normal" />
-
-            <Button
-                android:id="@+id/button_explore_home"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_normal"
-                android:background="@color/colorAccent"
-                android:text="@string/button_explore"
-                android:textColor="@color/colorWhite" />
-        </LinearLayout>
-
-        <FrameLayout
-            android:id="@+id/fragment_container_quotes_quotes"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone">
-
-        </FrameLayout>
 
     </FrameLayout>
 

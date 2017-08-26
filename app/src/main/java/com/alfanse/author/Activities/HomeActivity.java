@@ -8,8 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 
 import com.alfanse.author.Fragments.QuotesFragment;
 import com.alfanse.author.Models.Author;
@@ -30,8 +28,6 @@ public class HomeActivity extends BaseActivity {
     Toolbar mToolbar;
     @BindView(R.id.bottom_nav_home)
     BottomNavigationView bottomNav;
-    @BindView(R.id.button_explore_home)
-    Button buttonExplore;
     private Context mContext;
     private Activity mActivity;
     private QuotesFragment mQuotesFragment;
@@ -78,17 +74,20 @@ public class HomeActivity extends BaseActivity {
         mAuthor = SharedManagement.getInstance(mContext).getLoggedUser();
         initToolbar();
         initListener();
-        loadQuotesFragment();
         showAppRateDialog();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        loadQuotesFragment();
+    }
 
     private void loadQuotesFragment() {
 
         mQuotesFragment = new QuotesFragment();
 
         QuoteFilters quoteFilters = new QuoteFilters();
-        quoteFilters.setAuthorID(mAuthor.getId());
         quoteFilters.setFilterType(Constants.QUOTE_FILTER_TYPE_FEED);
         mQuotesFragment.setQuoteFilters(quoteFilters);
 
@@ -109,14 +108,6 @@ public class HomeActivity extends BaseActivity {
 
     private void initListener() {
         bottomNav.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
-        buttonExplore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent exploreQuotesIntent = new Intent(mActivity, ExploreQuotesActivity.class);
-                startActivity(exploreQuotesIntent);
-            }
-        });
     }
 
     public void showAppRateDialog() {
