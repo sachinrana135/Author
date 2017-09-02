@@ -36,6 +36,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -81,7 +82,7 @@ public class SignUpActivity extends BaseActivity {
         mActivity = SignUpActivity.this;
         mAuth = FirebaseAuth.getInstance();
         initListener();
-        checkGetAccountsPermission();
+        // checkGetAccountsPermission();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
@@ -142,10 +143,11 @@ public class SignUpActivity extends BaseActivity {
                                         // Sign in success, update UI with the signed-in user's information
                                         FirebaseUser currentUser = mAuth.getCurrentUser();
                                         if (currentUser != null) {
-                                            addUser();
+                                            updateProfileName();
                                         }
 
                                     } else {
+                                        CommonView.getInstance(mContext).dismissProgressDialog();
                                         CommonView.getInstance(mContext).showDialog(
                                                 new CustomDialog().setActivity(mActivity)
                                                         .setDialogType(ERROR)
@@ -178,6 +180,29 @@ public class SignUpActivity extends BaseActivity {
         });
     }
 
+    private void updateProfileName() {
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setDisplayName(editTextName.getText().toString().trim())
+                .build();
+        mAuth.getCurrentUser().updateProfile(profileUpdates)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            addUser();
+                        } else {
+                            CommonView.getInstance(mContext).dismissProgressDialog();
+                            CommonView.getInstance(mContext).showDialog(
+                                    new CustomDialog().setActivity(mActivity)
+                                            .setDialogType(ERROR)
+                                            .setTitle(getString(R.string.error_exception))
+                                            .setMessage(task.getException().getMessage())
+                            );
+                        }
+                    }
+                });
+    }
+
     private void sendVerificationEmail() {
 
         CommonView.getInstance(mContext).showProgressDialog(mActivity, getString(R.string.text_loading_verification_email), getString(R.string.text_please_wait));
@@ -190,8 +215,10 @@ public class SignUpActivity extends BaseActivity {
                         CommonView.getInstance(mContext).dismissProgressDialog();
                         if (task.isSuccessful()) {
                             showAccountCreatedSuccessDialog();
+                            CommonView.getInstance(mContext).dismissProgressDialog();
                         } else {
                             // If sign in fails, display a message to the user.
+                            CommonView.getInstance(mContext).dismissProgressDialog();
                             CommonView.getInstance(mContext).showDialog(
                                     new CustomDialog().setActivity(mActivity)
                                             .setDialogType(ERROR)
@@ -217,7 +244,6 @@ public class SignUpActivity extends BaseActivity {
     private void addUserOnWeb(Author author) {
 
         //region API_CALL_START
-        CommonView.getInstance(mContext).showProgressDialog(mActivity, getString(R.string.text_loading_creating_new_account), null);
         HashMap<String, String> param = new HashMap<>();
         param.put(Constants.API_PARAM_KEY_AUTHOR, new Gson().toJson(author));
         ApiUtils api = new ApiUtils(mContext)
@@ -228,8 +254,13 @@ public class SignUpActivity extends BaseActivity {
                 .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
                     @Override
                     public void onSuccessCallBack(String stringResponse) {
-                        CommonView.getInstance(mContext).dismissProgressDialog();
-                        sendVerificationEmail();
+                        try {
+                            CommonView.getInstance(mContext).dismissProgressDialog();
+                            sendVerificationEmail();
+                        } catch (Exception e) {
+                            CommonView.getInstance(mContext).dismissProgressDialog();
+                            Utils.getInstance(mContext).logException(e);
+                        }
                     }
 
                     @Override

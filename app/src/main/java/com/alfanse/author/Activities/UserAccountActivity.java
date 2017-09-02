@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -245,7 +246,11 @@ public class UserAccountActivity extends BaseActivity {
                 .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
                     @Override
                     public void onSuccessCallBack(String stringResponse) {
-                        parseGetAuthorResponse(stringResponse);
+                        try {
+                            parseGetAuthorResponse(stringResponse);
+                        } catch (Exception e) {
+                            Utils.getInstance(mContext).logException(e);
+                        }
                         CommonView.getInstance(mContext).dismissProgressDialog();
                     }
 
@@ -364,24 +369,13 @@ public class UserAccountActivity extends BaseActivity {
                         e.printStackTrace();
                     }
                     if (imageRequiredFor.equalsIgnoreCase(IMAGE_REQUIRED_FOR_COVER)) {
-                        mImagePath = saveCroppedImage();
+
                         imageCover.setImageBitmap(imageBitmap);
-                        updateCoverImage();
+
+                        new saveImageTask().execute();
 
                     } else if (imageRequiredFor.equalsIgnoreCase(IMAGE_REQUIRED_FOR_PROFILE)) {
-                        mImagePath = saveCroppedImage();
-
-                        RequestOptions profileImageOptions = new RequestOptions()
-                                .error(Utils.getInstance(mContext).getDrawable(R.drawable.ic_gallery_grey_24dp))
-                                .fitCenter()
-                                .circleCrop();
-
-                        Glide.with(mContext)
-                                .load(new File(mImagePath))
-                                .apply(profileImageOptions)
-                                .into(imageProfile);
-
-                        updateProfileImage();
+                        new saveImageTask().execute();
                     }
                 } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                     CommonView.showToast(mActivity, "Cropping failed: " + result.getError(), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
@@ -392,7 +386,6 @@ public class UserAccountActivity extends BaseActivity {
     }
 
     private void updateProfileImage() {
-
         //region API_CALL_START
         HashMap<String, String> param = new HashMap<>();
         param.put(Constants.API_PARAM_KEY_AUTHOR_ID, mAuthor.getId());
@@ -421,7 +414,6 @@ public class UserAccountActivity extends BaseActivity {
 
 
     private void updateCoverImage() {
-
         //region API_CALL_START
         HashMap<String, String> param = new HashMap<>();
         param.put(Constants.API_PARAM_KEY_AUTHOR_ID, mAuthor.getId());
@@ -449,10 +441,7 @@ public class UserAccountActivity extends BaseActivity {
 
     }
 
-
     private String saveCroppedImage() {
-
-        CommonView.getInstance(mContext).showTransparentProgressDialog(mActivity, getString(R.string.text_loading_save_quote));
 
         Bitmap bitmap = null;
         try {
@@ -466,7 +455,7 @@ public class UserAccountActivity extends BaseActivity {
             File dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), Constants.QUOTE_PUBLIC_OUTPUT_DIRECTORY);
 
             if (!dir.mkdirs()) {
-                CommonView.showToast(mActivity, getString(R.string.error_exception), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
+                //  CommonView.showToast(mActivity, getString(R.string.error_exception), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
             }
 
             file = new File(dir.getAbsolutePath() + "/" + Utils.getTimeStamp() + Constants.QUOTE_OUTPUT_FORMAT);
@@ -479,7 +468,6 @@ public class UserAccountActivity extends BaseActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        CommonView.getInstance(mContext).dismissProgressDialog();
         return file.getAbsolutePath();
     }
 
@@ -552,5 +540,40 @@ public class UserAccountActivity extends BaseActivity {
 
         }
     }
+
+    private class saveImageTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            CommonView.getInstance(mContext).showProgressDialog(mActivity, getString(R.string.text_loading_updating_image), null);
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            mImagePath = saveCroppedImage();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            if (imageRequiredFor.equalsIgnoreCase(IMAGE_REQUIRED_FOR_COVER)) {
+                updateCoverImage();
+            } else if (imageRequiredFor.equalsIgnoreCase(IMAGE_REQUIRED_FOR_PROFILE)) {
+
+                RequestOptions profileImageOptions = new RequestOptions()
+                        .error(Utils.getInstance(mContext).getDrawable(R.drawable.ic_gallery_grey_24dp))
+                        .fitCenter()
+                        .circleCrop();
+
+                Glide.with(mContext)
+                        .load(new File(mImagePath))
+                        .apply(profileImageOptions)
+                        .into(imageProfile);
+
+                updateProfileImage();
+            }
+        }
+    }
+
 
 }

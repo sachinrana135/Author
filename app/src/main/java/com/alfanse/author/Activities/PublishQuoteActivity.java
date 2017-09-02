@@ -224,7 +224,11 @@ public class PublishQuoteActivity extends BaseActivity {
                 .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
                     @Override
                     public void onSuccessCallBack(String stringResponse) {
-                        parseGetLanguagesResponse(stringResponse);
+                        try {
+                            parseGetLanguagesResponse(stringResponse);
+                        } catch (Exception e) {
+                            Utils.getInstance(mContext).logException(e);
+                        }
                         CommonView.getInstance(mContext).dismissProgressDialog();
                     }
 
@@ -335,7 +339,11 @@ public class PublishQuoteActivity extends BaseActivity {
                 .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
                     @Override
                     public void onSuccessCallBack(String stringResponse) {
-                        parseSaveQuoteResponse(stringResponse);
+                        try {
+                            parseSaveQuoteResponse(stringResponse);
+                        } catch (Exception e) {
+                            Utils.getInstance(mContext).logException(e);
+                        }
                         CommonView.getInstance(mContext).dismissProgressDialog();
                     }
 

@@ -170,7 +170,11 @@ public class ChooseCategoryActivity extends BaseActivity {
                 .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
                     @Override
                     public void onSuccessCallBack(String stringResponse) {
-                        parseGetCategoriesResponse(stringResponse);
+                        try {
+                            parseGetCategoriesResponse(stringResponse);
+                        } catch (Exception e) {
+                            Utils.getInstance(mContext).logException(e);
+                        }
                         CommonView.getInstance(mContext).dismissProgressDialog();
                     }
 

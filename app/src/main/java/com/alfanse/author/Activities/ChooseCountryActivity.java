@@ -53,7 +53,7 @@ public class ChooseCountryActivity extends BaseActivity {
 
             Country country = new Country();
             country.setCountryName(spinnerCountries.getSelectedItem().toString());
-            country.setCountryId(mHashCountries.get(country.getCountryId()));
+            country.setCountryId(mHashCountries.get(country.getCountryName()));
 
             Author author = SharedManagement.getInstance(mContext).getLoggedUser();
             author.setCountry(country);
@@ -124,7 +124,11 @@ public class ChooseCountryActivity extends BaseActivity {
                 .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
                     @Override
                     public void onSuccessCallBack(String stringResponse) {
-                        parseGetCountriesResponse(stringResponse);
+                        try {
+                            parseGetCountriesResponse(stringResponse);
+                        } catch (Exception e) {
+                            Utils.getInstance(mContext).logException(e);
+                        }
                         CommonView.getInstance(mContext).dismissProgressDialog();
                     }
 
@@ -144,28 +148,27 @@ public class ChooseCountryActivity extends BaseActivity {
 
         String countryISO3Code = locale.getISO3Country();
 
-        // String countryJson = Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_COUNTRIES);
-
         Type countryListType = new TypeToken<ArrayList<Country>>() {
         }.getType();
         mCountries = new Gson().fromJson(stringResponse, countryListType);
-
+        int defaultCountryIndex = -1;
+        int index = 0;
         for (Country country : mCountries) {
-            mHashCountries.put(country.getCountryName(), country.getIsoCode3());
-            mReverseHashCountries.put(country.getIsoCode3(), country.getCountryName());
+            mHashCountries.put(country.getCountryName(), country.getCountryId());
+            mReverseHashCountries.put(country.getCountryId(), country.getCountryName());
             mListCountries.add(country.getCountryName());
+            if (countryISO3Code.equalsIgnoreCase(country.getIsoCode3())) {
+                defaultCountryIndex = index;
+            }
+            index++;
         }
         mCountryAdapter = new ArrayAdapter<String>(mActivity, android.R.layout.simple_spinner_item, mListCountries);
         mCountryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCountries.setTitle(getString(R.string.text_select_country));
         spinnerCountries.setAdapter(mCountryAdapter);
 
-        String defaultLanguage = mReverseHashCountries.get(countryISO3Code);
-
-        int index = mListCountries.indexOf(defaultLanguage);
-
-        if (index != -1) {
-            spinnerCountries.setSelection(index);
+        if (defaultCountryIndex != -1) {
+            spinnerCountries.setSelection(defaultCountryIndex);
         }
 
 

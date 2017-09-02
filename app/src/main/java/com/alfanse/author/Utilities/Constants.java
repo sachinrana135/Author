@@ -48,6 +48,8 @@ public class Constants {
     public static final String APP_CUSTOM_BOLD_FONT_FILE_NAME = "DIN-Bold.otf";
     public static final String APP_CUSTOM_FONT_FILE_NAME = APP_CUSTOM_LIGHT_FONT_FILE_NAME;
     public static final String DEFAULT_FONT_NAME_TO_OVERRIDE = "SERIF";
+    public static final String LOG_FILE_NAME = "author_log.txt";
+    public static final int LOG_FILE_SIZE = 2097152; // 2mb(2*1024*1024)
 
     public final static String PATTERN_EMAIL = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
     public static final String ASSETS_DIR_FONTS = "fonts/";
@@ -66,7 +68,7 @@ public class Constants {
 
 
     /***************************** API Url **************************/
-    public static final String API_BASE_URL = "http://www.gagandeepsharma.in/authorApi/api.php?action=";
+    public static final String API_BASE_URL = "http://author.alfanse.com/api/";
     public static final String API_TOKEN = "02bd92faa38aaa6cc0ea75e59937a1ef";
     public static final String API_URL_GET_QUOTES = API_BASE_URL + "getQuotes";
     public static final String API_URL_GET_QUOTE = API_BASE_URL + "getQuote";

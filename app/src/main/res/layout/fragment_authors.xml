@@ -9,13 +9,28 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_authors_fragment_authors"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_authors_fragment_authors"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
 
-        </android.support.v7.widget.RecyclerView>
+            </android.support.v7.widget.RecyclerView>
+
+            <TextView
+                android:id="@+id/empty_view_fragment_authors"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/msg_no_data_available"
+                android:visibility="gone" />
+        </LinearLayout>
+
 
     </android.support.v4.widget.SwipeRefreshLayout>
 </FrameLayout>

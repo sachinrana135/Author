@@ -98,6 +98,7 @@
     <string name="text_loading_submitting_report">Submitting Report...</string>
     <string name="text_loading_updating_country">Updating country...</string>
     <string name="text_loading_creating_new_account">Creating account...</string>
+    <string name="text_loading_updating_image">Updating image...</string>
 
 
     <!-- Button -->
@@ -182,6 +183,7 @@
     <string name="msg_dialog_error">Error</string>
     <string name="msg_dialog_default">Error</string>
     <string name="msg_share_app">Read,compose and share your beautiful thoughts.\n\n</string>
+    <string name="msg_no_data_available">No data available!</string>
 
     <!-- Success -->
     <string name="success_email_sent">Email sent successfully</string>
@@ -192,6 +194,7 @@
     <string name="success_comment_reported">Comment reported successfully</string>
     <string name="success_logout">Logged out successfully</string>
     <string name="success_quote_published">Your quote published successfully</string>
+    <string name="success_comment_posted">Your comment posted successfully</string>
     <string name="success_profile_image_updated">Profile image updated successfully</string>
     <string name="success_cover_image_updated">Cover image updated successfully</string>
 

@@ -418,7 +418,11 @@ public class QuoteActivity extends BaseActivity {
                 .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
                     @Override
                     public void onSuccessCallBack(String stringResponse) {
-                        parseGetQuoteResponse(stringResponse);
+                        try {
+                            parseGetQuoteResponse(stringResponse);
+                        } catch (Exception e) {
+                            Utils.getInstance(mContext).logException(e);
+                        }
                         CommonView.getInstance(mContext).dismissProgressDialog();
                     }
 
@@ -691,7 +695,11 @@ public class QuoteActivity extends BaseActivity {
                 .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
                     @Override
                     public void onSuccessCallBack(String stringResponse) {
-                        parseGetReportReasonsResponse(stringResponse);
+                        try {
+                            parseGetReportReasonsResponse(stringResponse);
+                        } catch (Exception e) {
+                            Utils.getInstance(mContext).logException(e);
+                        }
                         CommonView.getInstance(mContext).dismissProgressDialog();
                     }
 
@@ -744,7 +752,11 @@ public class QuoteActivity extends BaseActivity {
                 .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
                     @Override
                     public void onSuccessCallBack(String stringResponse) {
-                        parseSubmitReportResponse(stringResponse);
+                        try {
+                            parseSubmitReportResponse(stringResponse);
+                        } catch (Exception e) {
+                            Utils.getInstance(mContext).logException(e);
+                        }
                         CommonView.getInstance(mContext).dismissProgressDialog();
                     }
 
@@ -781,5 +793,10 @@ public class QuoteActivity extends BaseActivity {
                 return super.onOptionsItemSelected(menuItem);
 
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 }

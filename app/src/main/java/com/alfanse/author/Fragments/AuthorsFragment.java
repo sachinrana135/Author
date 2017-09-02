@@ -12,6 +12,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.alfanse.author.Activities.AuthorActivity;
 import com.alfanse.author.Adapters.AuthorsAdapter;
@@ -26,6 +27,7 @@ import com.alfanse.author.Utilities.CommonView;
 import com.alfanse.author.Utilities.Constants;
 import com.alfanse.author.Utilities.EndlessRecyclerViewScrollListener;
 import com.alfanse.author.Utilities.SharedManagement;
+import com.alfanse.author.Utilities.Utils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -47,6 +49,8 @@ public class AuthorsFragment extends Fragment {
     SwipeRefreshLayout layoutSwipeRefresh;
     @BindView(R.id.rv_authors_fragment_authors)
     RecyclerView recyclerViewAuthors;
+    @BindView(R.id.empty_view_fragment_authors)
+    TextView emptyView;
     private Context mContext;
     private Activity mActivity;
     private ArrayList<Author> mListAuthors;
@@ -143,7 +147,11 @@ public class AuthorsFragment extends Fragment {
                 .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
                     @Override
                     public void onSuccessCallBack(String stringResponse) {
-                        parseLoadAuthorsResponse(stringResponse);
+                        try {
+                            parseLoadAuthorsResponse(stringResponse);
+                        } catch (Exception e) {
+                            Utils.getInstance(mContext).logException(e);
+                        }
                         layoutSwipeRefresh.setRefreshing(false);
                     }
 
@@ -170,6 +178,14 @@ public class AuthorsFragment extends Fragment {
         mListAuthors.addAll(listAuthors);
 
         mAuthorsAdapter.notifyDataSetChanged();
+
+        if (mListAuthors.isEmpty()) {
+            emptyView.setVisibility(View.VISIBLE);
+            recyclerViewAuthors.setVisibility(View.GONE);
+        } else {
+            emptyView.setVisibility(View.GONE);
+            recyclerViewAuthors.setVisibility(View.VISIBLE);
+        }
     }
 
     private void followAuthor(Author author, final onAuthorFollowedListener listener) {

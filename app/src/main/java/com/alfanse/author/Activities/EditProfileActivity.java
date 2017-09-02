@@ -128,15 +128,18 @@ public class EditProfileActivity extends BaseActivity {
         editTextMobile.setText(mAuthor.getMobile());
         editTextDob.setText(mAuthor.getDob());
 
-        if (mAuthor.getGender().equalsIgnoreCase("Male")) {
-            radioGroupGender.check(R.id.radio_male_edit_profile);
-        } else if (mAuthor.getGender().equalsIgnoreCase("Female")) {
-            radioGroupGender.check(R.id.radio_female_edit_profile);
+        if (mAuthor.getGender() != null) {
+            if (mAuthor.getGender().equalsIgnoreCase("Male")) {
+                radioGroupGender.check(R.id.radio_male_edit_profile);
+            } else if (mAuthor.getGender().equalsIgnoreCase("Female")) {
+                radioGroupGender.check(R.id.radio_female_edit_profile);
+            }
         }
-
-        if (!mAuthor.getEmail().equalsIgnoreCase("") && !mAuthor.getEmail().equalsIgnoreCase(null)) {
-            editTextEmail.setKeyListener(null);
-            editTextEmail.setEnabled(false);
+        if (mAuthor.getEmail() != null) {
+            if (!mAuthor.getEmail().equalsIgnoreCase("") && !mAuthor.getEmail().equalsIgnoreCase(null)) {
+                editTextEmail.setKeyListener(null);
+                editTextEmail.setEnabled(false);
+            }
         }
 
     }

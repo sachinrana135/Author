@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import com.alfanse.author.BuildConfig;
 import com.alfanse.author.Interfaces.bitmapRequestListener;
 import com.alfanse.author.R;
 import com.bumptech.glide.Glide;
@@ -35,11 +36,15 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
@@ -135,6 +140,96 @@ public class Utils {
         } catch (NoSuchAlgorithmException e) {
 
         }
+    }
+
+    public static void logInfo(String message) {
+        try {
+            deleteContentOfLogFileIfAccordingToSize();
+            if (BuildConfig.DEBUG) {
+                String tabSeprator = "\t";
+                String separator = "\r\n";
+                message = separator + getCurrentDateTimeForLog() + tabSeprator + message;
+                generateLogOnDevice(message);
+            }
+        } catch (Exception ex) {
+            logException(ex);
+        }
+    }
+
+    public static void deleteContentOfLogFileIfAccordingToSize() {
+        File root = new File(mContext.getExternalFilesDir(null).getPath());
+        String fileName = Constants.LOG_FILE_NAME;
+        File file = new File(root, fileName);
+        if (file.exists()) {
+            if (file.length() > Constants.LOG_FILE_SIZE) {
+                clearContentOfLogFile();
+                String message = "Message:";
+                message = message + "\t" + "Previous Log Deleted!";
+                logInfo(message);
+            } else {
+            }
+        } else {
+
+        }
+    }
+
+    public static void clearContentOfLogFile() {
+        File root = new File(mContext.getExternalFilesDir(null).getPath());
+        String fileName = Constants.LOG_FILE_NAME;
+        File file = new File(root, fileName);
+        if (file.exists()) {
+            try {
+                new RandomAccessFile(file, "rw").setLength(0);
+            } catch (FileNotFoundException e) {
+
+            } catch (IOException e) {
+
+            }
+        }
+    }
+
+    public static void generateLogOnDevice(String message) {
+        try {
+            File root = new File(mContext.getExternalFilesDir(null).getPath());
+            File file = new File(root, Constants.LOG_FILE_NAME);
+            FileWriter writer = new FileWriter(file, true);
+            writer.append(message + "\n");
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            logException(e);
+        }
+    }
+
+    public static String getCurrentDateTimeForLog() {
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String formattedDate = df.format(c.getTime());
+        return formattedDate;
+    }
+
+    public static String encodeBase64(String string) {
+        byte[] data;
+        try {
+            data = string.getBytes("UTF-8");
+            return Base64.encodeToString(data, Base64.DEFAULT);
+        } catch (UnsupportedEncodingException e) {
+            logException(e);
+            return string;
+        }
+
+    }
+
+    public static String decodeBase64(String string) {
+        byte[] data;
+        try {
+            data = Base64.decode(string, Base64.DEFAULT);
+            return new String(data, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            logException(e);
+            return string;
+        }
+
     }
 
     public Drawable getDrawable(int id) {
@@ -385,4 +480,5 @@ public class Utils {
             mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
         }
     }
+
 }

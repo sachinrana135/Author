@@ -75,6 +75,7 @@ public class HomeActivity extends BaseActivity {
         initToolbar();
         initListener();
         showAppRateDialog();
+        // Utils.getInstance(mContext).printFacebookHashKey();
     }
 
     @Override

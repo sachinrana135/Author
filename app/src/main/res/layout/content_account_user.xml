@@ -40,8 +40,7 @@
                         android:id="@+id/image_view_profile_image_account_user"
                         android:layout_width="@dimen/profile_image_width"
                         android:layout_height="@dimen/profile_image_height"
-                        android:layout_marginTop="@dimen/spacing_small"
-                        android:src="@drawable/profilepic" />
+                        android:layout_marginTop="@dimen/spacing_small" />
 
                     <android.support.design.widget.FloatingActionButton
                         android:id="@+id/fab_edit_profile_image_account_user"

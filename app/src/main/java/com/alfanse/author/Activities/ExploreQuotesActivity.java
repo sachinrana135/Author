@@ -78,12 +78,15 @@ public class ExploreQuotesActivity extends BaseActivity {
         public void onQuoteFiltersUpdate(QuoteFilters quoteFilters) {
             latestQuotesFragment.getQuoteFilters().setCategories(quoteFilters.getCategories());
             latestQuotesFragment.getQuoteFilters().setLanguages(quoteFilters.getLanguages());
+            latestQuotesFragment.getQuoteFilters().setSearchKeyword(quoteFilters.getSearchKeyword());
 
             trendingQuotesFragment.getQuoteFilters().setCategories(quoteFilters.getCategories());
             trendingQuotesFragment.getQuoteFilters().setLanguages(quoteFilters.getLanguages());
+            trendingQuotesFragment.getQuoteFilters().setSearchKeyword(quoteFilters.getSearchKeyword());
 
             popularQuotesFragment.getQuoteFilters().setCategories(quoteFilters.getCategories());
             popularQuotesFragment.getQuoteFilters().setLanguages(quoteFilters.getLanguages());
+            popularQuotesFragment.getQuoteFilters().setSearchKeyword(quoteFilters.getSearchKeyword());
 
             mPagerAdapter.notifyDataSetChanged();
         }
@@ -218,6 +221,10 @@ public class ExploreQuotesActivity extends BaseActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                if (newText.isEmpty()) {
+                    updateViewPagerContent(null);
+                }
+
                 return false;
             }
         });

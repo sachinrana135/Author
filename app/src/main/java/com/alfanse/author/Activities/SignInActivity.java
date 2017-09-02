@@ -537,7 +537,11 @@ public class SignInActivity extends BaseActivity implements
                 .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
                     @Override
                     public void onSuccessCallBack(String stringResponse) {
-                        parseAddOrUpdateAuthorResponse(stringResponse);
+                        try {
+                            parseAddOrUpdateAuthorResponse(stringResponse);
+                        } catch (Exception e) {
+                            Utils.getInstance(mContext).logException(e);
+                        }
                         CommonView.getInstance(mContext).dismissProgressDialog();
                     }
 

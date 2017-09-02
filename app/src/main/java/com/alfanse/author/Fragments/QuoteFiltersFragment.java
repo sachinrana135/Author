@@ -25,6 +25,7 @@ import com.alfanse.author.R;
 import com.alfanse.author.Utilities.ApiUtils;
 import com.alfanse.author.Utilities.CommonView;
 import com.alfanse.author.Utilities.Constants;
+import com.alfanse.author.Utilities.Utils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -122,6 +123,7 @@ public class QuoteFiltersFragment extends Fragment {
 
                 quoteFilters.setLanguages(null);
                 quoteFilters.setCategories(null);
+                quoteFilters.setSearchKeyword(null);
                 updateTotalSelectedLanguagesView();
                 updateTotalSelectedCategoriesView();
                 listener.onQuoteFiltersUpdate(quoteFilters);
@@ -163,7 +165,11 @@ public class QuoteFiltersFragment extends Fragment {
                 .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
                     @Override
                     public void onSuccessCallBack(String stringResponse) {
-                        parseGetLanguagesResponse(stringResponse);
+                        try {
+                            parseGetLanguagesResponse(stringResponse);
+                        } catch (Exception e) {
+                            Utils.getInstance(mContext).logException(e);
+                        }
                         CommonView.getInstance(mContext).dismissProgressDialog();
                     }
 

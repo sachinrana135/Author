@@ -167,7 +167,11 @@ public class NewQuoteActivity extends BaseActivity implements
                 .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
                     @Override
                     public void onSuccessCallBack(String stringResponse) {
-                        parseGetDefaultCanvasThemeResponse(stringResponse);
+                        try {
+                            parseGetDefaultCanvasThemeResponse(stringResponse);
+                        } catch (Exception e) {
+                            Utils.getInstance(mContext).logException(e);
+                        }
                         CommonView.getInstance(mContext).dismissProgressDialog();
                     }
 

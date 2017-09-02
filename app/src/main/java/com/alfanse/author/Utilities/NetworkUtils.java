@@ -5,6 +5,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.widget.Toast;
 
+import com.alfanse.author.BuildConfig;
 import com.alfanse.author.Models.Api.ApiError;
 import com.alfanse.author.Models.Api.ApiResponse;
 import com.alfanse.author.Models.CustomDialog;
@@ -137,6 +138,18 @@ public class NetworkUtils {
                      */
                     @Override
                     public void onResponse(String response) {
+                        try {
+                            if (BuildConfig.DEBUG) {
+                                String message = apiUtils.getMessage();
+                                message = message + "\t" + URL;
+                                message = message + "\t" + apiUtils.getHeaderParams().get(Constants.API_HEADER_PARAM_KEY_CORRELATION_ID);
+                                message = message + "\t" + "RESPONSE";
+                                message = message + "\t" + response;
+                                Utils.logInfo(message);
+                            }
+                        } catch (Exception e) {
+                            Utils.logException(e);
+                        }
                         parseApiResponse(response, apiUtils);
                     }
                 },

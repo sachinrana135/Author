@@ -3,6 +3,7 @@ package com.alfanse.author.Utilities;
 import android.app.Activity;
 import android.content.Context;
 
+import com.alfanse.author.BuildConfig;
 import com.alfanse.author.Interfaces.NetworkCallback;
 
 import java.util.HashMap;
@@ -135,13 +136,28 @@ public class ApiUtils {
 
         HashMap<String, String> requestParam = new HashMap<>();
         if (SharedManagement.getInstance(context).getString(SharedManagement.LOGGED_USER) != null) {
-            headerParam.put(Constants.API_PARAM_KEY_LOGGED_AUTHOR_ID, SharedManagement.getInstance(context).getLoggedUser().getId());
+            requestParam.put(Constants.API_PARAM_KEY_LOGGED_AUTHOR_ID, SharedManagement.getInstance(context).getLoggedUser().getId());
         }
 
         if (this.getParams() != null) {
             requestParam.putAll(this.getParams());
         }
         this.setParams(requestParam);
+
+        try {
+            if (BuildConfig.DEBUG) {
+                String message = getMessage();
+                message = message + "\t" + getUrl();
+                message = message + "\t" + correlationID;
+                message = message + "\t" + "REQUEST_PARAM";
+                message = message + "\t" + getParams().toString();
+                message = message + "\t" + "HEADER_PARAM";
+                message = message + "\t" + getHeaderParams().toString();
+                Utils.logInfo(message);
+            }
+        } catch (Exception e) {
+            Utils.logException(e);
+        }
         NetworkUtils.getInstance(context).sendStringRequest(this);
 
     }

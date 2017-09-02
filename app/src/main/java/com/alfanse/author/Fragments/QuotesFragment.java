@@ -17,15 +17,13 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alfanse.author.Activities.AuthorActivity;
 import com.alfanse.author.Activities.AuthorsActivity;
 import com.alfanse.author.Activities.CommentsActivity;
-import com.alfanse.author.Activities.ExploreQuotesActivity;
 import com.alfanse.author.Activities.QuoteActivity;
 import com.alfanse.author.Adapters.QuotesAdapter;
 import com.alfanse.author.Interfaces.NetworkCallback;
@@ -72,12 +70,10 @@ public class QuotesFragment extends Fragment implements UpdatableFragment {
     private static final int SAVE_TEMP_QUOTE_PERMISSION_REQUEST_CODE = 7847;
     @BindView(R.id.swipe_refresh_fragment_quote)
     SwipeRefreshLayout layoutSwipeRefresh;
-    @BindView(R.id.layout_no_quotes_fragment_quotes)
-    LinearLayout layoutNoQuotes;
     @BindView(R.id.rv_quotes_fragment_quotes)
     RecyclerView recyclerViewQuotes;
-    @BindView(R.id.button_explore_fragment_quotes)
-    Button buttonExplore;
+    @BindView(R.id.empty_view_fragment_quotes)
+    TextView emptyView;
     private Context mContext;
     private Activity mActivity;
     private ArrayList<Quote> mListQuotes;
@@ -257,7 +253,11 @@ public class QuotesFragment extends Fragment implements UpdatableFragment {
                 .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
                     @Override
                     public void onSuccessCallBack(String stringResponse) {
-                        parseGetReportReasonsResponse(stringResponse);
+                        try {
+                            parseGetReportReasonsResponse(stringResponse);
+                        } catch (Exception e) {
+                            Utils.getInstance(mContext).logException(e);
+                        }
                         CommonView.getInstance(mContext).dismissProgressDialog();
                     }
 
@@ -309,7 +309,11 @@ public class QuotesFragment extends Fragment implements UpdatableFragment {
                 .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
                     @Override
                     public void onSuccessCallBack(String stringResponse) {
-                        parseSubmitReportResponse(stringResponse);
+                        try {
+                            parseSubmitReportResponse(stringResponse);
+                        } catch (Exception e) {
+                            Utils.getInstance(mContext).logException(e);
+                        }
                         CommonView.getInstance(mContext).dismissProgressDialog();
                     }
 
@@ -362,14 +366,6 @@ public class QuotesFragment extends Fragment implements UpdatableFragment {
             }
         });
 
-        buttonExplore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent exploreQuotesIntent = new Intent(mActivity, ExploreQuotesActivity.class);
-                startActivity(exploreQuotesIntent);
-            }
-        });
-
         loadQuotes(mFirstPage);
 
         mScrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
@@ -404,7 +400,11 @@ public class QuotesFragment extends Fragment implements UpdatableFragment {
                 .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
                     @Override
                     public void onSuccessCallBack(String stringResponse) {
-                        parseLoadQuotesResponse(stringResponse);
+                        try {
+                            parseLoadQuotesResponse(stringResponse);
+                        } catch (Exception e) {
+                            Utils.getInstance(mContext).logException(e);
+                        }
                         layoutSwipeRefresh.setRefreshing(false);
                     }
 
@@ -431,10 +431,10 @@ public class QuotesFragment extends Fragment implements UpdatableFragment {
         mQuotesAdapter.notifyDataSetChanged();
 
         if (mListQuotes.isEmpty()) {
-            layoutNoQuotes.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.VISIBLE);
             recyclerViewQuotes.setVisibility(View.GONE);
         } else {
-            layoutNoQuotes.setVisibility(View.GONE);
+            emptyView.setVisibility(View.GONE);
             recyclerViewQuotes.setVisibility(View.VISIBLE);
         }
     }

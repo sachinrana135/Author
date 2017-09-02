@@ -161,7 +161,11 @@ public class CanvasOptionsFragment extends Fragment implements ColorPickerDialog
                 .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
                     @Override
                     public void onSuccessCallBack(String stringResponse) {
-                        parseLoadThemesResponse(stringResponse);
+                        try {
+                            parseLoadThemesResponse(stringResponse);
+                        } catch (Exception e) {
+                            Utils.getInstance(mContext).logException(e);
+                        }
                     }
 
                     @Override

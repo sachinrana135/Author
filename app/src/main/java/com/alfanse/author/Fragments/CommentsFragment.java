@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alfanse.author.Activities.AuthorActivity;
 import com.alfanse.author.Adapters.CommentsAdapter;
@@ -30,11 +32,15 @@ import com.alfanse.author.Utilities.CommonView;
 import com.alfanse.author.Utilities.Constants;
 import com.alfanse.author.Utilities.EndlessRecyclerViewScrollListener;
 import com.alfanse.author.Utilities.SharedManagement;
+import com.alfanse.author.Utilities.Utils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 import butterknife.BindView;
@@ -54,6 +60,8 @@ public class CommentsFragment extends Fragment {
     RecyclerView recyclerViewComments;
     @BindView(R.id.edit_text_enter_comment_fragment_comments)
     EditText editTextEnterComment;
+    @BindView(R.id.empty_view_fragment_comments)
+    TextView emptyView;
     @BindView(R.id.fab_submit_comment_fragment_comment)
     FloatingActionButton fabSubmitComment;
 
@@ -149,6 +157,10 @@ public class CommentsFragment extends Fragment {
 
     private void loadComments(int page) {
 
+        if (page == mFirstPage) {
+            mListComments.clear();
+        }
+
         layoutSwipeRefresh.setRefreshing(true);
         commentFilters.setPage(Integer.toString(page));
 
@@ -163,7 +175,11 @@ public class CommentsFragment extends Fragment {
                 .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
                     @Override
                     public void onSuccessCallBack(String stringResponse) {
-                        parseLoadCommentsResponse(stringResponse);
+                        try {
+                            parseLoadCommentsResponse(stringResponse);
+                        } catch (Exception e) {
+                            Utils.getInstance(mContext).logException(e);
+                        }
                         layoutSwipeRefresh.setRefreshing(false);
                     }
 
@@ -179,8 +195,6 @@ public class CommentsFragment extends Fragment {
 
     private void parseLoadCommentsResponse(String stringResponse) {
 
-        // String commentsJson = Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_COMMENTS);
-
         Type commentListType = new TypeToken<ArrayList<Comment>>() {
         }.getType();
 
@@ -189,6 +203,14 @@ public class CommentsFragment extends Fragment {
         listComments = new Gson().fromJson(stringResponse, commentListType);
         mListComments.addAll(listComments);
         mCommentsAdapter.notifyDataSetChanged();
+
+        if (mListComments.isEmpty()) {
+            recyclerViewComments.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+        } else {
+            recyclerViewComments.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.GONE);
+        }
     }
 
     private void getReportReasonsAndShowDialog() {
@@ -203,7 +225,11 @@ public class CommentsFragment extends Fragment {
                 .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
                     @Override
                     public void onSuccessCallBack(String stringResponse) {
-                        parseGetReportReasonsResponse(stringResponse);
+                        try {
+                            parseGetReportReasonsResponse(stringResponse);
+                        } catch (Exception e) {
+                            Utils.getInstance(mContext).logException(e);
+                        }
                         CommonView.getInstance(mContext).dismissProgressDialog();
                     }
 
@@ -258,7 +284,11 @@ public class CommentsFragment extends Fragment {
                 .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
                     @Override
                     public void onSuccessCallBack(String stringResponse) {
-                        parseSubmitReportResponse(stringResponse);
+                        try {
+                            parseSubmitReportResponse(stringResponse);
+                        } catch (Exception e) {
+                            Utils.getInstance(mContext).logException(e);
+                        }
                         CommonView.getInstance(mContext).dismissProgressDialog();
                     }
 
@@ -285,6 +315,7 @@ public class CommentsFragment extends Fragment {
     private void saveComment() {
 
         //region API_CALL_START
+        Utils.getInstance(mContext).hideSoftKeyboard(mActivity);
         CommonView.getInstance(mContext).showProgressDialog(mActivity, getString(R.string.text_loading_save_comment), null);
         HashMap<String, String> param = new HashMap<>();
         param.put(Constants.API_PARAM_KEY_AUTHOR_ID, mLoggedAuthor.getId());
@@ -298,7 +329,11 @@ public class CommentsFragment extends Fragment {
                 .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
                     @Override
                     public void onSuccessCallBack(String stringResponse) {
-                        parseSaveCommentResponse(stringResponse);
+                        try {
+                            parseSaveCommentResponse(stringResponse);
+                        } catch (Exception e) {
+                            Utils.getInstance(mContext).logException(e);
+                        }
                         CommonView.getInstance(mContext).dismissProgressDialog();
                     }
 
@@ -314,7 +349,34 @@ public class CommentsFragment extends Fragment {
 
     private void parseSaveCommentResponse(String stringResponse) {
 
-        loadComments(mFirstPage);
+        Comment comment = new Comment();
+
+        comment.setComment(editTextEnterComment.getText().toString().trim());
+        comment.setAuthor(mLoggedAuthor);
+
+        Date currentTime = Calendar.getInstance().getTime();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yy hh:mm a");
+
+        String date = dateFormat.format(currentTime);
+
+        comment.setDateAdded(date);
+
+        mListComments.add(comment);
+        mCommentsAdapter.notifyDataSetChanged();
+
+        editTextEnterComment.setText("");
+
+        if (mListComments.isEmpty()) {
+            recyclerViewComments.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+        } else {
+            recyclerViewComments.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.GONE);
+        }
+
+        CommonView.showToast(mActivity, getString(R.string.success_comment_posted), Toast.LENGTH_LONG, CommonView.ToastType.SUCCESS);
+
     }
 
     @Override

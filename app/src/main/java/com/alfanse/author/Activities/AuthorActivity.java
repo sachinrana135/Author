@@ -125,7 +125,11 @@ public class AuthorActivity extends BaseActivity {
                 .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
                     @Override
                     public void onSuccessCallBack(String stringResponse) {
-                        parseGetAuthorResponse(stringResponse);
+                        try {
+                            parseGetAuthorResponse(stringResponse);
+                        } catch (Exception e) {
+                            Utils.getInstance(mContext).logException(e);
+                        }
                         CommonView.getInstance(mContext).dismissProgressDialog();
                     }
 
@@ -148,6 +152,13 @@ public class AuthorActivity extends BaseActivity {
 
     private void loadQuotesFragment() {
         mQuotesFragment = new QuotesFragment();
+
+        QuoteFilters quoteFilters = new QuoteFilters();
+        quoteFilters.setAuthorID(mAuthorId);
+
+        if (quoteFilters != null) {
+            mQuotesFragment.setQuoteFilters(quoteFilters);
+        }
         mFragmentManager = getSupportFragmentManager();
         mFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container_quotes_author, mQuotesFragment)
@@ -226,16 +237,20 @@ public class AuthorActivity extends BaseActivity {
                         .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
                             @Override
                             public void onSuccessCallBack(String stringResponse) {
-                                if (mAuthor.isFollowingAuthor()) {
-                                    textFollow.setText(mContext.getString(R.string.action_follow));
-                                    mAuthor.setFollowingAuthor(false);
-                                    textTotalFollowers.setText(Integer.toString(Integer.parseInt(mAuthor.getTotalFollowers()) - 1));
-                                    mAuthor.setTotalFollowers(Integer.toString(Integer.parseInt(mAuthor.getTotalFollowers()) - 1));
-                                } else {
-                                    textFollow.setText(mContext.getString(R.string.action_unfollow));
-                                    mAuthor.setFollowingAuthor(true);
-                                    textTotalFollowers.setText(Integer.toString(Integer.parseInt(mAuthor.getTotalFollowers()) + 1));
-                                    mAuthor.setTotalFollowers(Integer.toString(Integer.parseInt(mAuthor.getTotalFollowers()) + 1));
+                                try {
+                                    if (mAuthor.isFollowingAuthor()) {
+                                        textFollow.setText(mContext.getString(R.string.action_follow));
+                                        mAuthor.setFollowingAuthor(false);
+                                        textTotalFollowers.setText(Integer.toString(Integer.parseInt(mAuthor.getTotalFollowers()) - 1));
+                                        mAuthor.setTotalFollowers(Integer.toString(Integer.parseInt(mAuthor.getTotalFollowers()) - 1));
+                                    } else {
+                                        textFollow.setText(mContext.getString(R.string.action_unfollow));
+                                        mAuthor.setFollowingAuthor(true);
+                                        textTotalFollowers.setText(Integer.toString(Integer.parseInt(mAuthor.getTotalFollowers()) + 1));
+                                        mAuthor.setTotalFollowers(Integer.toString(Integer.parseInt(mAuthor.getTotalFollowers()) + 1));
+                                    }
+                                } catch (Exception e) {
+                                    Utils.getInstance(mContext).logException(e);
                                 }
                                 CommonView.getInstance(mContext).dismissProgressDialog();
                             }

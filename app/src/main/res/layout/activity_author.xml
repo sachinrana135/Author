@@ -43,8 +43,7 @@
                         android:id="@+id/image_view_cover_image_author"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/app_bar_accounts_user_height"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/photo" />
+                        android:scaleType="centerCrop" />
 
                 </FrameLayout>
 
@@ -76,8 +75,7 @@
                                 android:id="@+id/image_view_profile_image_author"
                                 android:layout_width="@dimen/profile_image_width"
                                 android:layout_height="@dimen/profile_image_height"
-                                android:layout_marginTop="@dimen/spacing_small"
-                                android:src="@drawable/profilepic" />
+                                android:layout_marginTop="@dimen/spacing_small" />
 
                         </FrameLayout>
 

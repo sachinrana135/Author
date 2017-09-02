@@ -146,7 +146,7 @@
                             android:ems="10"
                             android:gravity="top|left"
                             android:hint="@string/hint_author_status"
-                            android:inputType="textMultiLine|textCapWords|textNoSuggestions"
+                            android:inputType="textMultiLine|textNoSuggestions"
                             android:textSize="@dimen/font_large" />
 
                     </android.support.design.widget.TextInputLayout>
