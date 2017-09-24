@@ -15,7 +15,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -614,12 +613,11 @@ public class NewQuoteActivity extends BaseActivity implements
         @Override
         public boolean onDoubleTap(MotionEvent e) {
 
-            ContextThemeWrapper ctx = new ContextThemeWrapper(mContext, R.style.AppTheme);
-            LayoutInflater layoutInflater = LayoutInflater.from(ctx);
+            LayoutInflater layoutInflater = mActivity.getLayoutInflater();
             final View view = layoutInflater.inflate(R.layout.layout_edit_text_dialog, null);
             final EditText quoteTextView = (EditText) view.findViewById(R.id.edit_text_layout_edit_text_dialog);
             quoteTextView.setText(mActiveComponentTextView.getText());
-
+            quoteTextView.setSelection(quoteTextView.getText().length());
             AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
             // Add the buttons
             builder.setPositiveButton(R.string.action_done, new DialogInterface.OnClickListener() {

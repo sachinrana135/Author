@@ -53,7 +53,7 @@
                         android:ems="10"
                         android:gravity="top|left"
                         android:hint="@string/hint_quote_caption"
-                        android:inputType="textMultiLine|textNoSuggestions"
+                        android:inputType="textMultiLine"
                         android:textSize="@dimen/font_xlarge" />
                 </LinearLayout>
 
@@ -161,7 +161,7 @@
                             android:layout_height="wrap_content"
                             android:hint="@string/hint_enter_tags"
                             android:imeOptions="actionGo"
-                            android:inputType="textCapWords" />
+                            android:inputType="text" />
 
                     </android.support.design.widget.TextInputLayout>
 

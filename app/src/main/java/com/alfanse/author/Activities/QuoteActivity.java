@@ -119,6 +119,8 @@ public class QuoteActivity extends BaseActivity {
     FlowLayout quoteTagsContainer;
     @BindView(R.id.parent_quote_tag_container_quote)
     LinearLayout parentQuoteTagsContainer;
+    @BindView(R.id.layout_quote_source_quote)
+    LinearLayout layoutQuoteSource;
 
     private FirebaseAuth mAuth;
     private Activity mActivity;
@@ -524,8 +526,7 @@ public class QuoteActivity extends BaseActivity {
         textTotalLikes.setText(mQuote.getTotalLikes());
         textTotalComments.setText(mQuote.getTotalComments());
         if (!mQuote.getSource().isEmpty() && mQuote.getSource() != null) {
-            labelQuoteSource.setVisibility(View.VISIBLE);
-            textQuoteSource.setVisibility(View.VISIBLE);
+            layoutQuoteSource.setVisibility(View.VISIBLE);
             textQuoteSource.setText(mQuote.getSource());
         }
 

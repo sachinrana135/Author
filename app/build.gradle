@@ -16,6 +16,14 @@ repositories {
 
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'Author'
+            keyPassword 'Author@123'
+            storeFile file('D:/Mensaus/backup/Author/Author.jks')
+            storePassword 'Author@123'
+        }
+    }
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
@@ -30,9 +38,15 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            shrinkResources true
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+            proguardFile 'D:/Mensaus/backup/Author/app/proguard-rules.pro'
         }
+    }
+    dexOptions {
+        jumboMode = true
     }
 }
 

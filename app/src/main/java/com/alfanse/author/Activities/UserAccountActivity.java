@@ -176,7 +176,13 @@ public class UserAccountActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 CommonView.showToast(mActivity, getString(R.string.success_logout), Toast.LENGTH_LONG, CommonView.ToastType.SUCCESS);
-                SharedManagement.getInstance(mContext).logoutUser();
+                FirebaseAuth.getInstance().signOut();
+                SharedManagement.getInstance(mContext).remove(SharedManagement.LOGGED_USER);
+                Intent intent = new Intent(mActivity, SignInActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
             }
         });
 
