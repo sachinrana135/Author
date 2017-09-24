@@ -8,6 +8,10 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import com.alfanse.author.Fragments.QuotesFragment;
 import com.alfanse.author.Models.Author;
@@ -22,12 +26,19 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class HomeActivity extends BaseActivity {
+public class HomeActivity extends BaseActivity implements
+        QuotesFragment.OnFragmentInteractionListener {
 
     @BindView(R.id.toolbar_home)
     Toolbar mToolbar;
     @BindView(R.id.bottom_nav_home)
     BottomNavigationView bottomNav;
+    @BindView(R.id.layout_explore_quotes_home)
+    LinearLayout layout_explore_quotes;
+    @BindView(R.id.fragment_container_quotes_home)
+    FrameLayout layout_quotes_fragment_container;
+    @BindView(R.id.button_explore_home)
+    Button buttonExplore;
     private Context mContext;
     private Activity mActivity;
     private QuotesFragment mQuotesFragment;
@@ -95,7 +106,7 @@ public class HomeActivity extends BaseActivity {
         mFragmentManager = getSupportFragmentManager();
 
         mFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container_quotes_quotes, mQuotesFragment)
+                .replace(R.id.fragment_container_quotes_home, mQuotesFragment)
                 .commit();
     }
 
@@ -109,6 +120,14 @@ public class HomeActivity extends BaseActivity {
 
     private void initListener() {
         bottomNav.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        buttonExplore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent exploreQuotesIntent = new Intent(mActivity, ExploreQuotesActivity.class);
+                startActivity(exploreQuotesIntent);
+            }
+        });
     }
 
     public void showAppRateDialog() {
@@ -148,6 +167,18 @@ public class HomeActivity extends BaseActivity {
         super.onResume();
         if (bottomNav.getSelectedItemId() != R.id.bottom_nav_item_home_home) {
             bottomNav.setSelectedItemId(R.id.bottom_nav_item_home_home);
+        }
+    }
+
+    @Override
+    public void quotesAvailable(Boolean quotesAvailable) {
+
+        if (quotesAvailable) {
+            layout_quotes_fragment_container.setVisibility(View.VISIBLE);
+            layout_explore_quotes.setVisibility(View.GONE);
+        } else {
+            layout_quotes_fragment_container.setVisibility(View.GONE);
+            layout_explore_quotes.setVisibility(View.VISIBLE);
         }
     }
 }

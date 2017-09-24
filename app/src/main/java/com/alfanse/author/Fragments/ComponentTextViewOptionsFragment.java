@@ -257,7 +257,7 @@ public class ComponentTextViewOptionsFragment extends Fragment implements ColorP
 
                 ComponentTextView componentTextView = new ComponentTextView(mContext, mCanvas);
 
-                componentTextView.copyTheme(mComponentTextView);
+                componentTextView.copy(mComponentTextView);
 
                 componentTextView.setMinimumHeight(componentTextView.getMinimumHeight());
 

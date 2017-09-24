@@ -275,6 +275,10 @@ public class AuthorActivity extends BaseActivity {
         textTotalFollowing.setText(mAuthor.getTotalFollowing());
         textTotalQuotes.setText(mAuthor.getTotalQuotes());
 
+        // Hide follow option if user is viewing his profile
+        if (mAuthor.getId().equalsIgnoreCase(mLoggedAuthor.getId())) {
+            textFollow.setVisibility(View.GONE);
+        }
         if (mAuthor.isFollowingAuthor()) {
             textFollow.setText(getString(R.string.action_unfollow));
         } else {

@@ -86,6 +86,7 @@ public class QuotesFragment extends Fragment implements UpdatableFragment {
     private QuoteFilters quoteFilters = new QuoteFilters();
     private Quote activeQuote = null;
     private Author mLoggedAuthor;
+    private OnFragmentInteractionListener mListener;
 
     private onQuoteItemClickListener mOnQuoteItemClickListener = new onQuoteItemClickListener() {
 
@@ -423,19 +424,30 @@ public class QuotesFragment extends Fragment implements UpdatableFragment {
         Type quoteListType = new TypeToken<ArrayList<Quote>>() {
         }.getType();
 
-        ArrayList<Quote> listQuotes = new ArrayList<>();
+        ArrayList<Quote> listQuotes = new ArrayList<Quote>();
         listQuotes = new Gson().fromJson(stringResponse, quoteListType);
 
         mListQuotes.addAll(listQuotes);
 
         mQuotesAdapter.notifyDataSetChanged();
 
-        if (mListQuotes.isEmpty()) {
-            emptyView.setVisibility(View.VISIBLE);
-            recyclerViewQuotes.setVisibility(View.GONE);
-        } else {
-            emptyView.setVisibility(View.GONE);
-            recyclerViewQuotes.setVisibility(View.VISIBLE);
+        if (quoteFilters.getPage() == Integer.toString(mFirstPage)) {
+
+            if (mListQuotes.isEmpty()) {
+                emptyView.setVisibility(View.VISIBLE);
+                recyclerViewQuotes.setVisibility(View.GONE);
+            } else {
+                emptyView.setVisibility(View.GONE);
+                recyclerViewQuotes.setVisibility(View.VISIBLE);
+            }
+
+            if (mListener != null) {
+                if (mListQuotes.size() > 0) {
+                    mListener.quotesAvailable(true);
+                } else {
+                    mListener.quotesAvailable(false);
+                }
+            }
         }
     }
 
@@ -475,13 +487,17 @@ public class QuotesFragment extends Fragment implements UpdatableFragment {
             // request permissions and handle the result in onRequestPermissionsResult()
             requestPermissions(PERMISSIONS, DOWNLOAD_QUOTE_PERMISSION_REQUEST_CODE);
         } else {
-            Utils.getInstance(mContext).downloadImageToDisk(quote.getImageUrl());
+            Utils.getInstance(mContext).downloadImageToDisk(quote.getOriginalImageUrl());
         }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        }
 
         mContext = context;
         mActivity = getActivity();
@@ -505,7 +521,7 @@ public class QuotesFragment extends Fragment implements UpdatableFragment {
         switch (requestCode) {
             case DOWNLOAD_QUOTE_PERMISSION_REQUEST_CODE: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Utils.getInstance(mContext).downloadImageToDisk(quoteForDownload.getImageUrl());
+                    Utils.getInstance(mContext).downloadImageToDisk(quoteForDownload.getOriginalImageUrl());
                 } else {
                     CommonView.showToast(mActivity, getString(R.string.warning_permission_denied), Toast.LENGTH_LONG, CommonView.ToastType.WARNING);
                 }
@@ -537,4 +553,19 @@ public class QuotesFragment extends Fragment implements UpdatableFragment {
         mQuotesAdapter.notifyDataSetChanged();
         loadQuotes(mFirstPage);
     }
+
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
+    public interface OnFragmentInteractionListener {
+        void quotesAvailable(Boolean quotesAvailable);
+    }
+
 }

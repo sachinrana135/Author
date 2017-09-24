@@ -365,25 +365,7 @@ public class NewQuoteActivity extends BaseActivity implements
                 if (ContextCompat.checkSelfPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_WRITE_EXTERNAL_STORAGE);
                 } else {
-                    String localImagePath = saveCanvasIntoImage();
-
-                    if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-
-                        Quote quote = new Quote();
-                        quote.setLocalImagePath(localImagePath);
-                        quote.setContent(getQuoteContent());
-
-                        Author author = new Author();
-                        author.setId(mLoggedAuthor.getId());
-                        quote.setAuthor(author);
-
-                        Intent publishQuoteIntent = new Intent(mActivity, PublishQuoteActivity.class);
-                        publishQuoteIntent.putExtra(BUNDLE_KEY_QUOTE, quote);
-                        startActivityForResult(publishQuoteIntent, REQUEST_CODE_PUBLISH_QUOTE);
-                    } else {
-                        Intent signInIntent = new Intent(mActivity, SignInActivity.class);
-                        startActivity(signInIntent);
-                    }
+                    startPublishActivity();
                 }
                 return true;
             default:
@@ -391,6 +373,29 @@ public class NewQuoteActivity extends BaseActivity implements
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(menuItem);
 
+        }
+    }
+
+    private void startPublishActivity() {
+
+        String localImagePath = saveCanvasIntoImage();
+
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+
+            Quote quote = new Quote();
+            quote.setLocalImagePath(localImagePath);
+            quote.setContent(getQuoteContent());
+
+            Author author = new Author();
+            author.setId(mLoggedAuthor.getId());
+            quote.setAuthor(author);
+
+            Intent publishQuoteIntent = new Intent(mActivity, PublishQuoteActivity.class);
+            publishQuoteIntent.putExtra(BUNDLE_KEY_QUOTE, quote);
+            startActivityForResult(publishQuoteIntent, REQUEST_CODE_PUBLISH_QUOTE);
+        } else {
+            Intent signInIntent = new Intent(mActivity, SignInActivity.class);
+            startActivity(signInIntent);
         }
     }
 
@@ -429,14 +434,16 @@ public class NewQuoteActivity extends BaseActivity implements
 
             File dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), Constants.QUOTE_PUBLIC_OUTPUT_DIRECTORY);
 
-            if (!dir.mkdirs()) {
-                Log.e("Error", "Directory not created");
+            if (!dir.exists()) {
+                if (!dir.mkdirs()) {
+                    Log.e("Error", "Directory not created");
+                }
             }
 
             file = new File(dir.getAbsolutePath() + "/" + Utils.getTimeStamp() + Constants.QUOTE_OUTPUT_FORMAT);
 
             FileOutputStream output = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 70, output);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, Constants.QUOTE_QUALITY, output);
             output.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -510,7 +517,7 @@ public class NewQuoteActivity extends BaseActivity implements
 
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
-                    saveCanvasIntoImage();
+                    startPublishActivity();
 
                 } else {
                     CommonView.showToast(mActivity, getString(R.string.warning_permission_denied), Toast.LENGTH_LONG, CommonView.ToastType.WARNING);

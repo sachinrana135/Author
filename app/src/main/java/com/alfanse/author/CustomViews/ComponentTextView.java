@@ -75,7 +75,8 @@ public class ComponentTextView extends ComponentView {
         }
     }
 
-    public void copyTheme(ComponentTextView source) {
+    public void copy(ComponentTextView source) {
+        this.setText(source.getText());
         this.setTextSize(source.getTextSize());
         this.setTextColor(source.getTextColor());
         this.setTypeface(source.getTypeface());

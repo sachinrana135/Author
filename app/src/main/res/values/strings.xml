@@ -216,6 +216,7 @@
     <string name="error_author_not_found">Author not found!</string>
     <string name="error_user_session_expired">Your session has expired! Please login again.</string>
     <string name="error_no_internet">No Internet Connection!</string>
+    <string name="error_no_gender_selected">Please select gender!</string>
 
 
     <!-- Warning messages-->

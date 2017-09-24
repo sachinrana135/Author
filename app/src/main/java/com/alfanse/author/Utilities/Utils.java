@@ -110,16 +110,18 @@ public class Utils {
 
     public static void logException(Exception exception) {
 
-        if (Fabric.isInitialized()) {
-            //Log user details
-            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                Crashlytics.setUserIdentifier(currentUser.getUid());
-                Crashlytics.setUserEmail(currentUser.getEmail());
-                Crashlytics.setUserName(currentUser.getDisplayName());
+        if (!BuildConfig.DEBUG) {
+            if (Fabric.isInitialized()) {
+                //Log user details
+                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                    FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                    Crashlytics.setUserIdentifier(currentUser.getUid());
+                    Crashlytics.setUserEmail(currentUser.getEmail());
+                    Crashlytics.setUserName(currentUser.getDisplayName());
+                }
+                //Log exception
+                Crashlytics.logException(exception);
             }
-            //Log exception
-            Crashlytics.logException(exception);
         }
     }
 
@@ -230,6 +232,45 @@ public class Utils {
             return string;
         }
 
+    }
+
+    public static int calculateInSampleSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) >= reqHeight
+                    && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
+    }
+
+    public static Bitmap decodeSampledBitmapFromResource(String filePath, int resId,
+                                                         int reqWidth, int reqHeight) {
+
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(filePath, options);
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeFile(filePath, options);
     }
 
     public Drawable getDrawable(int id) {
@@ -365,7 +406,7 @@ public class Utils {
     public String getStringImage(String imagePath) {
         Bitmap bm = BitmapFactory.decodeFile(imagePath);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
+        bm.compress(Bitmap.CompressFormat.JPEG, 70, baos); //bm is the bitmap object
         byte[] byteArrayImage = baos.toByteArray();
         String encodedImage = Base64.encodeToString(byteArrayImage, Base64.DEFAULT);
         return encodedImage;

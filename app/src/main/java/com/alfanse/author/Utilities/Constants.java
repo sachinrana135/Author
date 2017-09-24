@@ -21,8 +21,6 @@ public class Constants {
     public static final String BUNDLE_KEY_AUTHORS_FILTERS = "authorFilters";
     public static final String BUNDLE_KEY_COMMENTS_FILTERS = "commentFilters";
 
-    /********  Firebase Reference*******/
-
     public static final String TAG_DEFAULT_CANVASE_TEXT_VIEW = "TAG_DEFAULT_CANVASE_TEXT_VIEW";
     public static final String DEFAULT_COMPONENT_TEXTVIEW_FONT = "Helvetica";
     public static final String DEFAULT_COMPONENT_TEXTVIEW_STYLE = "1";//Bold
@@ -30,6 +28,9 @@ public class Constants {
     public static final String DEFAULT_COMPONENT_TEXTVIEW_SIZE = "20";
     public static final String DEFAULT_COMPONENT_TEXTVIEW_LOCATION_X = "30";
     public static final String DEFAULT_COMPONENT_TEXTVIEW_LOCATION_Y = "30";
+    public static final int QUOTE_HEIGHT = 500;
+    public static final int QUOTE_WIDTH = 500;
+    public static final int QUOTE_QUALITY = 100;
     public static final String QUOTE_PUBLIC_OUTPUT_DIRECTORY = "Author";
     public static final String QUOTE_SHARE_TEMP_FILE_NAME = "Author_App_Quote";
     public static final String QUOTE_OUTPUT_FORMAT = ".JPG";
@@ -50,12 +51,14 @@ public class Constants {
     public static final String DEFAULT_FONT_NAME_TO_OVERRIDE = "SERIF";
     public static final String LOG_FILE_NAME = "author_log.txt";
     public static final int LOG_FILE_SIZE = 2097152; // 2mb(2*1024*1024)
+    public static final String ENGLISH_LANGUAGE_CODE = "en"; // 2mb(2*1024*1024)
 
     public final static String PATTERN_EMAIL = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
     public static final String ASSETS_DIR_FONTS = "fonts/";
     public static final String ASSETS_DIR_JSON = "json/";
     public static final String ASSETS_FILE_FONTS = ASSETS_DIR_JSON + "fonts.json";
-    public static final String ASSETS_FILE_CATEGORY = ASSETS_DIR_JSON + "category.json";
+
+    /*public static final String ASSETS_FILE_CATEGORY = ASSETS_DIR_JSON + "category.json";
     public static final String ASSETS_FILE_AUTHOR = ASSETS_DIR_JSON + "author.json";
     public static final String ASSETS_FILE_AUTHORS = ASSETS_DIR_JSON + "authors.json";
     public static final String ASSETS_FILE_QUOTES = ASSETS_DIR_JSON + "quotes.json";
@@ -64,7 +67,7 @@ public class Constants {
     public static final String ASSETS_FILE_COUNTRIES = ASSETS_DIR_JSON + "countries.json";
     public static final String ASSETS_FILE_QUOTE = ASSETS_DIR_JSON + "quote.json";
     public static final String ASSETS_FILE_REPORTS = ASSETS_DIR_JSON + "report_reasons.json";
-    public static final String ASSETS_FILE_CANVAS_THEMES = ASSETS_DIR_JSON + "canvas_themes.json";
+    public static final String ASSETS_FILE_CANVAS_THEMES = ASSETS_DIR_JSON + "canvas_themes.json";*/
 
 
     /***************************** API Url **************************/

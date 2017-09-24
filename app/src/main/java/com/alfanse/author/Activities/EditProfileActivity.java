@@ -199,6 +199,11 @@ public class EditProfileActivity extends BaseActivity {
             return false;
         }
 
+        if (radioGroupGender.getCheckedRadioButtonId() == -1) {
+            CommonView.showToast(mContext, getString(R.string.error_no_gender_selected), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
+            return false;
+        }
+
         return true;
 
     }

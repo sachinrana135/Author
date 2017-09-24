@@ -105,6 +105,8 @@ public class QuoteActivity extends BaseActivity {
     ImageView imageShareQuote;
     @BindView(R.id.image_more_options_quote)
     ImageView imageMoreOptions;
+    @BindView(R.id.label_quote_source_quote)
+    TextView labelQuoteSource;
     @BindView(R.id.text_quote_source_quote)
     TextView textQuoteSource;
     @BindView(R.id.category_tag_container_quote)
@@ -506,6 +508,10 @@ public class QuoteActivity extends BaseActivity {
         textAuthorName.setText(mQuote.getAuthor().getName());
         textDateQuote.setText(mQuote.getDateAdded());
 
+        // Hide follow option if user is viewing his quote
+        if (mQuote.getAuthor().getId().equalsIgnoreCase(mLoggedAuthor.getId())) {
+            textFollow.setVisibility(View.GONE);
+        }
         if (mQuote.getAuthor().isFollowingAuthor()) {
             textFollow.setText(getString(R.string.action_unfollow));
         } else {
@@ -517,12 +523,15 @@ public class QuoteActivity extends BaseActivity {
         }
         textTotalLikes.setText(mQuote.getTotalLikes());
         textTotalComments.setText(mQuote.getTotalComments());
-        textQuoteSource.setText(mQuote.getSource());
+        if (!mQuote.getSource().isEmpty() && mQuote.getSource() != null) {
+            labelQuoteSource.setVisibility(View.VISIBLE);
+            textQuoteSource.setVisibility(View.VISIBLE);
+            textQuoteSource.setText(mQuote.getSource());
+        }
 
         addLanguageTags();
         addCategoryTags();
         addSearchTags();
-
     }
 
     private void addLanguageTags() {
@@ -645,7 +654,7 @@ public class QuoteActivity extends BaseActivity {
             // request permissions and handle the result in onRequestPermissionsResult()
             requestPermissions(PERMISSIONS, DOWNLOAD_QUOTE_PERMISSION_REQUEST_CODE);
         } else {
-            Utils.getInstance(mContext).downloadImageToDisk(quote.getImageUrl());
+            Utils.getInstance(mContext).downloadImageToDisk(quote.getOriginalImageUrl());
         }
     }
 
@@ -654,6 +663,11 @@ public class QuoteActivity extends BaseActivity {
         MenuInflater inflater = popupMenu.getMenuInflater();
         inflater.inflate(R.menu.menu_item_quote, popupMenu.getMenu());
         MenuItem followItem = popupMenu.getMenu().findItem(R.id.action_follow_author_item_quote);
+
+        // Hide follow option if user is viewing his quote
+        if (mQuote.getAuthor().getId().equalsIgnoreCase(mLoggedAuthor.getId())) {
+            followItem.setVisible(false);
+        }
         if (mQuote.getAuthor().isFollowingAuthor()) {
             followItem.setTitle(mContext.getString(R.string.action_unfollow));
         } else {

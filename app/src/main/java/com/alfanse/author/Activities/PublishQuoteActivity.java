@@ -249,16 +249,21 @@ public class PublishQuoteActivity extends BaseActivity {
         Type languageListType = new TypeToken<ArrayList<Language>>() {
         }.getType();
         mLanguages = new Gson().fromJson(stringResponse, languageListType);
-
+        int selectionIndex = 0;
+        int index = 0;
         for (Language language : mLanguages) {
             mHashLanguages.put(language.getLanguageName(), language.getLanguageId());
             mListLanguages.add(language.getLanguageName());
+            if (language.getLanguageIsoCode().equalsIgnoreCase(Constants.ENGLISH_LANGUAGE_CODE)) {
+                selectionIndex = index;
+            }
+            index++;
         }
         mLanguageAdapter = new ArrayAdapter<String>(mActivity, android.R.layout.simple_spinner_item, mListLanguages);
         mLanguageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerLanguages.setTitle(getString(R.string.text_select_language));
         spinnerLanguages.setAdapter(mLanguageAdapter);
-
+        spinnerLanguages.setSelection(selectionIndex);
     }
 
     private void initToolbar() {

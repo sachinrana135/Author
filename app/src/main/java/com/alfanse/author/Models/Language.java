@@ -10,6 +10,7 @@ public class Language implements Serializable {
 
     private String languageId;
     private String languageName;
+    private String languageIsoCode;
 
     public String getLanguageId() {
         return languageId;
@@ -25,5 +26,13 @@ public class Language implements Serializable {
 
     public void setLanguageName(String languageName) {
         this.languageName = languageName;
+    }
+
+    public String getLanguageIsoCode() {
+        return languageIsoCode;
+    }
+
+    public void setLanguageIsoCode(String languageIsoCode) {
+        this.languageIsoCode = languageIsoCode;
     }
 }

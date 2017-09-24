@@ -20,9 +20,11 @@ import android.widget.TextView;
 import com.alfanse.author.Interfaces.onAuthorFollowedListener;
 import com.alfanse.author.Interfaces.onQuoteItemClickListener;
 import com.alfanse.author.Interfaces.onQuoteLikedListener;
+import com.alfanse.author.Models.Author;
 import com.alfanse.author.Models.Quote;
 import com.alfanse.author.R;
 import com.alfanse.author.Utilities.Constants;
+import com.alfanse.author.Utilities.SharedManagement;
 import com.alfanse.author.Utilities.Utils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -43,6 +45,7 @@ import butterknife.ButterKnife;
 public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.QuoteViewHolder> {
 
     private final onQuoteItemClickListener listener;
+    private final Author mLoggedAuthor;
     private Context mContext;
     private ArrayList<Quote> mListQuotes;
     private ObjectAnimator mObjectAnimator;
@@ -51,6 +54,7 @@ public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.QuoteViewH
         mContext = context;
         mListQuotes = listQuotes;
         this.listener = listener;
+        mLoggedAuthor = SharedManagement.getInstance(mContext).getLoggedUser();
     }
 
     @Override
@@ -81,6 +85,12 @@ public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.QuoteViewH
         MenuInflater inflater = popupMenu.getMenuInflater();
         inflater.inflate(R.menu.menu_item_quote, popupMenu.getMenu());
         MenuItem followItem = popupMenu.getMenu().findItem(R.id.action_follow_author_item_quote);
+
+        // Hide follow option if user is viewing his quote
+        if (quote.getAuthor().getId().equalsIgnoreCase(mLoggedAuthor.getId())) {
+            followItem.setVisible(false);
+        }
+
         if (quote.getAuthor().isFollowingAuthor()) {
             followItem.setTitle(mContext.getString(R.string.action_unfollow));
         } else {
@@ -161,6 +171,7 @@ public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.QuoteViewH
 
             RequestOptions quoteImageOptions = new RequestOptions()
                     .fitCenter()
+                    .placeholder(R.drawable.quote_placeholder)
                     .error(Utils.getInstance(mContext).getDrawable(R.drawable.ic_gallery_grey_24dp))
                     .centerCrop();
 
@@ -205,11 +216,14 @@ public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.QuoteViewH
                     })
                     .into(imageAuthor);
 
+
             textAuthorName.setText(quote.getAuthor().getName());
             textDateQuote.setText(quote.getDateAdded());
+            textCaptionQuote.setText(quote.getCaption());
             if (!quote.getCaption().equalsIgnoreCase("") && !quote.getCaption().equalsIgnoreCase(null)) {
                 textCaptionQuote.setVisibility(View.VISIBLE);
-                textCaptionQuote.setText(quote.getCaption());
+            } else {
+                textCaptionQuote.setVisibility(View.GONE);
             }
             textTotalLikes.setText(quote.getTotalLikes());
             textTotalComments.setText(quote.getTotalComments());

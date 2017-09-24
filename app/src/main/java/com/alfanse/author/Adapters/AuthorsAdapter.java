@@ -12,6 +12,7 @@ import com.alfanse.author.Interfaces.onAuthorFollowedListener;
 import com.alfanse.author.Interfaces.onAuthorItemClickListener;
 import com.alfanse.author.Models.Author;
 import com.alfanse.author.R;
+import com.alfanse.author.Utilities.SharedManagement;
 import com.alfanse.author.Utilities.Utils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -28,6 +29,7 @@ import butterknife.ButterKnife;
 public class AuthorsAdapter extends RecyclerView.Adapter<AuthorsAdapter.AuthorViewHolder> {
 
     private final onAuthorItemClickListener listener;
+    private final Author mLoggedAuthor;
     private Context mContext;
     private ArrayList<Author> mListAuthors;
 
@@ -35,6 +37,7 @@ public class AuthorsAdapter extends RecyclerView.Adapter<AuthorsAdapter.AuthorVi
         mContext = context;
         mListAuthors = listAuthors;
         this.listener = listener;
+        mLoggedAuthor = SharedManagement.getInstance(mContext).getLoggedUser();
     }
 
     @Override
@@ -89,6 +92,11 @@ public class AuthorsAdapter extends RecyclerView.Adapter<AuthorsAdapter.AuthorVi
                     .into(authorImage);
 
             textAuthorName.setText(author.getName());
+
+            // Hide follow option if user is viewing his quote
+            if (author.getId().equalsIgnoreCase(mLoggedAuthor.getId())) {
+                textAction.setVisibility(View.GONE);
+            }
 
             if (author.isFollowingAuthor()) {
                 textAction.setText(mContext.getString(R.string.action_unfollow));

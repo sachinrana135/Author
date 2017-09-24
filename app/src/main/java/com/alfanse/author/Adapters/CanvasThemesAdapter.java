@@ -86,6 +86,7 @@ public class CanvasThemesAdapter extends RecyclerView.Adapter<CanvasThemesAdapte
             RequestOptions canvasImageOptions = new RequestOptions()
                     .error(Utils.getInstance(mContext).getDrawable(R.drawable.ic_gallery_grey_24dp))
                     .fitCenter()
+                    .placeholder(R.drawable.quote_placeholder)
                     .centerCrop();
 
             Glide.with(mContext)

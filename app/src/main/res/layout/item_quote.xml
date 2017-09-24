@@ -89,17 +89,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <ProgressBar
-                    android:id="@+id/progress_bar_quote_item_quote"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center" />
-
                 <ImageView
                     android:id="@+id/image_quote_shared"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:transitionName="@string/quote_image_shared_element_name" />
+
+                <ProgressBar
+                    android:id="@+id/progress_bar_quote_item_quote"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:indeterminate="true" />
+
 
             </com.alfanse.author.CustomViews.SquareFrameLayout>
 

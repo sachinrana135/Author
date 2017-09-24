@@ -17,6 +17,7 @@ public class Quote implements Serializable {
     private Boolean isCopyrighted;
     private String source;
     private String imageUrl;
+    private String originalImageUrl;
     private String caption;
     private String localImagePath;
     private String dateAdded;
@@ -152,6 +153,14 @@ public class Quote implements Serializable {
 
     public void setLanguage(Language language) {
         this.language = language;
+    }
+
+    public String getOriginalImageUrl() {
+        return originalImageUrl;
+    }
+
+    public void setOriginalImageUrl(String originalImageUrl) {
+        this.originalImageUrl = originalImageUrl;
     }
 }
 
