@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2017. Alfanse Developers
+ *  All Rights Reserved
+ *  Unauthorized copying of this file, via any medium is strictly prohibited
+ *  Proprietary and confidential
+ */
+
 package com.alfanse.author.Activities;
 
 import android.app.Activity;
@@ -86,7 +93,7 @@ public class HomeActivity extends BaseActivity implements
         initToolbar();
         initListener();
         showAppRateDialog();
-        // Utils.getInstance(mContext).printFacebookHashKey();
+        //Utils.getInstance(mContext).printFacebookHashKey();
     }
 
     @Override

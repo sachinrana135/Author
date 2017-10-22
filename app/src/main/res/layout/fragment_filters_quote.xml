@@ -1,3 +1,10 @@
+<!--
+  ~ Copyright (c) 2017. Alfanse Developers
+  ~ * All Rights Reserved
+  ~ * Unauthorized copying of this file, via any medium is strictly prohibited
+  ~ * Proprietary and confidential
+  -->
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"

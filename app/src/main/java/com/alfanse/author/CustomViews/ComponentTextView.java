@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2017. Alfanse Developers
+ *  All Rights Reserved
+ *  Unauthorized copying of this file, via any medium is strictly prohibited
+ *  Proprietary and confidential
+ */
+
 package com.alfanse.author.CustomViews;
 
 import android.content.Context;
@@ -154,9 +161,9 @@ public class ComponentTextView extends ComponentView {
 
     public void setAlignment(int gravity) {
         mGravity = gravity;
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.gravity = gravity;
-        mTextView.setLayoutParams(layoutParams);
+        /*FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.gravity = gravity;*/
+        mTextView.setGravity(gravity);
     }
 
     public void setTextBold() {

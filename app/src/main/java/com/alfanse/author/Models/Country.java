@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2017. Alfanse Developers
+ *  All Rights Reserved
+ *  Unauthorized copying of this file, via any medium is strictly prohibited
+ *  Proprietary and confidential
+ */
+
 package com.alfanse.author.Models;
 
 /**

@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2017. Alfanse Developers
+ *  All Rights Reserved
+ *  Unauthorized copying of this file, via any medium is strictly prohibited
+ *  Proprietary and confidential
+ */
+
 buildscript {
     repositories {
         maven { url 'https://maven.fabric.io/public' }
@@ -18,10 +25,12 @@ repositories {
 android {
     signingConfigs {
         config {
-            keyAlias 'Author'
-            keyPassword 'Author@123'
-            storeFile file('D:/Mensaus/backup/Author/Author.jks')
-            storePassword 'Author@123'
+            def Properties keyProps = new Properties()
+            keyProps.load(new FileInputStream(file(RELEASE_KEYSTORE_PROPS_FILE)))
+            keyAlias keyProps["RELEASE_KEY_ALIAS"]
+            keyPassword keyProps["RELEASE_KEY_PASSWORD"]
+            storeFile file(keyProps["RELEASE_STORE_FILE"])
+            storePassword keyProps["RELEASE_STORE_PASSWORD"]
         }
     }
     compileSdkVersion 25
@@ -47,6 +56,24 @@ android {
     }
     dexOptions {
         jumboMode = true
+    }
+    productFlavors {
+        dev {
+            def Properties devProps = new Properties()
+            devProps.load(new FileInputStream(file(DEVELOPMENT_PROPS_FILE)))
+            applicationIdSuffix devProps["APPLICATION_ID_SUFFIX"]
+            versionNameSuffix devProps["VERSION_NAME_SUFFIX"]
+            buildConfigField("String", "API_BASE_URL", devProps["API_BASE_URL"])
+            buildConfigField("String", "API_TOKEN", devProps["API_TOKEN"]);
+            resValue("string", "app_name", devProps["APP_NAME"])
+        }
+        prod {
+            def Properties prodProps = new Properties()
+            prodProps.load(new FileInputStream(file(PRODUCTION_PROPS_FILE)))
+            buildConfigField("String", "API_BASE_URL", prodProps["API_BASE_URL"])
+            buildConfigField("String", "API_TOKEN", prodProps["API_TOKEN"]);
+            resValue("string", "app_name", prodProps["APP_NAME"])
+        }
     }
 }
 

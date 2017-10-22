@@ -1,7 +1,14 @@
+<!--
+  ~ Copyright (c) 2017. Alfanse Developers
+  ~ * All Rights Reserved
+  ~ * Unauthorized copying of this file, via any medium is strictly prohibited
+  ~ * Proprietary and confidential
+  -->
+
 <!--naming convention - All resource names follow a simple convention i.e what_where_description_size -->
 
 <resources>
-    <string name="app_name">Author</string>
+    <!--<string name="app_name">Author</string>-->
     <string name="facebook_app_id">127658787785082</string>
     <string name="fb_login_protocol_scheme">fb127658787785082</string>
     <string name="twitter_consumer_key" translatable="false">419WvaDQvAQHOjeOJMr2vXUeX</string>
