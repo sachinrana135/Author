@@ -384,6 +384,9 @@ public class NewQuoteActivity extends BaseActivity implements
 
     private void startPublishActivity() {
 
+        mQuoteCanvas.setStateFocused();
+        loadCanvasOptionsFragment();
+
         String localImagePath = saveCanvasIntoImage();
 
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {

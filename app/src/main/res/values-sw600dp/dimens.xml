@@ -33,6 +33,6 @@
     <dimen name="profile_image_height">130dp</dimen>
     <dimen name="profile_image_width">130dp</dimen>
     <dimen name="fab_size_edit_image">35dp</dimen>
-    <dimen name="card_view_radius">5dp</dimen>
+    <dimen name="card_view_radius">4dp</dimen>
 
 </resources>
