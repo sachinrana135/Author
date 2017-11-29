@@ -1,7 +1,8 @@
 # Author - Social writing app
-A beautiful app for writing quotes , poems , memes, stories , emotions , thoughts.
 
-<a href='https://play.google.com/store/apps/details?id=com.alfanse.author&utm_source=github&utm_campaign=home page&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
+<h3>A beautiful app for writing quotes , poems , memes, stories , emotions , thoughts.</h3>
+
+Author is the most loved social writing app for writing quotes , poems , memes, stories , emotions , thoughts, one liners with beautiful template/background.It is loaded with all the tools used for writing. You can fully customized your creation and share with Author community.Author will give you completely new experience for writing.
 
 <h2>Features</h2>
 
@@ -35,8 +36,10 @@ A beautiful app for writing quotes , poems , memes, stories , emotions , thought
 
 [![Author video](https://img.youtube.com/vi/s0W1QdjIiwo/0.jpg)](https://www.youtube.com/watch?v=s0W1QdjIiwo)
 
+<a href='https://play.google.com/store/apps/details?id=com.alfanse.author&utm_source=github&utm_campaign=home page&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
 
-## Authors
+
+## Contributers
 
 * **Sachin Rana** - [Sachin Rana](https://github.com/sachinrana135)
 
