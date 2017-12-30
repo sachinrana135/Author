@@ -32,6 +32,7 @@ import com.alfanse.author.R;
 import com.alfanse.author.Utilities.Constants;
 import com.alfanse.author.Utilities.FontHelper;
 import com.alfanse.author.Utilities.SharedManagement;
+import com.alfanse.author.Utilities.Utils;
 import com.kila.apprater_dialog.lars.AppRater;
 
 import butterknife.BindView;
@@ -98,6 +99,7 @@ public class HomeActivity extends BaseActivity implements
         initToolbar();
         initListener();
         showAppRateDialog();
+        Utils.FirebaseSubscribeTopic(Constants.FIREBASE_SUBSCRIPTION_TOPIC_ANDROID_USERS);
         //Utils.getInstance(mContext).printFacebookHashKey();
     }
 
@@ -193,4 +195,6 @@ public class HomeActivity extends BaseActivity implements
             layout_explore_quotes.setVisibility(View.VISIBLE);
         }
     }
+
+
 }

@@ -229,7 +229,7 @@ public class NewQuoteActivity extends BaseActivity implements
         mFragmentManager.beginTransaction()
                 .replace(R.id.option_container_new_quote, mCanvasOptionsFragment)
                 .addToBackStack(null)
-                .commit();
+                .commitAllowingStateLoss();
     }
 
     @Override

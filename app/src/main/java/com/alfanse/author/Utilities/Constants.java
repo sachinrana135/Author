@@ -34,6 +34,7 @@ public class Constants {
     public static final String BUNDLE_KEY_QUOTES_FILTERS = "quoteFilters";
     public static final String BUNDLE_KEY_AUTHORS_FILTERS = "authorFilters";
     public static final String BUNDLE_KEY_COMMENTS_FILTERS = "commentFilters";
+    public static final String BUNDLE_KEY_FCM_MESSAGE_DATA = "fcmData";
 
     public static final String TAG_DEFAULT_CANVASE_TEXT_VIEW = "TAG_DEFAULT_CANVASE_TEXT_VIEW";
     public static final String DEFAULT_COMPONENT_TEXTVIEW_FONT = "Helvetica";
@@ -142,4 +143,11 @@ public class Constants {
 
     public static String SUPPORT_EMAIL = "support@alfanse.com";
     public static int MINIMUM_STAR_RATING = 4;
+
+    public static String NOTIFICATION_CHANNEL = "AUTHOR_CHANNEL_ID";
+    public static String FIREBASE_SUBSCRIPTION_TOPIC_ANDROID_USERS = "ANDROID_USERS";
+
+    public static String ACTIVITY_PACKAGE_PATH = "com.alfanse.author.Activities";
+
+
 }

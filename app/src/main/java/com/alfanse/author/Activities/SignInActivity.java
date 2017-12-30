@@ -43,6 +43,7 @@ import com.alfanse.author.CustomViews.DialogBuilder;
 import com.alfanse.author.Interfaces.NetworkCallback;
 import com.alfanse.author.Models.Author;
 import com.alfanse.author.Models.CustomDialog;
+import com.alfanse.author.Models.FirebaseRemoteMessageData;
 import com.alfanse.author.R;
 import com.alfanse.author.Utilities.ApiUtils;
 import com.alfanse.author.Utilities.CommonView;
@@ -130,6 +131,7 @@ public class SignInActivity extends BaseActivity implements
     private FirebaseAuth mAuth;
     private GoogleApiClient mGoogleApiClient;
     private Author mLoggedAuthor;
+    private FirebaseRemoteMessageData mFirebaseMessageData;
     private TextView.OnEditorActionListener passwordEditorActionListener = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -168,6 +170,14 @@ public class SignInActivity extends BaseActivity implements
 
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             postSignInAction();
+        }
+
+        Intent intent = getIntent();
+        if (intent.getExtras() != null) {
+            if (intent.hasExtra(Constants.BUNDLE_KEY_FCM_MESSAGE_DATA)) {
+                mFirebaseMessageData = (FirebaseRemoteMessageData) intent.getSerializableExtra(Constants.BUNDLE_KEY_FCM_MESSAGE_DATA);
+            }
+
         }
 
         initListener();
@@ -343,7 +353,7 @@ public class SignInActivity extends BaseActivity implements
             }
         });
 
-        editTextUserEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+       /* editTextUserEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -362,7 +372,7 @@ public class SignInActivity extends BaseActivity implements
 
             }
         });
-
+*/
     }
 
     private void addEmailAdapter() {
@@ -579,9 +589,16 @@ public class SignInActivity extends BaseActivity implements
             startActivity(chooseCountryIntent);
             finish();
         } else {
-            Intent homeIntent = new Intent(mActivity, HomeActivity.class);
-            startActivity(homeIntent);
-            finish();
+            if (mFirebaseMessageData != null) {
+                Intent intent = Utils.getInstance(mContext).getFirebaseMessageTargetIntent(mFirebaseMessageData);
+                startActivity(intent);
+                finish();
+
+            } else {
+                Intent homeIntent = new Intent(mActivity, HomeActivity.class);
+                startActivity(homeIntent);
+                finish();
+            }
         }
     }
 

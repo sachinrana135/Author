@@ -31,6 +31,7 @@ public class SharedManagement {
     public final static int PRIVATE_MODE = 0;
     public final static String LAST_LOGIN_EMAIL = "LAST_LOGIN_EMAIL";
     public final static String LOGGED_USER = "LOGGED_USER";
+    public final static String FIREBASE_TOKEN = "FIREBASE_TOKEN";
     public static Context mContext;
     private static SharedManagement mInstance;
     private SharedPreferences sharedpreferences;

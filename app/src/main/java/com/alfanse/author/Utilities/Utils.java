@@ -33,13 +33,18 @@ import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import com.alfanse.author.Activities.CommentsActivity;
+import com.alfanse.author.Activities.QuoteActivity;
 import com.alfanse.author.BuildConfig;
 import com.alfanse.author.Interfaces.bitmapRequestListener;
+import com.alfanse.author.Models.CommentFilters;
+import com.alfanse.author.Models.FirebaseRemoteMessageData;
 import com.alfanse.author.R;
 import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -64,6 +69,9 @@ import java.util.concurrent.ExecutionException;
 import io.fabric.sdk.android.Fabric;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
+import static com.alfanse.author.Services.MyFirebaseMessagingService.PUSH_TYPE_COMMENT;
+import static com.alfanse.author.Services.MyFirebaseMessagingService.PUSH_TYPE_QUOTE;
+import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_QUOTE_ID;
 import static com.alfanse.author.Utilities.Constants.QUOTE_SHARE_TEMP_FILE_NAME;
 
 /**
@@ -534,4 +542,38 @@ public class Utils {
         }
     }
 
+    public static void FirebaseSubscribeTopic(String topic) {
+        FirebaseMessaging.getInstance().subscribeToTopic(topic);
+    }
+
+    public static Class<?> getActivityFromStringClassName(String className) {
+
+        String StringClassname = Constants.ACTIVITY_PACKAGE_PATH + "." + className;
+        Class<?> c = null;
+        if (StringClassname != null) {
+            try {
+                c = Class.forName(StringClassname);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        return c;
+    }
+
+    public Intent getFirebaseMessageTargetIntent(FirebaseRemoteMessageData fcmData) {
+        Intent intent;
+        if (fcmData.getPushType().equalsIgnoreCase(PUSH_TYPE_QUOTE)) {
+            intent = new Intent(mContext, QuoteActivity.class);
+            intent.putExtra(BUNDLE_KEY_QUOTE_ID, fcmData.getQuoteId());
+        } else if (fcmData.getPushType().equalsIgnoreCase(PUSH_TYPE_COMMENT)) {
+            intent = new Intent(mContext, CommentsActivity.class);
+            CommentFilters commentFilters = new CommentFilters();
+            commentFilters.setQuoteID(fcmData.getQuoteId());
+            intent.putExtra(Constants.BUNDLE_KEY_COMMENTS_FILTERS, commentFilters);
+        } else {
+            intent = new Intent(mContext, Utils.getActivityFromStringClassName(fcmData.getTargetActivity()));
+        }
+
+        return intent;
+    }
 }

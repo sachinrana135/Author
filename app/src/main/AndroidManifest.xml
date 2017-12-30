@@ -8,8 +8,7 @@
   ~ is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
   ~ either express or implied. See the License for the specific language governing permissions
   ~ and limitations under the License.
-  -->
-
+-->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.alfanse.author">
 
@@ -32,6 +31,18 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
+
+        <service android:name=".Services.MyFirebaseInstanceIdService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+
+        <service android:name=".Services.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
 
         <activity
             android:name="com.facebook.FacebookActivity"
@@ -67,8 +78,7 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".Activities.SignInActivity">
-        </activity>
+        <activity android:name=".Activities.SignInActivity"></activity>
         <activity android:name=".Activities.SignUpActivity" />
 
         <meta-data
@@ -106,6 +116,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>
