@@ -34,6 +34,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.alfanse.author.Activities.CommentsActivity;
+import com.alfanse.author.Activities.HomeActivity;
 import com.alfanse.author.Activities.QuoteActivity;
 import com.alfanse.author.BuildConfig;
 import com.alfanse.author.Interfaces.bitmapRequestListener;
@@ -562,17 +563,27 @@ public class Utils {
 
     public Intent getFirebaseMessageTargetIntent(FirebaseRemoteMessageData fcmData) {
         Intent intent;
-        if (fcmData.getPushType().equalsIgnoreCase(PUSH_TYPE_QUOTE)) {
-            intent = new Intent(mContext, QuoteActivity.class);
-            intent.putExtra(BUNDLE_KEY_QUOTE_ID, fcmData.getQuoteId());
-        } else if (fcmData.getPushType().equalsIgnoreCase(PUSH_TYPE_COMMENT)) {
-            intent = new Intent(mContext, CommentsActivity.class);
-            CommentFilters commentFilters = new CommentFilters();
-            commentFilters.setQuoteID(fcmData.getQuoteId());
-            intent.putExtra(Constants.BUNDLE_KEY_COMMENTS_FILTERS, commentFilters);
+        if (fcmData.getPushType() != null) {
+            if (fcmData.getPushType().equalsIgnoreCase(PUSH_TYPE_QUOTE)) {
+                intent = new Intent(mContext, QuoteActivity.class);
+                intent.putExtra(BUNDLE_KEY_QUOTE_ID, fcmData.getQuoteId());
+            } else if (fcmData.getPushType().equalsIgnoreCase(PUSH_TYPE_COMMENT)) {
+                intent = new Intent(mContext, CommentsActivity.class);
+                CommentFilters commentFilters = new CommentFilters();
+                commentFilters.setQuoteID(fcmData.getQuoteId());
+                intent.putExtra(Constants.BUNDLE_KEY_COMMENTS_FILTERS, commentFilters);
+            } else {
+                intent = new Intent(mContext, HomeActivity.class);
+            }
         } else {
-            intent = new Intent(mContext, Utils.getActivityFromStringClassName(fcmData.getTargetActivity()));
+            if (fcmData.getTargetActivity() != null) {
+                intent = new Intent(mContext, Utils.getActivityFromStringClassName(fcmData.getTargetActivity()));
+            } else {
+                intent = new Intent(mContext, HomeActivity.class);
+            }
         }
+
+        intent.putExtra(Constants.BUNDLE_KEY_CAME_VIA_NOTIFICATION, true);
 
         return intent;
     }

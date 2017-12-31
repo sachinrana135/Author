@@ -15,6 +15,7 @@ package com.alfanse.author.Fragments;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -24,6 +25,7 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -38,6 +40,7 @@ import com.alfanse.author.Activities.AuthorsActivity;
 import com.alfanse.author.Activities.CommentsActivity;
 import com.alfanse.author.Activities.QuoteActivity;
 import com.alfanse.author.Adapters.QuotesAdapter;
+import com.alfanse.author.CustomViews.DialogBuilder;
 import com.alfanse.author.Interfaces.NetworkCallback;
 import com.alfanse.author.Interfaces.UpdatableFragment;
 import com.alfanse.author.Interfaces.bitmapRequestListener;
@@ -189,12 +192,40 @@ public class QuotesFragment extends Fragment implements UpdatableFragment {
         }
 
         @Override
+        public void onActionDeleteClick(Quote quote) {
+            showDeleteWarningDialog(quote);
+        }
+
+        @Override
         public void onAuthorClick(Quote quote) {
             Intent authorIntent = new Intent(mActivity, AuthorActivity.class);
             authorIntent.putExtra(BUNDLE_KEY_AUTHOR_ID, quote.getAuthor().getId());
             startActivity(authorIntent);
         }
     };
+
+    private void showDeleteWarningDialog(final Quote quote) {
+
+        DialogBuilder builder = new DialogBuilder(mActivity);
+        // Add the buttons
+        builder.setPositiveButton(R.string.action_yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                deleteQuote(quote);
+            }
+        });
+        builder.setNegativeButton(R.string.action_cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+            }
+        });
+        // Set other dialog properties
+        builder.setMessage(R.string.msg_quote_delete_confirm);
+        builder.setDialogType(DialogBuilder.WARNING);
+
+        // Create the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 
     public QuotesFragment() {
         // Required empty public constructor
@@ -308,6 +339,41 @@ public class QuotesFragment extends Fragment implements UpdatableFragment {
         });
     }
 
+    private void deleteQuote(final Quote quote) {
+        //region API_CALL_START
+        CommonView.getInstance(mContext).showProgressDialog(mActivity, getString(R.string.text_please_wait), null);
+        HashMap<String, String> param = new HashMap<>();
+        param.put(Constants.API_PARAM_KEY_AUTHOR_ID, mLoggedAuthor.getId());
+        param.put(Constants.API_PARAM_KEY_QUOTE_ID, quote.getId());
+        ApiUtils api = new ApiUtils(mContext)
+                .setActivity(mActivity)
+                .setUrl(Constants.API_URL_DELETE_QUOTE)
+                .setParams(param)
+                .setMessage("QuotesFragment.java|deleteQuote")
+                .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
+                    @Override
+                    public void onSuccessCallBack(String stringResponse) {
+                        try {
+                            CommonView.getInstance(mContext).dismissProgressDialog();
+                            CommonView.showToast(mActivity, getString(R.string.success_quote_deleted), Toast.LENGTH_LONG, CommonView.ToastType.SUCCESS);
+                            mListQuotes.remove(quote);
+                            mQuotesAdapter.notifyDataSetChanged();
+                        } catch (Exception e) {
+                            Utils.getInstance(mContext).logException(e);
+                        }
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onFailureCallBack(Exception e) {
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+                });
+
+        api.call();
+        //endregion API_CALL_END
+    }
+
     private void submitQuoteReport(String reportId) {
         //region API_CALL_START
         CommonView.getInstance(mContext).showProgressDialog(mActivity, getString(R.string.text_loading_submitting_report), null);
@@ -341,6 +407,9 @@ public class QuotesFragment extends Fragment implements UpdatableFragment {
     }
 
     private void parseSubmitReportResponse(String stringResponse) {
+
+        mListQuotes.remove(activeQuote);
+        mQuotesAdapter.notifyDataSetChanged();
 
         CommonView.getInstance(mContext).showDialog(
                 new CustomDialog().setActivity(mActivity)

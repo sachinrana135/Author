@@ -181,7 +181,7 @@ public class SignUpActivity extends BaseActivity {
             }
         });
 
-        editTextEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        /*editTextEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -189,7 +189,7 @@ public class SignUpActivity extends BaseActivity {
                     editTextEmail.showDropDown();
 
             }
-        });
+        });*/
     }
 
     private void updateProfileName() {

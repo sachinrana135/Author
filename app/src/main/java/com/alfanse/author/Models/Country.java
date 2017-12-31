@@ -12,11 +12,13 @@
 
 package com.alfanse.author.Models;
 
+import java.io.Serializable;
+
 /**
  * Created by Velocity-1601 on 6/26/2017.
  */
 
-public class Country {
+public class Country implements Serializable {
 
     private String countryId;
     private String isoCode2;

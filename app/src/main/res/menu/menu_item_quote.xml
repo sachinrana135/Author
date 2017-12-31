@@ -28,5 +28,10 @@
         android:title="@string/action_report"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/action_delete_quote_item_quote"
+        android:title="@string/action_delete"
+        android:visible="false"
+        app:showAsAction="always" />
 
 </menu>

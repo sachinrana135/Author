@@ -26,14 +26,18 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.alfanse.author.Fragments.QuotesFragment;
+import com.alfanse.author.Interfaces.NetworkCallback;
 import com.alfanse.author.Models.Author;
 import com.alfanse.author.Models.QuoteFilters;
 import com.alfanse.author.R;
+import com.alfanse.author.Utilities.ApiUtils;
 import com.alfanse.author.Utilities.Constants;
 import com.alfanse.author.Utilities.FontHelper;
 import com.alfanse.author.Utilities.SharedManagement;
 import com.alfanse.author.Utilities.Utils;
 import com.kila.apprater_dialog.lars.AppRater;
+
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -100,13 +104,14 @@ public class HomeActivity extends BaseActivity implements
         initListener();
         showAppRateDialog();
         Utils.FirebaseSubscribeTopic(Constants.FIREBASE_SUBSCRIPTION_TOPIC_ANDROID_USERS);
+        mapFcmIdToUser(SharedManagement.getInstance(mContext).getString(SharedManagement.FIREBASE_TOKEN));
+        loadQuotesFragment();
         //Utils.getInstance(mContext).printFacebookHashKey();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        loadQuotesFragment();
     }
 
     private void loadQuotesFragment() {
@@ -194,6 +199,30 @@ public class HomeActivity extends BaseActivity implements
             layout_quotes_fragment_container.setVisibility(View.GONE);
             layout_explore_quotes.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void mapFcmIdToUser(String fcmId) {
+        HashMap<String, String> param = new HashMap<>();
+        param.put(Constants.API_PARAM_KEY_AUTHOR_ID, SharedManagement.getInstance(mContext).getLoggedUser().getId());
+        param.put(Constants.API_PARAM_KEY_FCM_ID, fcmId);
+        ApiUtils api = new ApiUtils(mContext)
+                .setActivity(mActivity)
+                .setUrl(Constants.API_URL_MAP_FCM_ID)
+                .setParams(param)
+                .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
+                    @Override
+                    public void onSuccessCallBack(String stringResponse) {
+
+                    }
+
+                    @Override
+                    public void onFailureCallBack(Exception e) {
+
+                    }
+                });
+        api.call();
+        //endregion API_CALL_END
+
     }
 
 

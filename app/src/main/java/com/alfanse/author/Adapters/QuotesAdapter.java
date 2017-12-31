@@ -97,10 +97,12 @@ public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.QuoteViewH
         MenuInflater inflater = popupMenu.getMenuInflater();
         inflater.inflate(R.menu.menu_item_quote, popupMenu.getMenu());
         MenuItem followItem = popupMenu.getMenu().findItem(R.id.action_follow_author_item_quote);
+        MenuItem deleteItem = popupMenu.getMenu().findItem(R.id.action_delete_quote_item_quote);
 
         // Hide follow option if user is viewing his quote
         if (quote.getAuthor().getId().equalsIgnoreCase(mLoggedAuthor.getId())) {
             followItem.setVisible(false);
+            deleteItem.setVisible(true);
         }
 
         if (quote.getAuthor().isFollowingAuthor()) {
@@ -131,6 +133,9 @@ public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.QuoteViewH
                         break;
                     case R.id.action_report_quote_item_quote:
                         listener.onActionReportClick(quote);
+                        break;
+                    case R.id.action_delete_quote_item_quote:
+                        listener.onActionDeleteClick(quote);
                         break;
                     default:
                         break;
