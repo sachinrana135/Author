@@ -14,6 +14,7 @@ package com.alfanse.author.Activities;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -27,6 +28,8 @@ import com.alfanse.author.Utilities.NetworkUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_CAME_VIA_NOTIFICATION;
+
 public class BaseActivity extends AppCompatActivity {
 
 
@@ -35,6 +38,7 @@ public class BaseActivity extends AppCompatActivity {
     private Activity mActivity;
     private Boolean mIsNetworkConnected;
     private Snackbar mSnackbar;
+    private Boolean isCameViaNotification = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +46,13 @@ public class BaseActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mContext = getApplicationContext();
         mActivity = BaseActivity.this;
+
+        Intent intent = getIntent();
+        if (intent.getExtras() != null) {
+            if (intent.hasExtra(BUNDLE_KEY_CAME_VIA_NOTIFICATION)) {
+                isCameViaNotification = intent.getBooleanExtra(BUNDLE_KEY_CAME_VIA_NOTIFICATION, false);
+            }
+        }
     }
 
     @Override
@@ -80,5 +91,15 @@ public class BaseActivity extends AppCompatActivity {
         TextView textView = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
         textView.setTextColor(Color.YELLOW);
         mSnackbar.show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isCameViaNotification) {
+            Intent i = new Intent(mActivity, HomeActivity.class);
+            startActivity(i);
+        } else {
+            super.onBackPressed();
+        }
     }
 }

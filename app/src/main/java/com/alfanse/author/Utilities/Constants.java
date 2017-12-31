@@ -34,6 +34,8 @@ public class Constants {
     public static final String BUNDLE_KEY_QUOTES_FILTERS = "quoteFilters";
     public static final String BUNDLE_KEY_AUTHORS_FILTERS = "authorFilters";
     public static final String BUNDLE_KEY_COMMENTS_FILTERS = "commentFilters";
+    public static final String BUNDLE_KEY_FCM_MESSAGE_DATA = "fcmData";
+    public static final String BUNDLE_KEY_CAME_VIA_NOTIFICATION = "viaNotification";
 
     public static final String TAG_DEFAULT_CANVASE_TEXT_VIEW = "TAG_DEFAULT_CANVASE_TEXT_VIEW";
     public static final String DEFAULT_COMPONENT_TEXTVIEW_FONT = "Helvetica";
@@ -102,6 +104,7 @@ public class Constants {
     public static final String API_URL_SAVE_QUOTE = API_BASE_URL + "saveQuote";
     public static final String API_URL_SAVE_COMMENT = API_BASE_URL + "saveComment";
     public static final String API_URL_REPORT_QUOTE = API_BASE_URL + "reportQuote";
+    public static final String API_URL_DELETE_QUOTE = API_BASE_URL + "deleteQuote";
     public static final String API_URL_REPORT_COMMENT = API_BASE_URL + "reportComment";
     public static final String API_URL_FOLLOW_AUTHOR = API_BASE_URL + "followAuthor";
     public static final String API_URL_LIKE_QUOTE = API_BASE_URL + "likeQuote";
@@ -110,6 +113,7 @@ public class Constants {
     public static final String API_URL_UPDATE_PROFILE_IMAGE = API_BASE_URL + "updateProfileImage";
     public static final String API_URL_UPDATE_USER_COUNTRY = API_BASE_URL + "updateUserCountry";
     public static final String API_URL_GET_USER_FEED = API_BASE_URL + "getUserFeed";
+    public static final String API_URL_MAP_FCM_ID = API_BASE_URL + "mapFcmIdToUser";
 
     public static final String WEB_URL_WEBSERVICE_MAINTENANCE = WEB_URL + "onMaintenance";
     public static final String WEB_URL_UPGRADE_APP = WEB_URL + "upgradeApp";
@@ -130,6 +134,7 @@ public class Constants {
     public static final String API_PARAM_KEY_REPORT_ID = "reportId";
     public static final String API_PARAM_KEY_COMMENT_ID = "commentId";
     public static final String API_PARAM_KEY_QUOTE_ID = "quoteId";
+    public static final String API_PARAM_KEY_FCM_ID = "fcmId";
     public static final String API_PARAM_KEY_LOGGED_AUTHOR_ID = "loggedAuthorId";
     public static final String API_HEADER_PARAM_KEY_DEVICE_ID = "deviceId";
     public static final String API_HEADER_PARAM_KEY_CORRELATION_ID = "correlationId";
@@ -142,4 +147,11 @@ public class Constants {
 
     public static String SUPPORT_EMAIL = "support@alfanse.com";
     public static int MINIMUM_STAR_RATING = 4;
+
+    public static String NOTIFICATION_CHANNEL = "AUTHOR_CHANNEL_ID";
+    public static String FIREBASE_SUBSCRIPTION_TOPIC_ANDROID_USERS = "ANDROID_USERS";
+
+    public static String ACTIVITY_PACKAGE_PATH = "com.alfanse.author.Activities";
+
+
 }

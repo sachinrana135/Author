@@ -229,7 +229,7 @@ public class NewQuoteActivity extends BaseActivity implements
         mFragmentManager.beginTransaction()
                 .replace(R.id.option_container_new_quote, mCanvasOptionsFragment)
                 .addToBackStack(null)
-                .commit();
+                .commitAllowingStateLoss();
     }
 
     @Override
@@ -558,17 +558,20 @@ public class NewQuoteActivity extends BaseActivity implements
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case REQUEST_CODE_PUBLISH_QUOTE: {
-                if (data.getExtras() != null) {
-                    if (data.hasExtra(BUNDLE_KEY_QUOTE_ID)) {
-                        String quoteId = data.getStringExtra(BUNDLE_KEY_QUOTE_ID);
-                        Intent quoteIntent = new Intent(mActivity, QuoteActivity.class);
-                        quoteIntent.putExtra(BUNDLE_KEY_QUOTE_ID, quoteId);
-                        CommonView.showToast(mActivity, getString(R.string.success_quote_published), Toast.LENGTH_LONG, CommonView.ToastType.SUCCESS);
-                        startActivity(quoteIntent);
-                        finish();
-                    }
+                if (data != null) {
+                    if (data.getExtras() != null) {
+                        if (data.hasExtra(BUNDLE_KEY_QUOTE_ID)) {
+                            String quoteId = data.getStringExtra(BUNDLE_KEY_QUOTE_ID);
+                            Intent quoteIntent = new Intent(mActivity, QuoteActivity.class);
+                            quoteIntent.putExtra(BUNDLE_KEY_QUOTE_ID, quoteId);
+                            CommonView.showToast(mActivity, getString(R.string.success_quote_published), Toast.LENGTH_LONG, CommonView.ToastType.SUCCESS);
+                            startActivity(quoteIntent);
+                            finish();
+                        }
 
-                } else {
+                    } else {
+                        // Do nothing
+                    }
                 }
                 break;
             }

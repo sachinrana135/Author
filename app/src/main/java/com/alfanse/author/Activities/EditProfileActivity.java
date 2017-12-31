@@ -237,7 +237,7 @@ public class EditProfileActivity extends BaseActivity {
             View radioButton = radioGroupGender.findViewById(id);
             int radioId = radioGroupGender.indexOfChild(radioButton);
             RadioButton btn = (RadioButton) radioGroupGender.getChildAt(radioId);
-            String selection = (String) btn.getText();
+            String selection = btn.getText().toString();
             mAuthor.setGender(selection);
         }
 

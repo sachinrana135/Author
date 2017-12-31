@@ -18,6 +18,7 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
@@ -26,6 +27,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
@@ -38,6 +40,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alfanse.author.CustomViews.DialogBuilder;
 import com.alfanse.author.CustomViews.FlowLayout;
 import com.alfanse.author.Interfaces.NetworkCallback;
 import com.alfanse.author.Interfaces.bitmapRequestListener;
@@ -45,7 +48,6 @@ import com.alfanse.author.Interfaces.onReportItemSubmitListener;
 import com.alfanse.author.Models.Author;
 import com.alfanse.author.Models.Category;
 import com.alfanse.author.Models.CommentFilters;
-import com.alfanse.author.Models.CustomDialog;
 import com.alfanse.author.Models.Language;
 import com.alfanse.author.Models.Quote;
 import com.alfanse.author.Models.QuoteFilters;
@@ -75,7 +77,6 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.alfanse.author.CustomViews.DialogBuilder.SUCCESS;
 import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_AUTHOR_ID;
 import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_QUOTE_ID;
 
@@ -676,10 +677,12 @@ public class QuoteActivity extends BaseActivity {
         MenuInflater inflater = popupMenu.getMenuInflater();
         inflater.inflate(R.menu.menu_item_quote, popupMenu.getMenu());
         MenuItem followItem = popupMenu.getMenu().findItem(R.id.action_follow_author_item_quote);
+        MenuItem deleteItem = popupMenu.getMenu().findItem(R.id.action_delete_quote_item_quote);
 
         // Hide follow option if user is viewing his quote
         if (mQuote.getAuthor().getId().equalsIgnoreCase(mLoggedAuthor.getId())) {
             followItem.setVisible(false);
+            deleteItem.setVisible(true);
         }
         if (mQuote.getAuthor().isFollowingAuthor()) {
             followItem.setTitle(mContext.getString(R.string.action_unfollow));
@@ -699,6 +702,9 @@ public class QuoteActivity extends BaseActivity {
                     case R.id.action_report_quote_item_quote:
                         getReportReasonsAndShowDialog();
                         break;
+                    case R.id.action_delete_quote_item_quote:
+                        showDeleteWarningDialog();
+                        break;
                     default:
                         break;
                 }
@@ -707,6 +713,64 @@ public class QuoteActivity extends BaseActivity {
         });
 
         popupMenu.show();
+    }
+
+    private void showDeleteWarningDialog() {
+        DialogBuilder builder = new DialogBuilder(mActivity);
+        // Add the buttons
+        builder.setPositiveButton(R.string.action_yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                deleteQuote();
+            }
+        });
+        builder.setNegativeButton(R.string.action_cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+            }
+        });
+        // Set other dialog properties
+        builder.setMessage(R.string.msg_quote_delete_confirm);
+        builder.setDialogType(DialogBuilder.WARNING);
+
+        // Create the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void deleteQuote() {
+        //region API_CALL_START
+        CommonView.getInstance(mContext).showProgressDialog(mActivity, getString(R.string.text_please_wait), null);
+        HashMap<String, String> param = new HashMap<>();
+        param.put(Constants.API_PARAM_KEY_AUTHOR_ID, mLoggedAuthor.getId());
+        param.put(Constants.API_PARAM_KEY_QUOTE_ID, mQuoteId);
+        ApiUtils api = new ApiUtils(mContext)
+                .setActivity(mActivity)
+                .setUrl(Constants.API_URL_DELETE_QUOTE)
+                .setParams(param)
+                .setMessage("QuotesActivity.java|deleteQuote")
+                .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
+                    @Override
+                    public void onSuccessCallBack(String stringResponse) {
+                        try {
+                            CommonView.getInstance(mContext).dismissProgressDialog();
+                            CommonView.showToast(mActivity, getString(R.string.success_quote_deleted), Toast.LENGTH_LONG, CommonView.ToastType.SUCCESS);
+                            Intent intent = new Intent(mActivity, ExploreQuotesActivity.class);
+                            startActivity(intent);
+                            finish();
+                        } catch (Exception e) {
+                            Utils.getInstance(mContext).logException(e);
+                        }
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onFailureCallBack(Exception e) {
+                        CommonView.getInstance(mContext).dismissProgressDialog();
+                    }
+                });
+
+        api.call();
+        //endregion API_CALL_END
     }
 
     private void getReportReasonsAndShowDialog() {
@@ -799,12 +863,11 @@ public class QuoteActivity extends BaseActivity {
 
     private void parseSubmitReportResponse(String stringResponse) {
 
-        CommonView.getInstance(mContext).showDialog(
-                new CustomDialog().setActivity(mActivity)
-                        .setDialogType(SUCCESS)
-                        .setTitle(getString(R.string.success_quote_reported))
-                        .setMessage(getString(R.string.msg_post_quote_report_submit))
-        );
+        CommonView.showToast(mActivity, getString(R.string.msg_post_quote_report_submit), Toast.LENGTH_LONG, CommonView.ToastType.SUCCESS);
+
+        Intent i = new Intent(mActivity, ExploreQuotesActivity.class);
+        startActivity(i);
+        finish();
     }
 
 

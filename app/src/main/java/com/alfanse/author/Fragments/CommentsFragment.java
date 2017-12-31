@@ -316,6 +316,9 @@ public class CommentsFragment extends Fragment {
 
     private void parseSubmitReportResponse(String stringResponse) {
 
+        mListComments.remove(activeComment);
+        mCommentsAdapter.notifyDataSetChanged();
+
         CommonView.getInstance(mContext).showDialog(
                 new CustomDialog().setActivity(mActivity)
                         .setDialogType(SUCCESS)

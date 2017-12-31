@@ -39,5 +39,7 @@ public interface onQuoteItemClickListener {
 
     void onActionReportClick(Quote quote);
 
+    void onActionDeleteClick(Quote quote);
+
     void onAuthorClick(Quote quote);
 }

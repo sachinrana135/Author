@@ -12,11 +12,13 @@
 
 package com.alfanse.author.Models;
 
+import java.io.Serializable;
+
 /**
  * Created by Velocity-1601 on 6/21/2017.
  */
 
-public class Comment {
+public class Comment implements Serializable {
 
     private String id;
     private Author author;

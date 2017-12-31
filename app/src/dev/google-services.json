@@ -75,6 +75,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "967584212473-s439i75e4f8dv7ra6nrmhj8h6tpkqnjl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.alfanse.author.dev",
+            "certificate_hash": "c9680e1e8ea29037e6e421e121dce3a71bcb09dd"
+          }
+        },
+        {
           "client_id": "967584212473-l3l929epetlpu771684ppt9fltig1mjj.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
