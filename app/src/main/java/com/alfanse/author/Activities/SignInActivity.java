@@ -564,7 +564,6 @@ public class SignInActivity extends BaseActivity implements
                         } catch (Exception e) {
                             Utils.getInstance(mContext).logException(e);
                         }
-                        CommonView.getInstance(mContext).dismissProgressDialog();
                     }
 
                     @Override

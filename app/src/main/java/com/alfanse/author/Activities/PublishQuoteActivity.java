@@ -13,6 +13,7 @@
 package com.alfanse.author.Activities;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
@@ -309,8 +310,11 @@ public class PublishQuoteActivity extends BaseActivity {
                 Language language = new Language();
                 language.setLanguageName(spinnerLanguages.getSelectedItem().toString());
                 language.setLanguageId(mHashLanguages.get(language.getLanguageName()));
-
-                mQuote.setCaption(editTextQuoteCaption.getText().toString().trim());
+                if (editTextQuoteCaption.getText() != null) {
+                    mQuote.setCaption(editTextQuoteCaption.getText().toString().trim());
+                } else {
+                    mQuote.setCaption("");
+                }
                 mQuote.setLanguage(language);
 
                 if (switchButtonCopyright.isChecked()) {
@@ -318,7 +322,12 @@ public class PublishQuoteActivity extends BaseActivity {
                 } else {
                     mQuote.setCopyrighted(false);
                 }
-                mQuote.setSource(editTextQuoteSource.getText().toString().trim());
+
+                if (editTextQuoteSource.getText() != null) {
+                    mQuote.setSource(editTextQuoteSource.getText().toString().trim());
+                } else {
+                    mQuote.setSource("");
+                }
                 mQuote.setTags(mListTags);
                 mQuote.setCategories(mListCategories);
                 saveQuote();
@@ -462,5 +471,19 @@ public class PublishQuoteActivity extends BaseActivity {
         Intent intent = new Intent();
         setResult(RESULT_CODE, intent);
         finish();//finishing activity
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        removeSearchableDialog();
+    }
+
+    public void removeSearchableDialog() {
+        Fragment searchableSpinnerDialog = getFragmentManager().findFragmentByTag("TAG");
+
+        if (searchableSpinnerDialog != null && searchableSpinnerDialog.isAdded()) {
+            getFragmentManager().beginTransaction().remove(searchableSpinnerDialog).commit();
+        }
     }
 }

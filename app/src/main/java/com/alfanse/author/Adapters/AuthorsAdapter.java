@@ -107,7 +107,7 @@ public class AuthorsAdapter extends RecyclerView.Adapter<AuthorsAdapter.AuthorVi
 
             // Hide follow option if user is viewing his quote
             if (author.getId().equalsIgnoreCase(mLoggedAuthor.getId())) {
-                textAction.setVisibility(View.GONE);
+                textAction.setVisibility(View.INVISIBLE);
             }
 
             if (author.isFollowingAuthor()) {

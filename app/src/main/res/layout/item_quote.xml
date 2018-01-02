@@ -139,10 +139,12 @@
 
                     <TextView
                         android:id="@+id/text_total_likes_item_quote"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="21"
                         android:textColor="@color/colorAccent"
+                        android:gravity="end"
+                        android:layout_marginEnd="@dimen/spacing_small"
                         android:textSize="@dimen/font_small" />
 
                 </LinearLayout>
