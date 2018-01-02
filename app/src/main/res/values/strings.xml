@@ -198,6 +198,7 @@
     <string name="msg_dialog_default">Error</string>
     <string name="msg_share_app">Read,compose and share your beautiful thoughts.\n\n</string>
     <string name="msg_no_data_available">No data available!</string>
+    <string name="msg_image_not_available">Image not available!</string>
 
     <!-- Success -->
     <string name="success_email_sent">Email sent successfully</string>

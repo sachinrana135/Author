@@ -70,7 +70,6 @@ public class ChooseCountryActivity extends BaseActivity {
             Author author = SharedManagement.getInstance(mContext).getLoggedUser();
             author.setCountry(country);
             SharedManagement.getInstance(mContext).setLoggedUser(author);
-            Utils.FirebaseSubscribeTopic(country.getCountryName() + "_Users");
             updateUserCountry(country);
         }
     };

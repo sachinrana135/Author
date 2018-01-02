@@ -46,6 +46,7 @@ import com.alfanse.author.Interfaces.NetworkCallback;
 import com.alfanse.author.Interfaces.bitmapRequestListener;
 import com.alfanse.author.Interfaces.onReportItemSubmitListener;
 import com.alfanse.author.Models.Author;
+import com.alfanse.author.Models.AuthorFilters;
 import com.alfanse.author.Models.Category;
 import com.alfanse.author.Models.CommentFilters;
 import com.alfanse.author.Models.Language;
@@ -290,23 +291,28 @@ public class QuoteActivity extends BaseActivity {
         imageShareQuote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommonView.getInstance(mContext).showProgressDialog(mActivity, getString(R.string.text_loading), null);
+                if (mQuote.getImageUrl() != null) {
 
-                Utils.getInstance(mContext).getBitmapFromUrl(mQuote.getImageUrl(), new bitmapRequestListener() {
-                    @Override
-                    public void onSuccess(Bitmap bitmap) {
-                        CommonView.getInstance(mContext).dismissProgressDialog();
-                        if (bitmap != null) {
-                            quoteBitmapToSave = bitmap;
-                            checkPermissionAndSaveBitmapToDisk(bitmap);
+                    CommonView.getInstance(mContext).showProgressDialog(mActivity, getString(R.string.text_loading), null);
+
+                    Utils.getInstance(mContext).getBitmapFromUrl(mQuote.getImageUrl(), new bitmapRequestListener() {
+                        @Override
+                        public void onSuccess(Bitmap bitmap) {
+                            CommonView.getInstance(mContext).dismissProgressDialog();
+                            if (bitmap != null) {
+                                quoteBitmapToSave = bitmap;
+                                checkPermissionAndSaveBitmapToDisk(bitmap);
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onError(Exception e) {
-                        CommonView.getInstance(mContext).dismissProgressDialog();
-                    }
-                });
+                        @Override
+                        public void onError(Exception e) {
+                            CommonView.getInstance(mContext).dismissProgressDialog();
+                        }
+                    });
+                } else {
+                    CommonView.showToast(mActivity, getString(R.string.msg_image_not_available), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
+                }
             }
         });
 
@@ -314,6 +320,20 @@ public class QuoteActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 showMenuPopup(v);
+            }
+        });
+
+        textTotalLikes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent authorsIntent = new Intent(mActivity, AuthorsActivity.class);
+                authorsIntent.putExtra(Constants.BUNDLE_KEY_TITLE, getString(R.string.text_quote_liked_by));
+
+                AuthorFilters authorFilters = new AuthorFilters();
+                authorFilters.setQuoteID(mQuoteId);
+                authorFilters.setFilterType(Constants.AUTHOR_FILTER_TYPE_QUOTE_LIKED_BY);
+                authorsIntent.putExtra(Constants.BUNDLE_KEY_AUTHORS_FILTERS, authorFilters);
+                startActivity(authorsIntent);
             }
         });
     }
@@ -570,7 +590,7 @@ public class QuoteActivity extends BaseActivity {
 
         ArrayList<Category> listCategory = mQuote.getCategories();
 
-        if (listCategory.size() > 0) {
+        if (listCategory != null && listCategory.size() > 0) {
             for (Category category : listCategory) {
 
                 int randomTagColor = Utils.getInstance(mContext).getRandomTagColor();
