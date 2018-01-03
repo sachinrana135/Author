@@ -28,6 +28,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -498,8 +499,9 @@ public class Utils {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return Uri.fromFile(file);
-
+        return FileProvider.getUriForFile(mContext,
+                mContext.getPackageName().concat(".fileprovider"),
+                file);
     }
 
     public String getAppVersionName() {

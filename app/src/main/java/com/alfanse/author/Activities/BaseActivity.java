@@ -24,6 +24,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.alfanse.author.R;
+import com.alfanse.author.Utilities.CommonView;
 import com.alfanse.author.Utilities.NetworkUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -101,5 +102,11 @@ public class BaseActivity extends AppCompatActivity {
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        CommonView.getInstance(mContext).dismissProgressDialog();
+        super.onDestroy();
     }
 }
