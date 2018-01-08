@@ -159,10 +159,11 @@ public class NetworkUtils {
                                 message = message + "\t" + response;
                                 Utils.logInfo(message);
                             }
+                            parseApiResponse(response, apiUtils);
                         } catch (Exception e) {
                             Utils.logException(e);
+                            CommonView.showToast(mContext, mContext.getString(R.string.error_unknown_exception), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
                         }
-                        parseApiResponse(response, apiUtils);
                     }
                 },
                 new Response.ErrorListener() {
