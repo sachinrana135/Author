@@ -12,6 +12,7 @@
 
 package com.alfanse.author.Utilities;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -24,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.alfanse.author.CustomViews.DialogBuilder;
@@ -94,7 +96,7 @@ public class CommonView {
             return;
         }
 
-        ContextThemeWrapper ctx = new ContextThemeWrapper(mContext, R.style.AppTheme);
+        @SuppressLint("RestrictedApi") ContextThemeWrapper ctx = new ContextThemeWrapper(mContext, R.style.AppTheme);
 
         LayoutInflater layoutInflater = LayoutInflater.from(ctx);
 
@@ -162,11 +164,14 @@ public class CommonView {
         final String[] arrayReport = listReport.toArray(new String[listReport.size()]);
         final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 
+        selectedReportReasonTitle[0] = arrayReport[0];
+
         // Set the alert dialog title
         builder.setTitle(mContext.getString(R.string.text_reason_for_report));
 
         // Add the choices
-        builder.setSingleChoiceItems(arrayReport, -1, new DialogInterface.OnClickListener() {// Index of checked item (-1 = no selection)
+        builder.setSingleChoiceItems(arrayReport, 0, new DialogInterface.OnClickListener() {
+            // Index of checked item (-1 = no selection)
             public void onClick(DialogInterface dialog, int which) {
                 selectedReportReasonTitle[0] = arrayReport[which];
             }
@@ -249,6 +254,33 @@ public class CommonView {
 
         // Create the AlertDialog
         AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    public void showNoInternetDialog(final Activity activity) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+
+        @SuppressLint("RestrictedApi") ContextThemeWrapper ctx = new ContextThemeWrapper(mContext, R.style.AppTheme);
+
+        LayoutInflater layoutInflater = LayoutInflater.from(ctx);
+
+        View view = layoutInflater.inflate(R.layout.layout_no_internet_dialog, null);
+
+        builder.setView(view);
+        // Set other dialog properties
+        builder.setCancelable(false);
+
+        // Create the AlertDialog
+        AlertDialog dialog = builder.create();
+
+        Button button = (Button) view.findViewById(R.id.button_retry_layout_no_internet_dialog);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                activity.recreate();
+            }
+        });
+
         dialog.show();
     }
 

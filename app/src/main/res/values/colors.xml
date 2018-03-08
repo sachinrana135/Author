@@ -30,7 +30,7 @@
     <color name="colorGrey">#3F000000</color>
 
     <color name="black_overlay">#66000000</color>
-
+    <color name="noInternetBackground">#F7F7F7</color>
 
     <color name="colorCyan">#009688</color>
     <color name="colorSkyBlue">#00BCD4</color>

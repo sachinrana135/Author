@@ -37,7 +37,6 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-
         <service android:name=".Services.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -78,7 +77,7 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".Activities.SignInActivity"></activity>
+        <activity android:name=".Activities.SignInActivity" />
         <activity android:name=".Activities.SignUpActivity" />
 
         <meta-data
@@ -116,7 +115,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

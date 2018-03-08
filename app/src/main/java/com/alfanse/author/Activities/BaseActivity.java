@@ -70,7 +70,8 @@ public class BaseActivity extends AppCompatActivity {
     private void checkInternetConnectivity() {
         mIsNetworkConnected = NetworkUtils.getInstance(mContext).isNetworkConnected();
         if (!mIsNetworkConnected) {
-            showNoInternetSnackBar();
+            //showNoInternetSnackBar();
+            CommonView.getInstance(mContext).showNoInternetDialog(mActivity);
         }
     }
 
