@@ -16,6 +16,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -138,10 +139,23 @@ public class ComponentTextViewOptionsFragment extends Fragment implements ColorP
         mFontsAdapter = new FontsAdapter(mContext, mListFonts, new FontsAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Font font) {
-
+                setActiveFont(font);
                 mComponentTextView.setTypeface(font.getFontTypeface());
+                mComponentTextView.setFont(font);
             }
         });
+
+        if (mComponentTextView.getFont() != null) {
+            setActiveFont(mComponentTextView.getFont());
+        }
+    }
+
+    private void setActiveFont(Font activeFont) {
+        for (Font font : mListFonts) {
+            font.setSelected(false);
+        }
+        mListFonts.get(mListFonts.indexOf(activeFont)).setSelected(true);
+        mFontsAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -207,6 +221,18 @@ public class ComponentTextViewOptionsFragment extends Fragment implements ColorP
                 layoutTextFormat.setVisibility(View.GONE);
                 layoutTextSize.setVisibility(View.GONE);
                 layoutFontFamily.setVisibility(View.VISIBLE);
+                int scrollPosition = mComponentTextView.getFont() != null ? mListFonts.indexOf(mComponentTextView.getFont()) : 0;
+                if (scrollPosition < (mListFonts.size() - 1)) {
+                    scrollPosition = scrollPosition + 1;
+                }
+                final int finalScrollPosition = scrollPosition;
+                new Handler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        recyclerViewFonts.smoothScrollToPosition(finalScrollPosition);
+                    }
+                });
+
             }
         });
 
@@ -294,10 +320,10 @@ public class ComponentTextViewOptionsFragment extends Fragment implements ColorP
             @Override
             public void onClick(View v) {
                 ColorPickerDialog.newBuilder()
-                        .setDialogType(ColorPickerDialog.TYPE_PRESETS)
+                        .setDialogType(ColorPickerDialog.TYPE_CUSTOM)
                         .setAllowPresets(true)
                         .setDialogId(COMPONENT_TEXTVIEW_OPTIONS_COLOR_PICKER_DIALOG_ID)
-                        .setColor(ContextCompat.getColor(mContext, R.color.colorBlack))
+                        .setColor(mComponentTextView.getTextColor())
                         .setShowAlphaSlider(true)
                         .show(mActivity);
             }

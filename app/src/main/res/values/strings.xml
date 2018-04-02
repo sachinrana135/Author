@@ -47,7 +47,7 @@
 
     <string name="text_welcome_title_home">Welcome to Author!</string>
     <string name="text_welcome_body_home">The way to compose and share your beautiful thoughts. Explore our incredible quotes collection and start following others.</string>
-    <string name="text_default_quote_fragment_write_quote_fragment">Double tap to edit</string>
+    <string name="text_default_quote_fragment_write_quote_fragment">Double tap here to edit</string>
     <string name="text_social_login_sign_in">Social Login</string>
     <string name="text_email_login_sign_in">Or via Email</string>
     <string name="text_no_account_sign_in">Don\'t have an account?</string>
