@@ -23,6 +23,7 @@ public class Font {
     private String fontName;
     private String fontFileName;
     private Typeface fontTypeface;
+    private Boolean selected = false;
 
     public String getFontName() {
         return fontName;
@@ -46,5 +47,13 @@ public class Font {
 
     public void setFontTypeface(Typeface fontTypeface) {
         this.fontTypeface = fontTypeface;
+    }
+
+    public Boolean isSelected() {
+        return this.selected;
+    }
+
+    public void setSelected(Boolean selected) {
+        this.selected = selected;
     }
 }

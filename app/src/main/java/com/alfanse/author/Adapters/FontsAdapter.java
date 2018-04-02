@@ -13,6 +13,7 @@
 package com.alfanse.author.Adapters;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -87,6 +88,11 @@ public class FontsAdapter extends RecyclerView.Adapter<FontsAdapter.FontViewHold
 
             fontText.setTypeface(font.getFontTypeface());
             fontName.setText(font.getFontName());
+            if (font.isSelected()) {
+                fontName.setPaintFlags(fontName.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+            } else {
+                fontName.setPaintFlags(fontName.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
+            }
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

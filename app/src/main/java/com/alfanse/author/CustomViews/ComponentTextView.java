@@ -22,6 +22,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.alfanse.author.Models.CanvasTheme;
+import com.alfanse.author.Models.Font;
 import com.alfanse.author.R;
 import com.alfanse.author.Utilities.FontHelper;
 import com.alfanse.author.Utilities.Utils;
@@ -40,6 +41,7 @@ public class ComponentTextView extends ComponentView {
     private int mStyle = 0;
     private int mGravity;
     private int mViewDistancePercentage = 10;
+    private Font mFont;
 
     public ComponentTextView(@NonNull Context context, @NonNull QuoteCanvas canvas) {
         super(context, canvas);
@@ -81,6 +83,7 @@ public class ComponentTextView extends ComponentView {
             this.setTextLocationX(Float.parseFloat(canvasTheme.getTextLocationX()));
             this.setTextLocationY(Float.parseFloat(canvasTheme.getTextLocationY()));
             this.setTypeface(FontHelper.getInstance(mContext).getFontsHashMap().get(canvasTheme.getTextFontFamily()).getFontTypeface());
+            this.setFont(FontHelper.getInstance(mContext).getFontsHashMap().get(canvasTheme.getTextFontFamily()));
             this.setTextStyle(Integer.parseInt(canvasTheme.getTextStyle()));
         } catch (Exception e) {
             e.printStackTrace();
@@ -125,6 +128,14 @@ public class ComponentTextView extends ComponentView {
     public void setTypeface(Typeface textFontFamily) {
         mTypeface = textFontFamily;
         mTextView.setTypeface(textFontFamily, getTextStyle());
+    }
+
+    public void setFont(Font font) {
+        mFont = font;
+    }
+
+    public Font getFont() {
+        return mFont;
     }
 
     public int getTextColor() {
