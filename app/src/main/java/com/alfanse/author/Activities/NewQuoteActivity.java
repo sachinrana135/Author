@@ -390,6 +390,7 @@ public class NewQuoteActivity extends BaseActivity implements
     private void startPublishActivity() {
 
         mQuoteCanvas.setStateFocused();
+        mQuoteCanvas.removeProgressBar();// to fix the issue of loading icon seen in some quotes
         loadCanvasOptionsFragment();
 
         String localImagePath = saveCanvasIntoImage();

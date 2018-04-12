@@ -67,7 +67,7 @@ import static com.theartofdev.edmodo.cropper.CropImage.PICK_IMAGE_CHOOSER_REQUES
  * {@link CanvasOptionsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class CanvasOptionsFragment extends Fragment implements ColorPickerDialogListener {
+public class CanvasOptionsFragment extends BaseFragment implements ColorPickerDialogListener {
 
     public static final int CANVAS_OPTIONS_COLOR_PICKER_DIALOG_ID = 100;
     private static final int ALL_PERMISSIONS_REQUEST_CODE = 1000;

@@ -241,5 +241,6 @@
 
     <string name="quote_image_shared_element_name">quoteImage</string>
     <string name="author_image_shared_element_name">authorImage</string>
+    
 
 </resources>

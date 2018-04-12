@@ -15,6 +15,7 @@ package com.alfanse.author.Utilities;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.DownloadManager;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -26,14 +27,15 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import com.alfanse.author.Activities.AuthorActivity;
 import com.alfanse.author.Activities.CommentsActivity;
 import com.alfanse.author.Activities.HomeActivity;
 import com.alfanse.author.Activities.QuoteActivity;
@@ -54,10 +56,10 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -71,10 +73,11 @@ import java.util.concurrent.ExecutionException;
 import io.fabric.sdk.android.Fabric;
 
 import static android.content.Context.DOWNLOAD_SERVICE;
+import static com.alfanse.author.Services.MyFirebaseMessagingService.PUSH_TYPE_AUTHOR;
 import static com.alfanse.author.Services.MyFirebaseMessagingService.PUSH_TYPE_COMMENT;
 import static com.alfanse.author.Services.MyFirebaseMessagingService.PUSH_TYPE_QUOTE;
+import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_AUTHOR_ID;
 import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_QUOTE_ID;
-import static com.alfanse.author.Utilities.Constants.QUOTE_SHARE_TEMP_FILE_NAME;
 
 /**
  * Created by Velocity-1601 on 4/18/2017.
@@ -487,10 +490,10 @@ public class Utils {
 
     public Uri saveBitmapToDisk(Bitmap bitmap) {
 
-        File file = null;
+        /*File file = null;
         try {
 
-            file = new File(mContext.getExternalCacheDir().getAbsolutePath(), QUOTE_SHARE_TEMP_FILE_NAME + Constants.QUOTE_OUTPUT_FORMAT);
+            file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), QUOTE_SHARE_TEMP_FILE_NAME + Constants.QUOTE_OUTPUT_FORMAT);
             FileOutputStream output = new FileOutputStream(file);
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, output);
             output.close();
@@ -498,10 +501,30 @@ public class Utils {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        }*/
+        /*
+        This code was added to fix the facebook
+         */
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, "title");
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+        Uri uri = mContext.getContentResolver().insert(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+        OutputStream outStream;
+        try {
+            outStream = mContext.getContentResolver()
+                    .openOutputStream(uri);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outStream);
+            outStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return FileProvider.getUriForFile(mContext,
+        return uri;
+
+        /*return FileProvider.getUriForFile(mContext,
                 mContext.getPackageName().concat(".fileprovider"),
-                file);
+                file);*/
     }
 
     public String getAppVersionName() {
@@ -574,6 +597,9 @@ public class Utils {
                 CommentFilters commentFilters = new CommentFilters();
                 commentFilters.setQuoteID(fcmData.getQuoteId());
                 intent.putExtra(Constants.BUNDLE_KEY_COMMENTS_FILTERS, commentFilters);
+            } else if (fcmData.getPushType().equalsIgnoreCase(PUSH_TYPE_AUTHOR)) {
+                intent = new Intent(mContext, AuthorActivity.class);
+                intent.putExtra(BUNDLE_KEY_AUTHOR_ID, fcmData.getAuthorId());
             } else {
                 intent = new Intent(mContext, HomeActivity.class);
             }

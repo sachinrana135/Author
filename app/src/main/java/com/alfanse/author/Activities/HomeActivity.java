@@ -132,8 +132,8 @@ public class HomeActivity extends BaseActivity implements
     private void initToolbar() {
 
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle(FontHelper.getCustomTypefaceTitle(getString(R.string.title_home)));
     }
 

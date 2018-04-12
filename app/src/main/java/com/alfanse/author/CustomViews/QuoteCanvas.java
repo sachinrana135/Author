@@ -42,6 +42,7 @@ public class QuoteCanvas extends SquareFrameLayout {
     private Context mContext;
     private ImageView mImageView;
     private ComponentTextView mDefaultComponentTextView = null;
+    private ProgressBar progressBar;
 
     public QuoteCanvas(Context context) {
         super(context);
@@ -58,6 +59,11 @@ public class QuoteCanvas extends SquareFrameLayout {
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         mImageView.setLayoutParams(layoutParams);
         addView(mImageView);
+
+        progressBar = new ProgressBar(mContext);
+        FrameLayout.LayoutParams progressLayoutParams = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        progressLayoutParams.gravity = Gravity.CENTER;
+        progressBar.setLayoutParams(progressLayoutParams);
     }
 
     public QuoteCanvas(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -87,13 +93,6 @@ public class QuoteCanvas extends SquareFrameLayout {
 
     public void setBackground(String imageUrl) {
 
-        final ProgressBar progressBar = new ProgressBar(mContext);
-
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        layoutParams.gravity = Gravity.CENTER;
-        progressBar.setLayoutParams(layoutParams);
-        this.addView(progressBar);
-
         RequestOptions canvasImageOptions = new RequestOptions()
                 .fitCenter()
                 .error(Utils.getInstance(mContext).getDrawable(R.drawable.ic_gallery_grey_24dp))
@@ -105,17 +104,27 @@ public class QuoteCanvas extends SquareFrameLayout {
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        QuoteCanvas.this.removeView(progressBar);
+                        removeProgressBar();
                         return false;
                     }
 
                     @Override
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        QuoteCanvas.this.removeView(progressBar);
+                        removeProgressBar();
                         return false;
                     }
                 })
                 .into(mImageView);
+    }
+
+    public void addProgressBar() {
+        this.addView(progressBar);
+    }
+
+    public void removeProgressBar() {
+        if (this.indexOfChild(progressBar) != -1) {
+            this.removeView(progressBar);
+        }
     }
 
     public void setStateFocused() {

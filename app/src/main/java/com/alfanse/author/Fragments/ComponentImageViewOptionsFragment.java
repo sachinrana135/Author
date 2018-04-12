@@ -36,7 +36,7 @@ import butterknife.Unbinder;
  * {@link ComponentImageViewOptionsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class ComponentImageViewOptionsFragment extends Fragment {
+public class ComponentImageViewOptionsFragment extends BaseFragment {
 
     @BindView(R.id.layout_back_fragment_component_imageview_options)
     LinearLayout optionBack;

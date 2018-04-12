@@ -43,6 +43,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     public final static String PUSH_TYPE_QUOTE = "quote";
     public final static String PUSH_TYPE_COMMENT = "comment";
+    public final static String PUSH_TYPE_AUTHOR = "author";
 
     /**
      * Called when message is received.

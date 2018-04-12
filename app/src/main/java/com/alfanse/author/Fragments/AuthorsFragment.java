@@ -55,7 +55,7 @@ import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_AUTHOR_ID;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AuthorsFragment extends Fragment {
+public class AuthorsFragment extends BaseFragment {
 
     @BindView(R.id.swipe_refresh_fragment_authors)
     SwipeRefreshLayout layoutSwipeRefresh;

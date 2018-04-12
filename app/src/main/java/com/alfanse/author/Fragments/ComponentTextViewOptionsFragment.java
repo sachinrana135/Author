@@ -54,7 +54,7 @@ import butterknife.Unbinder;
  * {@link ComponentTextViewOptionsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class ComponentTextViewOptionsFragment extends Fragment implements ColorPickerDialogListener {
+public class ComponentTextViewOptionsFragment extends BaseFragment implements ColorPickerDialogListener {
 
 
     public static final int COMPONENT_TEXTVIEW_OPTIONS_COLOR_PICKER_DIALOG_ID = 101;

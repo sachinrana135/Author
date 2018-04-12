@@ -55,7 +55,7 @@ import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_SELECTED_CATEGOR
 /**
  * A simple {@link Fragment} subclass.
  */
-public class QuoteFiltersFragment extends Fragment {
+public class QuoteFiltersFragment extends BaseFragment {
 
     private static final int REQUEST_CODE_CHOOSE_CATEGORIES = 958;
     @BindView(R.id.layout_select_language_filters_quote)
