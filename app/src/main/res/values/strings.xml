@@ -155,6 +155,7 @@
     <string name="option_item_canvas_color_picker">BG Color</string>
     <string name="option_item_boxview_color_picker">BG Color</string>
     <string name="option_item_canvas_image">BG Image</string>
+    <string name="option_item_canvas_filter">Filters</string>
     <string name="option_item_add_image">Add Image</string>
     <string name="option_item_add_text">Add Text</string>
     <string name="option_item_add_box">Add Box</string>
@@ -241,6 +242,6 @@
 
     <string name="quote_image_shared_element_name">quoteImage</string>
     <string name="author_image_shared_element_name">authorImage</string>
-    
+
 
 </resources>

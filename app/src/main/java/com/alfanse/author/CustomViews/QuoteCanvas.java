@@ -14,8 +14,10 @@ package com.alfanse.author.CustomViews;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -31,7 +33,13 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
+
+import net.alhazmy13.imagefilter.ImageFilter;
+
+
 
 /**
  * Created by Velocity-1601 on 4/18/2017.
@@ -43,11 +51,15 @@ public class QuoteCanvas extends SquareFrameLayout {
     private ImageView mImageView;
     private ComponentTextView mDefaultComponentTextView = null;
     private ProgressBar progressBar;
+    private Bitmap mOriginalBitmap = null;
+    private ImageFilter.Filter mFilter = null;
+    private Handler mHandler;
 
     public QuoteCanvas(Context context) {
         super(context);
         mContext = context;
         mImageView = new ImageView(mContext);
+        mHandler = new Handler(Looper.getMainLooper());
     }
 
     public QuoteCanvas(Context context, AttributeSet attrs) {
@@ -79,8 +91,17 @@ public class QuoteCanvas extends SquareFrameLayout {
     }
 
     public void setBackground(Bitmap bitmap) {
+        mOriginalBitmap = bitmap;
         mImageView.setImageBitmap(bitmap);
+        updateFilter();
     }
+
+    private void updateFilter() {
+        if (getFilter() != null) {
+            setFilter(getFilter());
+        }
+    }
+
 
     public void setBackground(int color) {
         mImageView.setImageDrawable(null);
@@ -89,9 +110,13 @@ public class QuoteCanvas extends SquareFrameLayout {
 
     public void setBackground(Uri croppedImageUri) {
         mImageView.setImageURI(croppedImageUri);
+        mOriginalBitmap = ((BitmapDrawable) mImageView.getDrawable()).getBitmap();
+        updateFilter();
     }
 
     public void setBackground(String imageUrl) {
+
+        addProgressBar();
 
         RequestOptions canvasImageOptions = new RequestOptions()
                 .fitCenter()
@@ -99,22 +124,30 @@ public class QuoteCanvas extends SquareFrameLayout {
                 .centerCrop();
 
         Glide.with(mContext)
+                .asBitmap()
                 .load(imageUrl)
                 .apply(canvasImageOptions)
-                .listener(new RequestListener<Drawable>() {
+                .listener(new RequestListener<Bitmap>() {
                     @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
                         removeProgressBar();
                         return false;
                     }
 
                     @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                    public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
                         removeProgressBar();
                         return false;
                     }
                 })
-                .into(mImageView);
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                        mOriginalBitmap = resource;
+                        mImageView.setImageBitmap(resource);
+                        updateFilter();
+                    }
+                });
     }
 
     public void addProgressBar() {
@@ -144,4 +177,37 @@ public class QuoteCanvas extends SquareFrameLayout {
         }
     }
 
+    public void setFilter(final ImageFilter.Filter filter) {
+
+        mFilter = filter;
+
+        final Handler handler = new Handler(Looper.getMainLooper());
+
+        addProgressBar();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                final Bitmap b = ImageFilter.applyFilter(mOriginalBitmap, filter);
+
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (filter != null) {
+                            mImageView.setImageBitmap(b);
+                        } else {
+                            mImageView.setImageBitmap(mOriginalBitmap);
+                        }
+                        removeProgressBar();
+                    }
+                });
+            }
+        }).start();
+
+    }
+
+    public ImageFilter.Filter getFilter() {
+        return mFilter;
+    }
 }
