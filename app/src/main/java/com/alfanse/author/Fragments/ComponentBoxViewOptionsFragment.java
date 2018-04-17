@@ -40,7 +40,7 @@ import butterknife.Unbinder;
  * {@link ComponentBoxViewOptionsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class ComponentBoxViewOptionsFragment extends Fragment implements ColorPickerDialogListener {
+public class ComponentBoxViewOptionsFragment extends BaseFragment implements ColorPickerDialogListener {
 
     public static final int COMPONENT_BOXVIEW_OPTIONS_BG_COLOR_PICKER_DIALOG_ID = 42342;
     @BindView(R.id.layout_back_fragment_component_boxview_options)
@@ -95,7 +95,7 @@ public class ComponentBoxViewOptionsFragment extends Fragment implements ColorPi
             @Override
             public void onClick(View v) {
                 ColorPickerDialog.newBuilder()
-                        .setDialogType(ColorPickerDialog.TYPE_PRESETS)
+                        .setDialogType(ColorPickerDialog.TYPE_CUSTOM)
                         .setAllowPresets(true)
                         .setDialogId(COMPONENT_BOXVIEW_OPTIONS_BG_COLOR_PICKER_DIALOG_ID)
                         .setColor(ContextCompat.getColor(mContext, R.color.colorBlack))

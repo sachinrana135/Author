@@ -91,6 +91,32 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/layout_filter_fragment_canvas_options"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_xsmall">
+
+                    <ImageView
+                        android:id="@+id/image_filter_fragment_canvas_options"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/ic_image_filter_white_24dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/option_item_canvas_filter"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/font_xsmall" />
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/layout_add_photo_fragment_canvas_options"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -185,6 +211,23 @@
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_canvas_themes_fragment_canvas_options"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+            </android.support.v7.widget.RecyclerView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_filters_list_fragment_canvas_options"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_filters_fragment_canvas_options"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 

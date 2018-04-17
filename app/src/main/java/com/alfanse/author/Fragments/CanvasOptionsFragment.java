@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.ColorInt;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -33,13 +34,16 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.alfanse.author.Adapters.CanvasThemesAdapter;
+import com.alfanse.author.Adapters.FilterAdapter;
 import com.alfanse.author.CustomViews.ComponentBoxView;
 import com.alfanse.author.CustomViews.ComponentImageView;
 import com.alfanse.author.CustomViews.ComponentTextView;
 import com.alfanse.author.CustomViews.QuoteCanvas;
 import com.alfanse.author.Interfaces.NetworkCallback;
 import com.alfanse.author.Interfaces.onCanvasThemeItemClickListener;
+import com.alfanse.author.Interfaces.onFilterItemClickListener;
 import com.alfanse.author.Models.CanvasTheme;
+import com.alfanse.author.Models.Filter;
 import com.alfanse.author.R;
 import com.alfanse.author.Utilities.ApiUtils;
 import com.alfanse.author.Utilities.CommonView;
@@ -51,6 +55,8 @@ import com.google.gson.reflect.TypeToken;
 import com.jrummyapps.android.colorpicker.ColorPickerDialog;
 import com.jrummyapps.android.colorpicker.ColorPickerDialogListener;
 import com.theartofdev.edmodo.cropper.CropImage;
+
+import net.alhazmy13.imagefilter.ImageFilter;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -67,7 +73,7 @@ import static com.theartofdev.edmodo.cropper.CropImage.PICK_IMAGE_CHOOSER_REQUES
  * {@link CanvasOptionsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class CanvasOptionsFragment extends Fragment implements ColorPickerDialogListener {
+public class CanvasOptionsFragment extends BaseFragment implements ColorPickerDialogListener {
 
     public static final int CANVAS_OPTIONS_COLOR_PICKER_DIALOG_ID = 100;
     private static final int ALL_PERMISSIONS_REQUEST_CODE = 1000;
@@ -78,24 +84,35 @@ public class CanvasOptionsFragment extends Fragment implements ColorPickerDialog
     LinearLayout optionColorize;
     @BindView(R.id.layout_gallery_fragment_canvas_options)
     LinearLayout optionGallery;
+    @BindView(R.id.layout_filter_fragment_canvas_options)
+    LinearLayout optionFilter;
     @BindView(R.id.layout_add_photo_fragment_canvas_options)
     LinearLayout optionAddImage;
     @BindView(R.id.layout_add_text_fragment_canvas_options)
     LinearLayout optionAddText;
     @BindView(R.id.layout_add_box_fragment_canvas_options)
     LinearLayout optionAddBox;
+    @BindView(R.id.layout_canvas_themes_fragment_canvas_options)
+    LinearLayout layoutCanvasThemes;
     @BindView(R.id.rv_canvas_themes_fragment_canvas_options)
     RecyclerView recyclerViewCanvasThemes;
+    @BindView(R.id.layout_filters_list_fragment_canvas_options)
+    LinearLayout layoutFilters;
+    @BindView(R.id.rv_filters_fragment_canvas_options)
+    RecyclerView recyclerViewFilters;
 
     private Context mContext;
     private Activity mActivity;
     private QuoteCanvas mCanvas;
     private Uri mCropImageUri;
     private CanvasThemesAdapter mCanvasThemesAdapter;
+    private FilterAdapter mFiltersAdapter;
     private ArrayList<CanvasTheme> mListCanvasThemes = new ArrayList<CanvasTheme>();
+    private ArrayList<Filter> mListFilters = new ArrayList<Filter>();
     private OnFragmentInteractionListener mListener;
     private ComponentTextView mActiveComponentTextView;
-    private LinearLayoutManager mLinearLayoutManager;
+    private LinearLayoutManager mThemeLinearLayoutManager;
+    private LinearLayoutManager mFilterLinearLayoutManager;
     private CanvasTheme defaultCanvasTheme;
     private int firstIndex = 0;
     private String imageRequiredFor = null;
@@ -107,11 +124,19 @@ public class CanvasOptionsFragment extends Fragment implements ColorPickerDialog
         @Override
         public void onItemClick(CanvasTheme canvasTheme) {
             mCanvas.setBackground(canvasTheme.getImageUrl());
-
             if (mCanvas.findViewWithTag(Constants.TAG_DEFAULT_CANVASE_TEXT_VIEW) != null) {
                 ComponentTextView componentTextView = (ComponentTextView) mCanvas.findViewWithTag(Constants.TAG_DEFAULT_CANVASE_TEXT_VIEW);
                 componentTextView.setTheme(canvasTheme);
             }
+        }
+    };
+
+    private onFilterItemClickListener mOnFilterItemClickListener = new onFilterItemClickListener() {
+
+        @Override
+        public void onItemClick(Filter filter) {
+            setActiveFilter(filter);
+            mCanvas.setFilter(filter);
         }
     };
 
@@ -124,6 +149,11 @@ public class CanvasOptionsFragment extends Fragment implements ColorPickerDialog
         super.onCreate(savedInstanceState);
         mListCanvasThemes = new ArrayList<CanvasTheme>();
         mCanvasThemesAdapter = new CanvasThemesAdapter(mContext, mListCanvasThemes, mOnCanvasThemeItemClickListener);
+
+        mListFilters = new ArrayList<Filter>();
+        mFiltersAdapter = new FilterAdapter(mContext, mListFilters, mOnFilterItemClickListener);
+
+        loadFilters();
     }
 
     @Override
@@ -133,19 +163,66 @@ public class CanvasOptionsFragment extends Fragment implements ColorPickerDialog
         View view = inflater.inflate(R.layout.fragment_canvas_options, container, false);
         ButterKnife.bind(this, view);
 
-        mLinearLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
-        recyclerViewCanvasThemes.setLayoutManager(mLinearLayoutManager);
+        mThemeLinearLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
+        recyclerViewCanvasThemes.setLayoutManager(mThemeLinearLayoutManager);
         recyclerViewCanvasThemes.setAdapter(mCanvasThemesAdapter);
+
+        mFilterLinearLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
+        recyclerViewFilters.setLayoutManager(mFilterLinearLayoutManager);
+        recyclerViewFilters.setAdapter(mFiltersAdapter);
+
         loadThemes(mFirstPage);
         initListener();
+
         return view;
+    }
+
+    private void loadFilters() {
+
+        mListFilters.clear();
+
+        Filter originalFilter = new Filter(getString(R.string.original), null, true);
+        mListFilters.add(originalFilter);
+        mListFilters.add(new Filter(getString(R.string.gray), ImageFilter.Filter.GRAY, false));
+        mListFilters.add(new Filter(getString(R.string.blur), ImageFilter.Filter.AVERAGE_BLUR, false));
+        mListFilters.add(new Filter(getString(R.string.oil), ImageFilter.Filter.OIL, false));
+        mListFilters.add(new Filter(getString(R.string.old_tv), ImageFilter.Filter.TV, false));
+        mListFilters.add(new Filter(getString(R.string.invert), ImageFilter.Filter.INVERT, false));
+        mListFilters.add(new Filter(getString(R.string.block), ImageFilter.Filter.BLOCK, false));
+        mListFilters.add(new Filter(getString(R.string.old), ImageFilter.Filter.OLD, false));
+        mListFilters.add(new Filter(getString(R.string.sharpen), ImageFilter.Filter.SHARPEN, false));
+        mListFilters.add(new Filter(getString(R.string.light), ImageFilter.Filter.LIGHT, false));
+        mListFilters.add(new Filter(getString(R.string.lomo), ImageFilter.Filter.LOMO, false));
+        mListFilters.add(new Filter(getString(R.string.hdr), ImageFilter.Filter.HDR, false));
+        mListFilters.add(new Filter(getString(R.string.gaussian), ImageFilter.Filter.GAUSSIAN_BLUR, false));
+        mListFilters.add(new Filter(getString(R.string.soft), ImageFilter.Filter.SOFT_GLOW, false));
+        mListFilters.add(new Filter(getString(R.string.sketch), ImageFilter.Filter.SKETCH, false));
+        mListFilters.add(new Filter(getString(R.string.motion), ImageFilter.Filter.MOTION_BLUR, false));
+        mListFilters.add(new Filter(getString(R.string.gotham), ImageFilter.Filter.GOTHAM, false));
+        mListFilters.add(new Filter(getString(R.string.pixelate), ImageFilter.Filter.PIXELATE, false));
+        mListFilters.add(new Filter(getString(R.string.neon), ImageFilter.Filter.NEON, false));
+        mListFilters.add(new Filter(getString(R.string.relief), ImageFilter.Filter.RELIEF, false));
+
+        setActiveFilter(originalFilter);
+        mCanvas.setFilter(originalFilter);
+
+        mFiltersAdapter.notifyDataSetChanged();
+
+    }
+
+    private void setActiveFilter(Filter filter) {
+        for (Filter filter1 : mListFilters) {
+            filter1.setSelected(false);
+        }
+        mListFilters.get(mListFilters.indexOf(filter)).setSelected(true);
+        mFiltersAdapter.notifyDataSetChanged();
     }
 
     private void initListener() {
 
         initOptionItemClickListener();
 
-        mScrollListener = new EndlessRecyclerViewScrollListener(mLinearLayoutManager) {
+        mScrollListener = new EndlessRecyclerViewScrollListener(mThemeLinearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 // Triggered only when new data needs to be appended to the list
@@ -159,7 +236,6 @@ public class CanvasOptionsFragment extends Fragment implements ColorPickerDialog
     }
 
     private void loadThemes(int page) {
-
 
         //region API_CALL_START
         HashMap<String, String> param = new HashMap<>();
@@ -209,7 +285,7 @@ public class CanvasOptionsFragment extends Fragment implements ColorPickerDialog
             @Override
             public void onClick(View v) {
                 ColorPickerDialog.newBuilder()
-                        .setDialogType(ColorPickerDialog.TYPE_PRESETS)
+                        .setDialogType(ColorPickerDialog.TYPE_CUSTOM)
                         .setAllowPresets(true)
                         .setDialogId(CANVAS_OPTIONS_COLOR_PICKER_DIALOG_ID)
                         .setColor(ContextCompat.getColor(mContext, R.color.colorBlack))
@@ -223,6 +299,17 @@ public class CanvasOptionsFragment extends Fragment implements ColorPickerDialog
             public void onClick(View v) {
                 imageRequiredFor = IMAGE_REQUIRED_FOR_CANVAS;
                 startPickImageActivity();
+            }
+        });
+
+        optionFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isCanvasThemeVisible()) {
+                    hideCanvasThemes();
+                } else {
+                    showCanvasThemes();
+                }
             }
         });
 
@@ -417,6 +504,31 @@ public class CanvasOptionsFragment extends Fragment implements ColorPickerDialog
             mListener.onComponentImageViewAdded(imageView);
         }
 
+    }
+
+    public void showCanvasThemes() {
+        layoutCanvasThemes.setVisibility(View.VISIBLE);
+        layoutFilters.setVisibility(View.GONE);
+    }
+
+    public void hideCanvasThemes() {
+        layoutCanvasThemes.setVisibility(View.GONE);
+        layoutFilters.setVisibility(View.VISIBLE);
+        int scrollPosition = mCanvas.getFilter() != null ? mListFilters.indexOf(mCanvas.getFilter()) : 0;
+        if (scrollPosition < (mListFilters.size() - 1)) {
+            scrollPosition = scrollPosition + 1;
+        }
+        final int finalScrollPosition = scrollPosition;
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                recyclerViewFilters.smoothScrollToPosition(finalScrollPosition);
+            }
+        });
+    }
+
+    public boolean isCanvasThemeVisible() {
+        return layoutCanvasThemes.getVisibility() == View.VISIBLE;
     }
 
 

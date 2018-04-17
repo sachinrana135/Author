@@ -79,7 +79,7 @@ import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_QUOTE_ID;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class QuotesFragment extends Fragment implements UpdatableFragment {
+public class QuotesFragment extends BaseFragment implements UpdatableFragment {
 
     private static final int DOWNLOAD_QUOTE_PERMISSION_REQUEST_CODE = 4704;
     private static final int SAVE_TEMP_QUOTE_PERMISSION_REQUEST_CODE = 7847;
