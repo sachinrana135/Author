@@ -20,12 +20,22 @@ import net.alhazmy13.imagefilter.ImageFilter;
 
 public class Filter {
 
+    private String title;
     private ImageFilter.Filter filter;
     private Boolean selected = false;
 
-    public Filter(ImageFilter.Filter filter, Boolean selected) {
+    public Filter(String title, ImageFilter.Filter filter, Boolean selected) {
+        this.title = title;
         this.filter = filter;
         this.selected = selected;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public ImageFilter.Filter getFilter() {

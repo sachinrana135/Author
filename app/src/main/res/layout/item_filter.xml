@@ -22,4 +22,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/black_overlay"
+        android:padding="@dimen/spacing_xxsmall">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/title_item_filter"
+            android:text="Sachin"
+            android:gravity="center"
+            android:textSize="@dimen/font_xsmall"
+            android:textColor="@color/colorWhite" />
+
+    </FrameLayout>
+
 </com.alfanse.author.CustomViews.SquareFrameLayout>

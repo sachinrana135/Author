@@ -16,11 +16,13 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.alfanse.author.Interfaces.onFilterItemClickListener;
 import com.alfanse.author.Models.Filter;
@@ -87,6 +89,8 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
 
         @BindView(R.id.filter_item_filter)
         ImageView filterImage;
+        @BindView(R.id.title_item_filter)
+        TextView titleFilter;
 
 
         public FilterViewHolder(View view) {
@@ -95,6 +99,14 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
         }
 
         public void bind(final Filter filter, final onFilterItemClickListener listener) {
+
+            titleFilter.setText(filter.getTitle());
+
+            if (filter.isSelected()) {
+                titleFilter.setTextColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
+            } else {
+                titleFilter.setTextColor(ContextCompat.getColor(mContext, R.color.colorWhite));
+            }
 
             RequestOptions filterImageOptions = new RequestOptions()
                     .error(Utils.getInstance(mContext).getDrawable(R.drawable.ic_gallery_grey_24dp))

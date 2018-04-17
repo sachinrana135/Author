@@ -26,6 +26,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.alfanse.author.Models.Filter;
 import com.alfanse.author.R;
 import com.alfanse.author.Utilities.Utils;
 import com.bumptech.glide.Glide;
@@ -40,7 +41,6 @@ import com.bumptech.glide.request.transition.Transition;
 import net.alhazmy13.imagefilter.ImageFilter;
 
 
-
 /**
  * Created by Velocity-1601 on 4/18/2017.
  */
@@ -52,7 +52,7 @@ public class QuoteCanvas extends SquareFrameLayout {
     private ComponentTextView mDefaultComponentTextView = null;
     private ProgressBar progressBar;
     private Bitmap mOriginalBitmap = null;
-    private ImageFilter.Filter mFilter = null;
+    private Filter mFilter = null;
     private Handler mHandler;
 
     public QuoteCanvas(Context context) {
@@ -151,7 +151,9 @@ public class QuoteCanvas extends SquareFrameLayout {
     }
 
     public void addProgressBar() {
-        this.addView(progressBar);
+        if (this.indexOfChild(progressBar) == -1) {
+            this.addView(progressBar);
+        }
     }
 
     public void removeProgressBar() {
@@ -177,37 +179,40 @@ public class QuoteCanvas extends SquareFrameLayout {
         }
     }
 
-    public void setFilter(final ImageFilter.Filter filter) {
+    public void setFilter(final Filter filter) {
 
         mFilter = filter;
 
-        final Handler handler = new Handler(Looper.getMainLooper());
+        if (mFilter.getFilter() != null) {
 
-        addProgressBar();
+            final Handler handler = new Handler(Looper.getMainLooper());
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+            addProgressBar();
 
-                final Bitmap b = ImageFilter.applyFilter(mOriginalBitmap, filter);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
 
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (filter != null) {
+                    final Bitmap b = ImageFilter.applyFilter(mOriginalBitmap, mFilter.getFilter());
+
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+
                             mImageView.setImageBitmap(b);
-                        } else {
-                            mImageView.setImageBitmap(mOriginalBitmap);
+
+                            removeProgressBar();
                         }
-                        removeProgressBar();
-                    }
-                });
-            }
-        }).start();
+                    });
+                }
+            }).start();
+        } else {
+            mImageView.setImageBitmap(mOriginalBitmap);
+        }
 
     }
 
-    public ImageFilter.Filter getFilter() {
+    public Filter getFilter() {
         return mFilter;
     }
 }

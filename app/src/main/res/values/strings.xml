@@ -243,5 +243,26 @@
     <string name="quote_image_shared_element_name">quoteImage</string>
     <string name="author_image_shared_element_name">authorImage</string>
 
+    <string name="original">Original</string>
+    <string name="gray">Gray</string>
+    <string name="relief">Relief</string>
+    <string name="blur">Blur</string>
+    <string name="oil">Oil</string>
+    <string name="neon">Neon</string>
+    <string name="pixelate">Pixelate</string>
+    <string name="old_tv">Old TV</string>
+    <string name="invert">Invert</string>
+    <string name="block">Block</string>
+    <string name="old">old</string>
+    <string name="sharpen">Sharpen</string>
+    <string name="light">light</string>
+    <string name="lomo">Lomo</string>
+    <string name="hdr">HDR</string>
+    <string name="gaussian">Gaussian</string>
+    <string name="soft">Soft</string>
+    <string name="sketch">Sketch</string>
+    <string name="motion">Motion</string>
+    <string name="gotham">Gotham</string>
+
 
 </resources>

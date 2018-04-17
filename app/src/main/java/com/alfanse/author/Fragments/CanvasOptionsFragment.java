@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.ColorInt;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -134,7 +135,8 @@ public class CanvasOptionsFragment extends BaseFragment implements ColorPickerDi
 
         @Override
         public void onItemClick(Filter filter) {
-            mCanvas.setFilter(filter.getFilter());
+            setActiveFilter(filter);
+            mCanvas.setFilter(filter);
         }
     };
 
@@ -150,6 +152,8 @@ public class CanvasOptionsFragment extends BaseFragment implements ColorPickerDi
 
         mListFilters = new ArrayList<Filter>();
         mFiltersAdapter = new FilterAdapter(mContext, mListFilters, mOnFilterItemClickListener);
+
+        loadFilters();
     }
 
     @Override
@@ -168,8 +172,8 @@ public class CanvasOptionsFragment extends BaseFragment implements ColorPickerDi
         recyclerViewFilters.setAdapter(mFiltersAdapter);
 
         loadThemes(mFirstPage);
-        loadFilters();
         initListener();
+
         return view;
     }
 
@@ -177,29 +181,41 @@ public class CanvasOptionsFragment extends BaseFragment implements ColorPickerDi
 
         mListFilters.clear();
 
-        mListFilters.add(new Filter(null, true));
-        mListFilters.add(new Filter(ImageFilter.Filter.GRAY, false));
-        mListFilters.add(new Filter(ImageFilter.Filter.RELIEF, false));
-        mListFilters.add(new Filter(ImageFilter.Filter.AVERAGE_BLUR, false));
-        mListFilters.add(new Filter(ImageFilter.Filter.OIL, false));
-        mListFilters.add(new Filter(ImageFilter.Filter.NEON, false));
-        mListFilters.add(new Filter(ImageFilter.Filter.PIXELATE, false));
-        mListFilters.add(new Filter(ImageFilter.Filter.TV, false));
-        mListFilters.add(new Filter(ImageFilter.Filter.INVERT, false));
-        mListFilters.add(new Filter(ImageFilter.Filter.BLOCK, false));
-        mListFilters.add(new Filter(ImageFilter.Filter.OLD, false));
-        mListFilters.add(new Filter(ImageFilter.Filter.SHARPEN, false));
-        mListFilters.add(new Filter(ImageFilter.Filter.LIGHT, false));
-        mListFilters.add(new Filter(ImageFilter.Filter.LOMO, false));
-        mListFilters.add(new Filter(ImageFilter.Filter.HDR, false));
-        mListFilters.add(new Filter(ImageFilter.Filter.GAUSSIAN_BLUR, false));
-        mListFilters.add(new Filter(ImageFilter.Filter.SOFT_GLOW, false));
-        mListFilters.add(new Filter(ImageFilter.Filter.SKETCH, false));
-        mListFilters.add(new Filter(ImageFilter.Filter.MOTION_BLUR, false));
-        mListFilters.add(new Filter(ImageFilter.Filter.GOTHAM, false));
+        Filter originalFilter = new Filter(getString(R.string.original), null, true);
+        mListFilters.add(originalFilter);
+        mListFilters.add(new Filter(getString(R.string.gray), ImageFilter.Filter.GRAY, false));
+        mListFilters.add(new Filter(getString(R.string.relief), ImageFilter.Filter.RELIEF, false));
+        mListFilters.add(new Filter(getString(R.string.blur), ImageFilter.Filter.AVERAGE_BLUR, false));
+        mListFilters.add(new Filter(getString(R.string.oil), ImageFilter.Filter.OIL, false));
+        mListFilters.add(new Filter(getString(R.string.neon), ImageFilter.Filter.NEON, false));
+        mListFilters.add(new Filter(getString(R.string.pixelate), ImageFilter.Filter.PIXELATE, false));
+        mListFilters.add(new Filter(getString(R.string.old_tv), ImageFilter.Filter.TV, false));
+        mListFilters.add(new Filter(getString(R.string.invert), ImageFilter.Filter.INVERT, false));
+        mListFilters.add(new Filter(getString(R.string.block), ImageFilter.Filter.BLOCK, false));
+        mListFilters.add(new Filter(getString(R.string.old), ImageFilter.Filter.OLD, false));
+        mListFilters.add(new Filter(getString(R.string.sharpen), ImageFilter.Filter.SHARPEN, false));
+        mListFilters.add(new Filter(getString(R.string.light), ImageFilter.Filter.LIGHT, false));
+        mListFilters.add(new Filter(getString(R.string.lomo), ImageFilter.Filter.LOMO, false));
+        mListFilters.add(new Filter(getString(R.string.hdr), ImageFilter.Filter.HDR, false));
+        mListFilters.add(new Filter(getString(R.string.gaussian), ImageFilter.Filter.GAUSSIAN_BLUR, false));
+        mListFilters.add(new Filter(getString(R.string.soft), ImageFilter.Filter.SOFT_GLOW, false));
+        mListFilters.add(new Filter(getString(R.string.sketch), ImageFilter.Filter.SKETCH, false));
+        mListFilters.add(new Filter(getString(R.string.motion), ImageFilter.Filter.MOTION_BLUR, false));
+        mListFilters.add(new Filter(getString(R.string.gotham), ImageFilter.Filter.GOTHAM, false));
+
+        setActiveFilter(originalFilter);
+        mCanvas.setFilter(originalFilter);
 
         mFiltersAdapter.notifyDataSetChanged();
 
+    }
+
+    private void setActiveFilter(Filter filter) {
+        for (Filter filter1 : mListFilters) {
+            filter1.setSelected(false);
+        }
+        mListFilters.get(mListFilters.indexOf(filter)).setSelected(true);
+        mFiltersAdapter.notifyDataSetChanged();
     }
 
     private void initListener() {
@@ -220,7 +236,6 @@ public class CanvasOptionsFragment extends BaseFragment implements ColorPickerDi
     }
 
     private void loadThemes(int page) {
-
 
         //region API_CALL_START
         HashMap<String, String> param = new HashMap<>();
@@ -290,8 +305,11 @@ public class CanvasOptionsFragment extends BaseFragment implements ColorPickerDi
         optionFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                layoutCanvasThemes.setVisibility(View.GONE);
-                layoutFilters.setVisibility(View.VISIBLE);
+                if (isCanvasThemeVisible()) {
+                    hideCanvasThemes();
+                } else {
+                    showCanvasThemes();
+                }
             }
         });
 
@@ -486,6 +504,31 @@ public class CanvasOptionsFragment extends BaseFragment implements ColorPickerDi
             mListener.onComponentImageViewAdded(imageView);
         }
 
+    }
+
+    public void showCanvasThemes() {
+        layoutCanvasThemes.setVisibility(View.VISIBLE);
+        layoutFilters.setVisibility(View.GONE);
+    }
+
+    public void hideCanvasThemes() {
+        layoutCanvasThemes.setVisibility(View.GONE);
+        layoutFilters.setVisibility(View.VISIBLE);
+        int scrollPosition = mCanvas.getFilter() != null ? mListFilters.indexOf(mCanvas.getFilter()) : 0;
+        if (scrollPosition < (mListFilters.size() - 1)) {
+            scrollPosition = scrollPosition + 1;
+        }
+        final int finalScrollPosition = scrollPosition;
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                recyclerViewFilters.smoothScrollToPosition(finalScrollPosition);
+            }
+        });
+    }
+
+    public boolean isCanvasThemeVisible() {
+        return layoutCanvasThemes.getVisibility() == View.VISIBLE;
     }
 
 

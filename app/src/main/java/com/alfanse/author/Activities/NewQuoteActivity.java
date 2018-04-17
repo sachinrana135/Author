@@ -205,7 +205,7 @@ public class NewQuoteActivity extends BaseActivity implements
         mListCanvasThemes = new Gson().fromJson(stringResponse, themeListType);
         for (CanvasTheme canvasTheme : mListCanvasThemes) {
             mQuoteCanvas.setBackground(canvasTheme.getImageUrl());
-            mQuoteCanvas.getBackground();
+            //mQuoteCanvas.getBackground();
             addComponentTextView(canvasTheme);
             break;
         }
@@ -226,10 +226,14 @@ public class NewQuoteActivity extends BaseActivity implements
             mCanvasOptionsFragment.setQuoteCanvas(mQuoteCanvas);
         }
 
-        mFragmentManager.beginTransaction()
-                .replace(R.id.option_container_new_quote, mCanvasOptionsFragment)
-                .addToBackStack(null)
-                .commitAllowingStateLoss();
+        if (!mCanvasOptionsFragment.isAdded()) {
+            mFragmentManager.beginTransaction()
+                    .replace(R.id.option_container_new_quote, mCanvasOptionsFragment)
+                    .addToBackStack(null)
+                    .commitAllowingStateLoss();
+        } else {
+            mCanvasOptionsFragment.showCanvasThemes();
+        }
     }
 
     @Override
@@ -515,6 +519,7 @@ public class NewQuoteActivity extends BaseActivity implements
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
