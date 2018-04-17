@@ -285,7 +285,7 @@ public class CanvasOptionsFragment extends BaseFragment implements ColorPickerDi
             @Override
             public void onClick(View v) {
                 ColorPickerDialog.newBuilder()
-                        .setDialogType(ColorPickerDialog.TYPE_PRESETS)
+                        .setDialogType(ColorPickerDialog.TYPE_CUSTOM)
                         .setAllowPresets(true)
                         .setDialogId(CANVAS_OPTIONS_COLOR_PICKER_DIALOG_ID)
                         .setColor(ContextCompat.getColor(mContext, R.color.colorBlack))

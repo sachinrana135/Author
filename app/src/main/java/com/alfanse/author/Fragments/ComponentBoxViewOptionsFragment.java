@@ -95,7 +95,7 @@ public class ComponentBoxViewOptionsFragment extends BaseFragment implements Col
             @Override
             public void onClick(View v) {
                 ColorPickerDialog.newBuilder()
-                        .setDialogType(ColorPickerDialog.TYPE_PRESETS)
+                        .setDialogType(ColorPickerDialog.TYPE_CUSTOM)
                         .setAllowPresets(true)
                         .setDialogId(COMPONENT_BOXVIEW_OPTIONS_BG_COLOR_PICKER_DIALOG_ID)
                         .setColor(ContextCompat.getColor(mContext, R.color.colorBlack))
