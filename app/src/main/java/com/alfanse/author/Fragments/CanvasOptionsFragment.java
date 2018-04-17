@@ -184,11 +184,8 @@ public class CanvasOptionsFragment extends BaseFragment implements ColorPickerDi
         Filter originalFilter = new Filter(getString(R.string.original), null, true);
         mListFilters.add(originalFilter);
         mListFilters.add(new Filter(getString(R.string.gray), ImageFilter.Filter.GRAY, false));
-        mListFilters.add(new Filter(getString(R.string.relief), ImageFilter.Filter.RELIEF, false));
         mListFilters.add(new Filter(getString(R.string.blur), ImageFilter.Filter.AVERAGE_BLUR, false));
         mListFilters.add(new Filter(getString(R.string.oil), ImageFilter.Filter.OIL, false));
-        mListFilters.add(new Filter(getString(R.string.neon), ImageFilter.Filter.NEON, false));
-        mListFilters.add(new Filter(getString(R.string.pixelate), ImageFilter.Filter.PIXELATE, false));
         mListFilters.add(new Filter(getString(R.string.old_tv), ImageFilter.Filter.TV, false));
         mListFilters.add(new Filter(getString(R.string.invert), ImageFilter.Filter.INVERT, false));
         mListFilters.add(new Filter(getString(R.string.block), ImageFilter.Filter.BLOCK, false));
@@ -202,6 +199,9 @@ public class CanvasOptionsFragment extends BaseFragment implements ColorPickerDi
         mListFilters.add(new Filter(getString(R.string.sketch), ImageFilter.Filter.SKETCH, false));
         mListFilters.add(new Filter(getString(R.string.motion), ImageFilter.Filter.MOTION_BLUR, false));
         mListFilters.add(new Filter(getString(R.string.gotham), ImageFilter.Filter.GOTHAM, false));
+        mListFilters.add(new Filter(getString(R.string.pixelate), ImageFilter.Filter.PIXELATE, false));
+        mListFilters.add(new Filter(getString(R.string.neon), ImageFilter.Filter.NEON, false));
+        mListFilters.add(new Filter(getString(R.string.relief), ImageFilter.Filter.RELIEF, false));
 
         setActiveFilter(originalFilter);
         mCanvas.setFilter(originalFilter);

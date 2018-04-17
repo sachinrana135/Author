@@ -33,9 +33,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/title_item_filter"
-            android:text="Sachin"
             android:gravity="center"
             android:textSize="@dimen/font_xsmall"
+            android:textStyle="bold"
             android:textColor="@color/colorWhite" />
 
     </FrameLayout>

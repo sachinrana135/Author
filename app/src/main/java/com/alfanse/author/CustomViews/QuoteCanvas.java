@@ -106,6 +106,7 @@ public class QuoteCanvas extends SquareFrameLayout {
     public void setBackground(int color) {
         mImageView.setImageDrawable(null);
         mImageView.setBackgroundColor(color);
+        mOriginalBitmap = null;
     }
 
     public void setBackground(Uri croppedImageUri) {
@@ -183,31 +184,33 @@ public class QuoteCanvas extends SquareFrameLayout {
 
         mFilter = filter;
 
-        if (mFilter.getFilter() != null) {
+        if (mOriginalBitmap != null) {
+            if (mFilter.getFilter() != null) {
 
-            final Handler handler = new Handler(Looper.getMainLooper());
+                final Handler handler = new Handler(Looper.getMainLooper());
 
-            addProgressBar();
+                addProgressBar();
 
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
 
-                    final Bitmap b = ImageFilter.applyFilter(mOriginalBitmap, mFilter.getFilter());
+                        final Bitmap b = ImageFilter.applyFilter(mOriginalBitmap, mFilter.getFilter());
 
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
 
-                            mImageView.setImageBitmap(b);
+                                mImageView.setImageBitmap(b);
 
-                            removeProgressBar();
-                        }
-                    });
-                }
-            }).start();
-        } else {
-            mImageView.setImageBitmap(mOriginalBitmap);
+                                removeProgressBar();
+                            }
+                        });
+                    }
+                }).start();
+            } else {
+                mImageView.setImageBitmap(mOriginalBitmap);
+            }
         }
 
     }

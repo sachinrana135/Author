@@ -134,8 +134,7 @@ public class Utils {
     }
 
     public static void logException(Exception exception) {
-
-        if (!BuildConfig.DEBUG) {
+        if (!BuildConfig.DEBUG && BuildConfig.FLAVOR != "dev") {
             if (Fabric.isInitialized()) {
                 //Log user details
                 if (FirebaseAuth.getInstance().getCurrentUser() != null) {

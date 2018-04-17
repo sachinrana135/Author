@@ -11,7 +11,7 @@
   -->
 
 <resources>
-    <color name="colorPrimary">#FD6469</color>
+    <color name="colorPrimary">#fd6469</color>
     <color name="colorPrimaryDark">#fc5256</color>
     <color name="colorAccent">#015376</color>
     <color name="colorOptionsBackground">#212121</color>
