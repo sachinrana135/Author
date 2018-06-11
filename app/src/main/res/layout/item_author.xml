@@ -31,9 +31,8 @@
 
             <ImageView
                 android:id="@+id/image_author_image_item_author"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="7" />
+                android:layout_width="@dimen/profile_image_height_small"
+                android:layout_height="@dimen/profile_image_width_small" />
 
             <TextView
                 android:id="@+id/text_author_name_item_author"
@@ -41,7 +40,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/spacing_normal"
                 android:layout_weight="10"
-                android:text="Sachin Rana"
                 android:textSize="@dimen/font_normal" />
 
             <TextView
