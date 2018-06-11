@@ -147,6 +147,8 @@ public class CanvasOptionsFragment extends BaseFragment implements ColorPickerDi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Retain this fragment across configuration changes.
+        setRetainInstance(true);
         mListCanvasThemes = new ArrayList<CanvasTheme>();
         mCanvasThemesAdapter = new CanvasThemesAdapter(mContext, mListCanvasThemes, mOnCanvasThemeItemClickListener);
 

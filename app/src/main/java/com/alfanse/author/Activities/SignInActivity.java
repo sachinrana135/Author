@@ -164,6 +164,7 @@ public class SignInActivity extends BaseActivity implements
 
         mContext = getApplicationContext();
         mActivity = SignInActivity.this;
+        super.mActivity = SignInActivity.this;
         mAuth = FirebaseAuth.getInstance();
 
         Utils.getInstance(mContext).printFacebookHashKey();

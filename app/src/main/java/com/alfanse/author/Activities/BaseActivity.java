@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.alfanse.author.R;
 import com.alfanse.author.Utilities.CommonView;
 import com.alfanse.author.Utilities.NetworkUtils;
+import com.alfanse.author.Utilities.SharedManagement;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -36,7 +37,7 @@ public class BaseActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private Context mContext;
-    private Activity mActivity;
+    protected Activity mActivity;
     private Boolean mIsNetworkConnected;
     private Snackbar mSnackbar;
     private Boolean isCameViaNotification = false;
@@ -47,7 +48,6 @@ public class BaseActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mContext = getApplicationContext();
         mActivity = BaseActivity.this;
-
         Intent intent = getIntent();
         if (intent.getExtras() != null) {
             if (intent.hasExtra(BUNDLE_KEY_CAME_VIA_NOTIFICATION)) {
@@ -61,9 +61,8 @@ public class BaseActivity extends AppCompatActivity {
         super.onStart();
         checkInternetConnectivity();
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser == null) {
-            // No user is signed in
-            //Toast.makeText(mActivity, getString(R.string.error_user_session_expired), Toast.LENGTH_LONG).show();
+        if (currentUser == null && !(mActivity instanceof SignInActivity || mActivity instanceof SignUpActivity)) {
+            SharedManagement.getInstance(mContext).logoutUser();
         }
     }
 

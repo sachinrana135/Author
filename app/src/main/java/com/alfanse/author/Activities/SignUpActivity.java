@@ -42,6 +42,7 @@ import com.alfanse.author.R;
 import com.alfanse.author.Utilities.ApiUtils;
 import com.alfanse.author.Utilities.CommonView;
 import com.alfanse.author.Utilities.Constants;
+import com.alfanse.author.Utilities.SharedManagement;
 import com.alfanse.author.Utilities.Utils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -92,6 +93,7 @@ public class SignUpActivity extends BaseActivity {
         ButterKnife.bind(this);
         mContext = getApplicationContext();
         mActivity = SignUpActivity.this;
+        super.mActivity = SignUpActivity.this;
         mAuth = FirebaseAuth.getInstance();
         initListener();
         // checkGetAccountsPermission();
@@ -154,6 +156,7 @@ public class SignUpActivity extends BaseActivity {
                                     if (task.isSuccessful()) {
                                         // Sign in success, update UI with the signed-in user's information
                                         FirebaseUser currentUser = mAuth.getCurrentUser();
+                                        SharedManagement.getInstance(mContext).setString(SharedManagement.LAST_LOGIN_EMAIL, currentUser.getEmail());
                                         if (currentUser != null) {
                                             updateProfileName();
                                         }

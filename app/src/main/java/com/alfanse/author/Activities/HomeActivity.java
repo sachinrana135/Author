@@ -100,6 +100,8 @@ public class HomeActivity extends BaseActivity implements
         mContext = getApplicationContext();
         mActivity = HomeActivity.this;
         mAuthor = SharedManagement.getInstance(mContext).getLoggedUser();
+
+
         initToolbar();
         initListener();
         showAppRateDialog();

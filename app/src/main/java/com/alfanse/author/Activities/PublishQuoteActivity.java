@@ -308,7 +308,11 @@ public class PublishQuoteActivity extends BaseActivity {
             public void onClick(View v) {
 
                 Language language = new Language();
-                language.setLanguageName(spinnerLanguages.getSelectedItem().toString());
+                if (spinnerLanguages.getSelectedItem() != null) {
+                    language.setLanguageName(spinnerLanguages.getSelectedItem().toString());
+                } else {
+                    language.setLanguageName("");
+                }
                 language.setLanguageId(mHashLanguages.get(language.getLanguageName()));
                 if (editTextQuoteCaption.getText() != null) {
                     mQuote.setCaption(editTextQuoteCaption.getText().toString().trim());
