@@ -45,8 +45,8 @@ android {
         applicationId "com.alfanse.author"
         minSdkVersion 17
         targetSdkVersion 26
-        versionCode 8
-        versionName "2.1"
+        versionCode 9
+        versionName "2.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 
@@ -59,6 +59,16 @@ android {
             signingConfig signingConfigs.config
             proguardFile 'proguard-rules.pro'
         }
+    }
+
+    def isRunningOnTravis = System.getenv("CI") == "true"
+
+    if (isRunningOnTravis) {
+        // configure keystore
+        signingConfigs.release.storeFile = file("../Author.jks.enc")
+        signingConfigs.release.storePassword = System.getenv("keyPassword")
+        signingConfigs.release.keyAlias = System.getenv("keyAlias")
+        signingConfigs.release.keyPassword = System.getenv("keyPassword")
     }
     dexOptions {
         jumboMode = true
