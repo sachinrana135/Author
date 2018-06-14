@@ -60,6 +60,8 @@ public class ComponentImageViewOptionsFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Retain this fragment across configuration changes.
+        setRetainInstance(true);
     }
 
     @Override

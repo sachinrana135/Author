@@ -133,6 +133,8 @@ public class ComponentTextViewOptionsFragment extends BaseFragment implements Co
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Retain this fragment across configuration changes.
+        setRetainInstance(true);
 
         mListFonts = FontHelper.getInstance(mContext).getFontsArrayList();
 
