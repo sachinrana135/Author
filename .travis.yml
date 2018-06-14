@@ -7,17 +7,14 @@ before_install:
 - openssl aes-256-cbc -K $encrypted_779f5939505e_key -iv $encrypted_779f5939505e_iv
   -in Author.jks.enc -out Author.jks -d
 before_deploy:
-  # Set up git user name and tag this commit
-  - git config --local user.name "YOUR GIT USER NAME"
-  - git config --local user.email "YOUR GIT USER EMAIL"
-  - git tag "$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
-
-branches:
+- git config --local user.name "YOUR GIT USER NAME"
+- git config --local user.email "YOUR GIT USER EMAIL"
+- git tag "$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
+branches: 
 only:
-  - master
-  - v2.2
-
-deploy:
+- master
+- v2.2
+deploy: 
 provider: releases
 api_key: "f3d0b9252a5fa8db98e8938fb14277132a7245c2"
 overwrite: true
