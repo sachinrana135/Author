@@ -12,9 +12,9 @@ before_deploy:
 - git tag "$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
 deploy: 
 provider: releases
-api_key: f3d0b9252a5fa8db98e8938fb14277132a7245c2
+api_key: "f3d0b9252a5fa8db98e8938fb14277132a7245c2"
 overwrite: true
-file: app/build/outputs/apk/prod/release/app-prod-release.apk
+file: "app/build/outputs/apk/prod/release/app-prod-release.apk"
 skip_cleanup: true
 true: 
 tags: true
