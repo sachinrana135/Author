@@ -1,0 +1,595 @@
+<!--
+  ~ Copyright (c) 2018. Alfanse Developers
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+  ~  in compliance with the License. You may obtain a copy of the License at
+  ~  http://www.apache.org/licenses/LICENSE-2.0
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the License
+  ~ is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+  ~ either express or implied. See the License for the specific language governing permissions
+  ~ and limitations under the License.
+  -->
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.alfanse.author.Fragments.EnhanceImageFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/layout_options_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="33"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/layout_back_option_item"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_xsmall">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:tag="@string/option_item_image_tag"
+                    app:srcCompat="@drawable/ic_arrow_back_white_24dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:tag="@string/option_item_text_tag"
+                    android:text="@string/option_item_back"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/font_xsmall" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_filter_option_item"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_xsmall">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:tag="@string/option_item_image_tag"
+                    app:srcCompat="@drawable/ic_image_filter_white_24dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:tag="@string/option_item_text_tag"
+                    android:text="@string/option_item_canvas_filter"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/font_xsmall" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_bright_option_item"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_xsmall">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:tag="@string/option_item_image_tag"
+                    app:srcCompat="@drawable/ic_bright" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:tag="@string/option_item_bright"
+                    android:text="@string/option_item_bright"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/font_xsmall" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_contrast_option_item"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_xsmall">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_contrast" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/option_item_contrast"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/font_xsmall" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_hue_option_item"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_xsmall">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_hue" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/option_item_hue"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/font_xsmall" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_saturation_option_item"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_xsmall">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_saturation" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/option_item_satur"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/font_xsmall" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_temp_option_item"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_xsmall">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_temp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/option_item_temp"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/font_xsmall" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_tint_option_item"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_xsmall">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_tint" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/option_item_tint"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/font_xsmall" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="66"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/layout_filters_list_fragment_enhance_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_filters_fragment_enhance_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </android.support.v7.widget.RecyclerView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_bright_fragment_enhance_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/bright_value_seekbar_fragment_component_textview_options"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/font_xlarge" />
+
+                <SeekBar
+                    android:id="@+id/seekbar_bright_fragment_component_textview_options"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:max="200"
+                    android:progress="100" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_contrast_fragment_enhance_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/contrast_value_seekbar_fragment_component_textview_options"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/font_xlarge" />
+
+                <SeekBar
+                    android:id="@+id/seekbar_contrast_fragment_component_textview_options"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:max="200"
+                    android:progress="100" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_hue_fragment_enhance_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/hue_value_seekbar_fragment_component_textview_options"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/font_xlarge" />
+
+                <SeekBar
+                    android:id="@+id/seekbar_hue_fragment_component_textview_options"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:progress="0"
+                    android:max="360" />
+
+                <ImageView
+                    android:id="@+id/img_cancel_hue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_cancel"
+                    android:layout_marginTop="@dimen/spacing_normal" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_satur_fragment_enhance_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/satur_value_seekbar_fragment_component_textview_options"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/font_xlarge" />
+
+                <SeekBar
+                    android:id="@+id/seekbar_satur_fragment_component_textview_options"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:max="200"
+                    android:progress="100" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_temp_fragment_enhance_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/temp_value_seekbar_fragment_component_textview_options"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/font_xlarge" />
+
+                <SeekBar
+                    android:id="@+id/seekbar_temp_fragment_component_textview_options"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_tint_fragment_enhance_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scrollbars="none">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="@dimen/width_tint_color"
+                            android:layout_height="match_parent"
+                            android:background="@color/black_overlay"
+                            android:src="@drawable/ic_cancel"
+                            android:clickable="true"
+                            android:onClick="applyTint"
+                            android:layout_gravity="center"
+                            android:tag="@string/text_original" />
+                        <!--    GREEEN-->
+                        <View
+                            android:layout_width="@dimen/width_tint_color"
+                            android:layout_height="match_parent"
+                            android:background="#1E8D24"
+                            android:clickable="true"
+                            android:onClick="applyTint"
+                            android:tag="#FF1E8D24" />
+
+                        <View
+                            android:layout_width="@dimen/width_tint_color"
+                            android:layout_height="match_parent"
+                            android:background="#374D1F"
+                            android:clickable="true"
+                            android:tag="#FF374D1F" />
+
+                        <View
+                            android:layout_width="@dimen/width_tint_color"
+                            android:layout_height="match_parent"
+                            android:background="#04A639"
+                            android:clickable="true"
+                            android:onClick="applyTint"
+                            android:tag="#FF04A639" />
+
+                        <View
+                            android:layout_width="@dimen/width_tint_color"
+                            android:layout_height="match_parent"
+                            android:background="#A0D722"
+                            android:clickable="true"
+                            android:onClick="applyTint"
+                            android:tag="#FFA0D722" />
+
+                        <!-- RED -->
+
+                        <View
+                            android:layout_width="@dimen/width_tint_color"
+                            android:layout_height="match_parent"
+                            android:background="#C41430"
+                            android:clickable="true"
+                            android:onClick="applyTint"
+                            android:tag="#FFC41430" />
+
+                        <View
+                            android:layout_width="@dimen/width_tint_color"
+                            android:layout_height="match_parent"
+                            android:background="#FF0000"
+                            android:clickable="true"
+                            android:onClick="applyTint"
+                            android:tag="#FFFF0000" />
+
+                        <View
+                            android:layout_width="@dimen/width_tint_color"
+                            android:layout_height="match_parent"
+                            android:background="#FF3300"
+                            android:clickable="true"
+                            android:onClick="applyTint"
+                            android:tag="#FFFF3300" />
+
+                        <View
+                            android:layout_width="@dimen/width_tint_color"
+                            android:layout_height="match_parent"
+                            android:background="#AD343A"
+                            android:clickable="true"
+                            android:onClick="applyTint"
+                            android:tag="#FFAD343A" />
+
+                        <View
+                            android:layout_width="@dimen/width_tint_color"
+                            android:layout_height="match_parent"
+                            android:background="#7B2A26"
+                            android:clickable="true"
+                            android:onClick="applyTint"
+                            android:tag="#FF7B2A26" />
+
+                        <View
+                            android:layout_width="@dimen/width_tint_color"
+                            android:layout_height="match_parent"
+                            android:background="#9B162F"
+                            android:clickable="true"
+                            android:onClick="applyTint"
+                            android:tag="#FF9B162F" />
+
+                        <!-- PURPLE -->
+
+                        <View
+                            android:layout_width="@dimen/width_tint_color"
+                            android:layout_height="match_parent"
+                            android:background="#FF29E8"
+                            android:clickable="true"
+                            android:onClick="applyTint"
+                            android:tag="#FFFF29E8" />
+
+                        <View
+                            android:layout_width="@dimen/width_tint_color"
+                            android:layout_height="match_parent"
+                            android:background="#862B73"
+                            android:clickable="true"
+                            android:onClick="applyTint"
+                            android:tag="#FF862B73" />
+
+                        <!-- BLUE -->
+
+                        <View
+                            android:layout_width="@dimen/width_tint_color"
+                            android:layout_height="match_parent"
+                            android:background="#01A6A8"
+                            android:clickable="true"
+                            android:onClick="applyTint"
+                            android:tag="#FF01A6A8" />
+
+                        <View
+                            android:layout_width="@dimen/width_tint_color"
+                            android:layout_height="match_parent"
+                            android:background="#147C87"
+                            android:clickable="true"
+                            android:onClick="applyTint"
+                            android:tag="#FF147C87" />
+
+                        <View
+                            android:layout_width="@dimen/width_tint_color"
+                            android:layout_height="match_parent"
+                            android:background="#3C4056"
+                            android:clickable="true"
+                            android:onClick="applyTint"
+                            android:tag="#FF3C4056" />
+
+                        <View
+                            android:layout_width="@dimen/width_tint_color"
+                            android:layout_height="match_parent"
+                            android:background="#0120C1"
+                            android:clickable="true"
+                            android:onClick="applyTint"
+                            android:tag="#FF0120C1" />
+
+                        <!-- OTHER -->
+
+                        <View
+                            android:layout_width="@dimen/width_tint_color"
+                            android:layout_height="match_parent"
+                            android:background="#F3C538"
+                            android:clickable="true"
+                            android:onClick="applyTint"
+                            android:tag="#FFF3C538" />
+
+                        <View
+                            android:layout_width="@dimen/width_tint_color"
+                            android:layout_height="match_parent"
+                            android:background="#0A1D19"
+                            android:clickable="true"
+                            android:onClick="applyTint"
+                            android:tag="#FF0A1D19" />
+
+                        <View
+                            android:layout_width="@dimen/width_tint_color"
+                            android:layout_height="match_parent"
+                            android:background="#F27B35"
+                            android:clickable="true"
+                            android:onClick="applyTint"
+                            android:tag="#FFF27B35" />
+
+                        <View
+                            android:layout_width="@dimen/width_tint_color"
+                            android:layout_height="match_parent"
+                            android:background="#F2B885"
+                            android:clickable="true"
+                            android:onClick="applyTint"
+                            android:tag="#FFF2B885" />
+                    </LinearLayout>
+                </HorizontalScrollView>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+</FrameLayout>

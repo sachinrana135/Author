@@ -52,6 +52,7 @@ import com.alfanse.author.Fragments.CanvasOptionsFragment;
 import com.alfanse.author.Fragments.ComponentBoxViewOptionsFragment;
 import com.alfanse.author.Fragments.ComponentImageViewOptionsFragment;
 import com.alfanse.author.Fragments.ComponentTextViewOptionsFragment;
+import com.alfanse.author.Fragments.EnhanceImageFragment;
 import com.alfanse.author.Interfaces.NetworkCallback;
 import com.alfanse.author.Models.Author;
 import com.alfanse.author.Models.CanvasTheme;
@@ -91,7 +92,9 @@ public class NewQuoteActivity extends BaseActivity implements
         ComponentImageViewOptionsFragment.OnFragmentInteractionListener,
         ComponentBoxViewOptionsFragment.OnFragmentInteractionListener,
         ColorPickerDialogListener,
-        ComponentView.onComponentViewInteractionListener {
+        ComponentView.onComponentViewInteractionListener,
+        EnhanceImageFragment.OnFragmentInteractionListener {
+
 
     private static final int REQUEST_CODE_WRITE_EXTERNAL_STORAGE = 3242;
     private static final int REQUEST_CODE_PUBLISH_QUOTE = 5235;
@@ -112,6 +115,7 @@ public class NewQuoteActivity extends BaseActivity implements
     private ComponentImageViewOptionsFragment mComponentImageViewOptionsFragment;
     private ComponentTextViewOptionsFragment mComponentTextViewOptionsFragment;
     private ComponentBoxViewOptionsFragment mComponentBoxViewOptionsFragment;
+    private EnhanceImageFragment mEnhanceImageFragment;
     private android.support.v4.app.Fragment mActiveOptionFragment = null;
 
     private ComponentTextView mActiveComponentTextView;
@@ -226,14 +230,10 @@ public class NewQuoteActivity extends BaseActivity implements
             mCanvasOptionsFragment.setQuoteCanvas(mQuoteCanvas);
         }
 
-        if (!mCanvasOptionsFragment.isAdded()) {
-            mFragmentManager.beginTransaction()
-                    .replace(R.id.option_container_new_quote, mCanvasOptionsFragment)
-                    .addToBackStack(null)
-                    .commitAllowingStateLoss();
-        } else {
-            mCanvasOptionsFragment.showCanvasThemes();
-        }
+        mFragmentManager.beginTransaction()
+                .replace(R.id.option_container_new_quote, mCanvasOptionsFragment)
+                .addToBackStack(null)
+                .commitAllowingStateLoss();
     }
 
     @Override
@@ -293,6 +293,22 @@ public class NewQuoteActivity extends BaseActivity implements
 
         componentBoxView.setOnTouchListener(new componentBoxViewTouchListener());
         mActiveComponentBoxView = componentBoxView;
+    }
+
+    @Override
+    public void onEnhanceImageOptionClicked() {
+        loadEnhanceImageFragment();
+    }
+
+    public void loadEnhanceImageFragment() {
+
+        mEnhanceImageFragment = new EnhanceImageFragment();
+        mEnhanceImageFragment.setQuoteCanvas(mQuoteCanvas);
+
+        mFragmentManager.beginTransaction()
+                .replace(R.id.option_container_new_quote, mEnhanceImageFragment)
+                .commit();
+
     }
 
     @Override
@@ -582,6 +598,10 @@ public class NewQuoteActivity extends BaseActivity implements
                 break;
             }
         }
+    }
+
+    public void applyTint(View view) {
+        mEnhanceImageFragment.tintItemClick(view);
     }
 
     private class CanvasTouchListener implements View.OnTouchListener {

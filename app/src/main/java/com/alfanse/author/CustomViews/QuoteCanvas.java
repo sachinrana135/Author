@@ -14,6 +14,13 @@ package com.alfanse.author.CustomViews;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.LightingColorFilter;
+import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Handler;
@@ -26,6 +33,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.alfanse.author.Interfaces.bitmapFilterListener;
 import com.alfanse.author.Models.Filter;
 import com.alfanse.author.R;
 import com.alfanse.author.Utilities.Utils;
@@ -54,6 +62,10 @@ public class QuoteCanvas extends SquareFrameLayout {
     private Bitmap mOriginalBitmap = null;
     private Filter mFilter = null;
     private Handler mHandler;
+    private int hueLevel;
+    private int brightnessLevel;
+    private int contrastLevel;
+    private int saturationLevel = 100;//default saturation
 
     public QuoteCanvas(Context context) {
         super(context);
@@ -215,7 +227,383 @@ public class QuoteCanvas extends SquareFrameLayout {
 
     }
 
+    public void applyBrightnessFilter(final int level, final bitmapFilterListener bitmapFilterListener) {
+
+        brightnessLevel = level;
+
+        if (mOriginalBitmap != null) {
+
+            final Handler handler = new Handler(Looper.getMainLooper());
+
+            addProgressBar();
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+
+                    Bitmap bmOut = null;
+
+                    try {
+                        // image size
+                        int width = mOriginalBitmap.getWidth();
+                        int height = mOriginalBitmap.getHeight();
+                        // create output bitmap
+                        bmOut = Bitmap.createBitmap(width, height, mOriginalBitmap.getConfig());
+                        // color information
+                        int A, R, G, B;
+                        int pixel;
+
+                        // scan through all pixels
+                        for (int x = 0; x < width; ++x) {
+                            for (int y = 0; y < height; ++y) {
+                                // get pixel color
+                                pixel = mOriginalBitmap.getPixel(x, y);
+                                A = Color.alpha(pixel);
+                                R = Color.red(pixel);
+                                G = Color.green(pixel);
+                                B = Color.blue(pixel);
+
+                                // increase/decrease each channel
+                                R += level;
+                                if (R > 255) {
+                                    R = 255;
+                                } else if (R < 0) {
+                                    R = 0;
+                                }
+
+                                G += level;
+                                if (G > 255) {
+                                    G = 255;
+                                } else if (G < 0) {
+                                    G = 0;
+                                }
+
+                                B += level;
+                                if (B > 255) {
+                                    B = 255;
+                                } else if (B < 0) {
+                                    B = 0;
+                                }
+
+                                // apply new pixel color to output bitmap
+                                bmOut.setPixel(x, y, Color.argb(A, R, G, B));
+                            }
+                        }
+                    } catch (Exception e) {
+                        bitmapFilterListener.onError();
+                    }
+
+                    final Bitmap finalBmOut = bmOut;
+
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (finalBmOut != null) {
+                                mImageView.setImageBitmap(finalBmOut);
+                                bitmapFilterListener.onSuccuess();
+                            } else {
+                                bitmapFilterListener.onError();
+                            }
+                            removeProgressBar();
+                        }
+                    });
+                }
+            }).start();
+
+        }
+    }
+
+    public void applyContrastFilter(final int level, final bitmapFilterListener bitmapFilterListener) {
+
+        contrastLevel = level;
+
+        final double castedLevel = level;
+
+        if (mOriginalBitmap != null) {
+
+            final Handler handler = new Handler(Looper.getMainLooper());
+
+            addProgressBar();
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+
+                    Bitmap bmOut = null;
+
+                    try {
+                        // image size
+                        int width = mOriginalBitmap.getWidth();
+                        int height = mOriginalBitmap.getHeight();
+                        // create output bitmap
+
+                        // create a mutable empty bitmap
+                        bmOut = Bitmap.createBitmap(width, height, mOriginalBitmap.getConfig());
+
+                        // create a canvas so that we can draw the bmOut Bitmap from source bitmap
+                        Canvas c = new Canvas();
+                        c.setBitmap(bmOut);
+
+                        // draw bitmap to bmOut from src bitmap so we can modify it
+                        c.drawBitmap(mOriginalBitmap, 0, 0, new Paint(Color.BLACK));
+
+
+                        // color information
+                        int A, R, G, B;
+                        int pixel;
+                        // get contrast value
+                        double contrast = Math.pow((100 + castedLevel) / 100, 2);
+
+                        // scan through all pixels
+                        for (int x = 0; x < width; ++x) {
+                            for (int y = 0; y < height; ++y) {
+                                // get pixel color
+                                pixel = mOriginalBitmap.getPixel(x, y);
+                                A = Color.alpha(pixel);
+                                // apply filter contrast for every channel R, G, B
+                                R = Color.red(pixel);
+                                R = (int) (((((R / 255.0) - 0.5) * contrast) + 0.5) * 255.0);
+                                if (R < 0) {
+                                    R = 0;
+                                } else if (R > 255) {
+                                    R = 255;
+                                }
+
+                                G = Color.green(pixel);
+                                G = (int) (((((G / 255.0) - 0.5) * contrast) + 0.5) * 255.0);
+                                if (G < 0) {
+                                    G = 0;
+                                } else if (G > 255) {
+                                    G = 255;
+                                }
+
+                                B = Color.blue(pixel);
+                                B = (int) (((((B / 255.0) - 0.5) * contrast) + 0.5) * 255.0);
+                                if (B < 0) {
+                                    B = 0;
+                                } else if (B > 255) {
+                                    B = 255;
+                                }
+
+                                // set new pixel color to output bitmap
+                                bmOut.setPixel(x, y, Color.argb(A, R, G, B));
+                            }
+                        }
+
+                    } catch (Exception e) {
+                        bitmapFilterListener.onError();
+                    }
+
+                    final Bitmap finalBmOut = bmOut;
+
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (finalBmOut != null) {
+                                mImageView.setImageBitmap(finalBmOut);
+                                bitmapFilterListener.onSuccuess();
+                            } else {
+                                bitmapFilterListener.onError();
+                            }
+                            removeProgressBar();
+                        }
+                    });
+                }
+            }).start();
+
+        }
+    }
+
+    public void applySaturationFilter(final int level, final bitmapFilterListener bitmapFilterListener) {
+
+        saturationLevel = level;
+
+        if (mOriginalBitmap != null) {
+
+            final Handler handler = new Handler(Looper.getMainLooper());
+
+            addProgressBar();
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+
+                    Bitmap bmOut = null;
+
+                    try {
+                        float f_value = (float) (level / 100.0);
+
+                        int w = mOriginalBitmap.getWidth();
+                        int h = mOriginalBitmap.getHeight();
+
+                        bmOut = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+                        Canvas canvasResult = new Canvas(bmOut);
+                        Paint paint = new Paint();
+                        ColorMatrix colorMatrix = new ColorMatrix();
+                        colorMatrix.setSaturation(f_value);
+                        ColorMatrixColorFilter filter = new ColorMatrixColorFilter(colorMatrix);
+                        paint.setColorFilter(filter);
+                        canvasResult.drawBitmap(mOriginalBitmap, 0, 0, paint);
+
+                    } catch (Exception e) {
+                        bitmapFilterListener.onError();
+                    }
+
+                    final Bitmap finalBmOut = bmOut;
+
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (finalBmOut != null) {
+                                mImageView.setImageBitmap(finalBmOut);
+                                bitmapFilterListener.onSuccuess();
+                            } else {
+                                bitmapFilterListener.onError();
+                            }
+                            removeProgressBar();
+                        }
+                    });
+                }
+            }).start();
+
+        }
+    }
+
+    public void applyTint(final int color, final bitmapFilterListener bitmapFilterListener) {
+
+        if (mOriginalBitmap != null) {
+
+            final Handler handler = new Handler(Looper.getMainLooper());
+
+            addProgressBar();
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+
+                    Bitmap bmOut = null;
+
+                    try {
+                        // image size
+                        int width = mOriginalBitmap.getWidth();
+                        int height = mOriginalBitmap.getHeight();
+                        // create output bitmap
+
+                        // create a mutable empty bitmap
+                        bmOut = Bitmap.createBitmap(width, height, mOriginalBitmap.getConfig());
+
+                        Paint p = new Paint(Color.RED);
+                        ColorFilter filter = new LightingColorFilter(color, 1);
+                        p.setColorFilter(filter);
+
+                        Canvas c = new Canvas();
+                        c.setBitmap(bmOut);
+                        c.drawBitmap(mOriginalBitmap, 0, 0, p);
+
+                    } catch (Exception e) {
+                        bitmapFilterListener.onError();
+                    }
+
+                    final Bitmap finalBmOut = bmOut;
+
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (finalBmOut != null) {
+                                mImageView.setImageBitmap(finalBmOut);
+                                bitmapFilterListener.onSuccuess();
+                            } else {
+                                bitmapFilterListener.onError();
+                            }
+                            removeProgressBar();
+                        }
+                    });
+                }
+            }).start();
+
+        }
+    }
+
+    public void applyHueFilter(final int level, final bitmapFilterListener bitmapFilterListener) {
+
+        hueLevel = level;
+
+        final float castedHueLevel = level;
+
+        if (mOriginalBitmap != null) {
+
+            final Handler handler = new Handler(Looper.getMainLooper());
+
+            addProgressBar();
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+
+                    Bitmap bmOut = null;
+
+                    try {
+                        bmOut = mOriginalBitmap.copy(mOriginalBitmap.getConfig(), true);
+                        int width = bmOut.getWidth();
+                        int height = bmOut.getHeight();
+
+                        float[] hsv = new float[3];
+
+                        for (int y = 0; y < height; y++) {
+                            for (int x = 0; x < width; x++) {
+                                int pixel = bmOut.getPixel(x, y);
+                                Color.colorToHSV(pixel, hsv);
+                                hsv[0] = castedHueLevel;
+                                bmOut.setPixel(x, y, Color.HSVToColor(Color.alpha(pixel), hsv));
+                            }
+                        }
+
+                    } catch (Exception e) {
+                        bitmapFilterListener.onError();
+                    }
+
+                    final Bitmap finalBmOut = bmOut;
+
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (finalBmOut != null) {
+                                mImageView.setImageBitmap(finalBmOut);
+                                bitmapFilterListener.onSuccuess();
+                            } else {
+                                bitmapFilterListener.onError();
+                            }
+                            removeProgressBar();
+                        }
+                    });
+                }
+            }).start();
+
+        }
+    }
+
+
     public Filter getFilter() {
         return mFilter;
+    }
+
+    public int getHueLevel() {
+        return hueLevel;
+    }
+
+    public int getBrightnessLevel() {
+        return brightnessLevel;
+    }
+
+    public int getContrastLevel() {
+        return contrastLevel;
+    }
+
+    public int getSaturationLevel() {
+        return saturationLevel;
+    }
+
+    public void resetOriginalBitmap() {
+        mImageView.setImageBitmap(mOriginalBitmap);
     }
 }
