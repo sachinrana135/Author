@@ -94,6 +94,10 @@
     <string name="text_quote_liked_by">Quote liked by</string>
     <string name="text_share_via">Share via</string>
     <string name="text_original">original</string>
+    <string name="text_rotate">Rotate</string>
+    <string name="text_horizon">Horizon.</string>
+    <string name="text_vertical">Vertical</string>
+    <string name="text_flip">Flip</string>
 
     <!-- Loading messages -->
     <string name="text_please_wait">Please Wait...</string>

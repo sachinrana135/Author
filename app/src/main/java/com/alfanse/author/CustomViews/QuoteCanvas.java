@@ -20,6 +20,7 @@ import android.graphics.ColorFilter;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.LightingColorFilter;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -66,6 +67,7 @@ public class QuoteCanvas extends SquareFrameLayout {
     private int brightnessLevel;
     private int contrastLevel;
     private int saturationLevel = 100;//default saturation
+    private int rotationAngel;
 
     public QuoteCanvas(Context context) {
         super(context);
@@ -582,6 +584,61 @@ public class QuoteCanvas extends SquareFrameLayout {
         }
     }
 
+    public void applyRotateFilter(final int angle, final boolean flipHorizontal, final boolean flipVertical, final bitmapFilterListener bitmapFilterListener) {
+
+        rotationAngel = angle;
+
+        if (mOriginalBitmap != null) {
+
+            final Handler handler = new Handler(Looper.getMainLooper());
+
+            addProgressBar();
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+
+                    Bitmap bmOut = null;
+
+                    try {
+                        bmOut = rotate(flip(mOriginalBitmap, flipHorizontal, flipVertical), (float) angle);
+                    } catch (Exception e) {
+                        bitmapFilterListener.onError();
+                    }
+
+                    final Bitmap finalBmOut = bmOut;
+
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (finalBmOut != null) {
+                                mImageView.setImageBitmap(finalBmOut);
+                                bitmapFilterListener.onSuccuess();
+                            } else {
+                                bitmapFilterListener.onError();
+                            }
+                            removeProgressBar();
+                        }
+                    });
+                }
+            }).start();
+
+        }
+    }
+
+    // [-360, +360] -> Default = 0
+    public static Bitmap rotate(Bitmap bitmap, float degrees) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degrees);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+    }
+
+    public static Bitmap flip(Bitmap bitmap, boolean horizontal, boolean vertical) {
+        Matrix matrix = new Matrix();
+        matrix.preScale(horizontal ? -1 : 1, vertical ? -1 : 1);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+    }
+
 
     public Filter getFilter() {
         return mFilter;
@@ -601,6 +658,10 @@ public class QuoteCanvas extends SquareFrameLayout {
 
     public int getSaturationLevel() {
         return saturationLevel;
+    }
+
+    public int getRotationAngle() {
+        return rotationAngel;
     }
 
     public void resetOriginalBitmap() {

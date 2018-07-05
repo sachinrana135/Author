@@ -85,6 +85,31 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/layout_tint_option_item"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_xsmall">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_tint" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/option_item_tint"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/font_xsmall" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/layout_bright_option_item"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -187,7 +212,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/layout_temp_option_item"
+                android:id="@+id/layout_flip_option_item"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -200,41 +225,17 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_temp" />
+                    app:srcCompat="@drawable/ic_flip_white" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/option_item_temp"
+                    android:text="@string/text_flip"
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/font_xsmall" />
 
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/layout_tint_option_item"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:clickable="true"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="@dimen/spacing_xsmall">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_tint" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/option_item_tint"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/font_xsmall" />
-
-            </LinearLayout>
 
         </LinearLayout>
 
@@ -367,7 +368,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/layout_temp_fragment_enhance_image"
+                android:id="@+id/layout_flip_fragment_enhance_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
@@ -375,7 +376,7 @@
                 android:visibility="gone">
 
                 <TextView
-                    android:id="@+id/temp_value_seekbar_fragment_component_textview_options"
+                    android:id="@+id/rotate_value_seekbar_fragment_component_textview_options"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -383,9 +384,35 @@
                     android:textSize="@dimen/font_xlarge" />
 
                 <SeekBar
-                    android:id="@+id/seekbar_temp_fragment_component_textview_options"
+                    android:id="@+id/seekbar_rotate_fragment_component_textview_options"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:max="200"
+                    android:progress="100" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/flip_v"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/text_horizon"
+                        android:textSize="18sp" />
+
+                    <Button
+                        android:id="@+id/flip_h"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/text_vertical"
+                        android:textSize="18sp" />
+                </LinearLayout>
+
 
             </LinearLayout>
 

@@ -63,8 +63,8 @@ public class EnhanceImageFragment extends BaseFragment implements XmlClickable {
     ViewGroup layoutHueOption;
     @BindView(R.id.layout_saturation_option_item)
     ViewGroup layoutSaturationOption;
-    @BindView(R.id.layout_temp_option_item)
-    ViewGroup layoutTempOption;
+    @BindView(R.id.layout_flip_option_item)
+    ViewGroup layoutRotateOption;
     @BindView(R.id.layout_tint_option_item)
     ViewGroup layoutTintOption;
     @BindView(R.id.layout_filters_list_fragment_enhance_image)
@@ -95,12 +95,12 @@ public class EnhanceImageFragment extends BaseFragment implements XmlClickable {
     SeekBar optionSeekBarHue;
     @BindView(R.id.hue_value_seekbar_fragment_component_textview_options)
     TextView optionSeekBarHueValue;
-    @BindView(R.id.layout_temp_fragment_enhance_image)
-    ViewGroup layoutTemp;
-    @BindView(R.id.seekbar_temp_fragment_component_textview_options)
-    SeekBar optionSeekBarTemp;
-    @BindView(R.id.temp_value_seekbar_fragment_component_textview_options)
-    TextView optionSeekBarTempValue;
+    @BindView(R.id.layout_flip_fragment_enhance_image)
+    ViewGroup layoutRotate;
+    @BindView(R.id.seekbar_rotate_fragment_component_textview_options)
+    SeekBar optionSeekBarRotate;
+    @BindView(R.id.rotate_value_seekbar_fragment_component_textview_options)
+    TextView optionSeekBarRotateValue;
     @BindView(R.id.layout_tint_fragment_enhance_image)
     ViewGroup layoutTint;
 
@@ -114,6 +114,9 @@ public class EnhanceImageFragment extends BaseFragment implements XmlClickable {
     private ArrayList<Filter> mListFilters = new ArrayList<Filter>();
     private boolean isApplyingFilter = false;
     private int tint_color = 0xFF1E8D24;
+    private boolean flipVertical = false;
+    private boolean flipHorizontal = false;
+    private int rotationAngle;
 
     private SeekBar.OnSeekBarChangeListener brightnessSeekBarListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
@@ -239,9 +242,11 @@ public class EnhanceImageFragment extends BaseFragment implements XmlClickable {
         }
     };
 
-    private SeekBar.OnSeekBarChangeListener tempSeekBarListener = new SeekBar.OnSeekBarChangeListener() {
+    private SeekBar.OnSeekBarChangeListener rotateSeekBarListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            rotationAngle = progress;
+            optionSeekBarRotateValue.setText(Integer.toString(progress));
         }
 
         @Override
@@ -250,7 +255,7 @@ public class EnhanceImageFragment extends BaseFragment implements XmlClickable {
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
-            optionSeekBarTempValue.setText(Integer.toString(seekBar.getProgress()));
+            flipCanvas();
         }
     };
 
@@ -275,7 +280,7 @@ public class EnhanceImageFragment extends BaseFragment implements XmlClickable {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_enhance_image, container, false);
         ButterKnife.bind(this, view);
-        optionsLayout = Arrays.asList(layoutFilterList, layoutBrightness, layoutContrast, layoutSatur, layoutHue, layoutTemp, layoutTint);
+        optionsLayout = Arrays.asList(layoutFilterList, layoutBrightness, layoutContrast, layoutSatur, layoutHue, layoutRotate, layoutTint);
         mFilterLinearLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
         recyclerViewFilters.setLayoutManager(mFilterLinearLayoutManager);
         recyclerViewFilters.setAdapter(mFiltersAdapter);
@@ -284,7 +289,7 @@ public class EnhanceImageFragment extends BaseFragment implements XmlClickable {
         optionSeekBarContrast.setOnSeekBarChangeListener(contrastSeekBarListener);
         optionSeekBarSatur.setOnSeekBarChangeListener(saturSeekBarListener);
         optionSeekBarHue.setOnSeekBarChangeListener(hueSeekBarListener);
-        optionSeekBarTemp.setOnSeekBarChangeListener(tempSeekBarListener);
+        optionSeekBarRotate.setOnSeekBarChangeListener(rotateSeekBarListener);
 
         optionSeekBarHue.setProgress(mCanvas.getHueLevel());
         optionSeekBarHueValue.setText(Integer.toString(mCanvas.getHueLevel()));
@@ -297,6 +302,9 @@ public class EnhanceImageFragment extends BaseFragment implements XmlClickable {
 
         optionSeekBarSatur.setProgress(mCanvas.getSaturationLevel());
         optionSeekBarSaturValue.setText(Integer.toString(mCanvas.getSaturationLevel()));
+
+        optionSeekBarRotate.setProgress(mCanvas.getRotationAngle());
+        optionSeekBarSaturValue.setText(Integer.toString(mCanvas.getRotationAngle()));
 
         return view;
     }
@@ -337,14 +345,46 @@ public class EnhanceImageFragment extends BaseFragment implements XmlClickable {
         showLayout(layoutSatur);
     }
 
-    @OnClick(R.id.layout_temp_option_item)
-    void onTempLayoutClick() {
-        showLayout(layoutTemp);
+    @OnClick(R.id.layout_flip_option_item)
+    void onRotateLayoutClick() {
+        showLayout(layoutRotate);
     }
 
     @OnClick(R.id.layout_tint_option_item)
     void onTintLayoutClick() {
         showLayout(layoutTint);
+    }
+
+    @OnClick(R.id.flip_v)
+    void onVerticalFlipClick() {
+        flipVertical = !flipVertical;
+        flipCanvas();
+    }
+
+    @OnClick(R.id.flip_h)
+    void onHorizonFlipClick() {
+        flipHorizontal = !flipHorizontal;
+        flipCanvas();
+    }
+
+    private void flipCanvas() {
+
+        optionSeekBarRotate.setEnabled(false);
+        isApplyingFilter = true;
+
+        mCanvas.applyRotateFilter(rotationAngle, flipHorizontal, flipVertical, new bitmapFilterListener() {
+            @Override
+            public void onSuccuess() {
+                optionSeekBarRotate.setEnabled(true);
+                isApplyingFilter = false;
+            }
+
+            @Override
+            public void onError() {
+                optionSeekBarRotate.setEnabled(true);
+                isApplyingFilter = false;
+            }
+        });
     }
 
     @OnClick(R.id.img_cancel_hue)
