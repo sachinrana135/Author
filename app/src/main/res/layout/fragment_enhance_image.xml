@@ -402,6 +402,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/text_horizon"
+                        android:background="@color/colorAccent"
                         android:textSize="18sp" />
 
                     <Button
@@ -410,6 +411,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/text_vertical"
+                        android:background="@color/colorAccent"
                         android:textSize="18sp" />
                 </LinearLayout>
 

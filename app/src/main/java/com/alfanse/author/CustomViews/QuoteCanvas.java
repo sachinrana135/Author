@@ -61,6 +61,7 @@ public class QuoteCanvas extends SquareFrameLayout {
     private ComponentTextView mDefaultComponentTextView = null;
     private ProgressBar progressBar;
     private Bitmap mOriginalBitmap = null;
+    private Bitmap mBitmapWithEffect = null;
     private Filter mFilter = null;
     private Handler mHandler;
     private int hueLevel;
@@ -86,9 +87,11 @@ public class QuoteCanvas extends SquareFrameLayout {
         mImageView.setLayoutParams(layoutParams);
         addView(mImageView);
 
-        progressBar = new ProgressBar(mContext);
-        FrameLayout.LayoutParams progressLayoutParams = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        progressLayoutParams.gravity = Gravity.CENTER;
+        progressBar = new ProgressBar(mContext, null,
+                android.R.attr.progressBarStyleHorizontal);
+        progressBar.setIndeterminate(true);
+        FrameLayout.LayoutParams progressLayoutParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+        progressLayoutParams.gravity = Gravity.BOTTOM;
         progressBar.setLayoutParams(progressLayoutParams);
     }
 
@@ -106,6 +109,7 @@ public class QuoteCanvas extends SquareFrameLayout {
 
     public void setBackground(Bitmap bitmap) {
         mOriginalBitmap = bitmap;
+        mBitmapWithEffect = mOriginalBitmap;
         mImageView.setImageBitmap(bitmap);
         updateFilter();
     }
@@ -116,16 +120,17 @@ public class QuoteCanvas extends SquareFrameLayout {
         }
     }
 
-
     public void setBackground(int color) {
         mImageView.setImageDrawable(null);
         mImageView.setBackgroundColor(color);
         mOriginalBitmap = null;
+        mBitmapWithEffect = null;
     }
 
     public void setBackground(Uri croppedImageUri) {
         mImageView.setImageURI(croppedImageUri);
         mOriginalBitmap = ((BitmapDrawable) mImageView.getDrawable()).getBitmap();
+        mBitmapWithEffect = mOriginalBitmap;
         updateFilter();
     }
 
@@ -159,6 +164,7 @@ public class QuoteCanvas extends SquareFrameLayout {
                     @Override
                     public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
                         mOriginalBitmap = resource;
+                        mBitmapWithEffect = mOriginalBitmap;
                         mImageView.setImageBitmap(resource);
                         updateFilter();
                     }
@@ -209,13 +215,13 @@ public class QuoteCanvas extends SquareFrameLayout {
                     @Override
                     public void run() {
 
-                        final Bitmap b = ImageFilter.applyFilter(mOriginalBitmap, mFilter.getFilter());
+                        mBitmapWithEffect = ImageFilter.applyFilter(mOriginalBitmap, mFilter.getFilter());
 
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
 
-                                mImageView.setImageBitmap(b);
+                                mImageView.setImageBitmap(mBitmapWithEffect);
 
                                 removeProgressBar();
                             }
@@ -224,6 +230,7 @@ public class QuoteCanvas extends SquareFrameLayout {
                 }).start();
             } else {
                 mImageView.setImageBitmap(mOriginalBitmap);
+                mBitmapWithEffect = mOriginalBitmap;
             }
         }
 
@@ -233,7 +240,7 @@ public class QuoteCanvas extends SquareFrameLayout {
 
         brightnessLevel = level;
 
-        if (mOriginalBitmap != null) {
+        if (mBitmapWithEffect != null) {
 
             final Handler handler = new Handler(Looper.getMainLooper());
 
@@ -247,10 +254,10 @@ public class QuoteCanvas extends SquareFrameLayout {
 
                     try {
                         // image size
-                        int width = mOriginalBitmap.getWidth();
-                        int height = mOriginalBitmap.getHeight();
+                        int width = mBitmapWithEffect.getWidth();
+                        int height = mBitmapWithEffect.getHeight();
                         // create output bitmap
-                        bmOut = Bitmap.createBitmap(width, height, mOriginalBitmap.getConfig());
+                        bmOut = Bitmap.createBitmap(width, height, mBitmapWithEffect.getConfig());
                         // color information
                         int A, R, G, B;
                         int pixel;
@@ -259,7 +266,7 @@ public class QuoteCanvas extends SquareFrameLayout {
                         for (int x = 0; x < width; ++x) {
                             for (int y = 0; y < height; ++y) {
                                 // get pixel color
-                                pixel = mOriginalBitmap.getPixel(x, y);
+                                pixel = mBitmapWithEffect.getPixel(x, y);
                                 A = Color.alpha(pixel);
                                 R = Color.red(pixel);
                                 G = Color.green(pixel);
@@ -295,13 +302,13 @@ public class QuoteCanvas extends SquareFrameLayout {
                         bitmapFilterListener.onError();
                     }
 
-                    final Bitmap finalBmOut = bmOut;
+                    mBitmapWithEffect = bmOut;
 
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            if (finalBmOut != null) {
-                                mImageView.setImageBitmap(finalBmOut);
+                            if (mBitmapWithEffect != null) {
+                                mImageView.setImageBitmap(mBitmapWithEffect);
                                 bitmapFilterListener.onSuccuess();
                             } else {
                                 bitmapFilterListener.onError();
