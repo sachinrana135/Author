@@ -15,28 +15,19 @@ package com.alfanse.author.CustomViews;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
-import android.graphics.LightingColorFilter;
-import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
+import android.opengl.GLSurfaceView;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import com.alfanse.author.Interfaces.bitmapFilterListener;
 import com.alfanse.author.Models.Filter;
 import com.alfanse.author.R;
+import com.alfanse.author.Utilities.GPUImageFilterTools;
 import com.alfanse.author.Utilities.Utils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -47,7 +38,17 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 
-import net.alhazmy13.imagefilter.ImageFilter;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.LinkedList;
+
+import jp.co.cyberagent.android.gpuimage.GPUImage;
+import jp.co.cyberagent.android.gpuimage.GPUImageFilter;
+import jp.co.cyberagent.android.gpuimage.GPUImageFilterGroup;
+
+import static com.alfanse.author.Utilities.GPUImageFilterTools.FilterType.BRIGHTNESS;
+import static com.alfanse.author.Utilities.GPUImageFilterTools.FilterType.CONTRAST;
+import static com.alfanse.author.Utilities.GPUImageFilterTools.FilterType.HUE;
 
 
 /**
@@ -56,82 +57,109 @@ import net.alhazmy13.imagefilter.ImageFilter;
 
 public class QuoteCanvas extends SquareFrameLayout {
 
+    private GLSurfaceView mGLSurfaceView;
     private Context mContext;
-    private ImageView mImageView;
-    private ComponentTextView mDefaultComponentTextView = null;
+    private GPUImage mImageView;
     private ProgressBar progressBar;
-    private Bitmap mOriginalBitmap = null;
-    private Bitmap mBitmapWithEffect = null;
     private Filter mFilter = null;
-    private Handler mHandler;
-    private int hueLevel;
-    private int brightnessLevel;
-    private int contrastLevel;
-    private int saturationLevel = 100;//default saturation
-    private int rotationAngel;
+    public Size mForceSize = null;
+    private float mRatio = 0.0f;
+    private Bitmap mOriginalBitmap = null;
+    GPUImageFilterGroup mGpuImageGroupFilter = new GPUImageFilterGroup();
+    private LinkedList<Filter> mFilters = new LinkedList<>();
+    private LinkedList<GPUImageFilterTools.FilterType> allowMergeFilters = new LinkedList<>(Arrays.asList(CONTRAST, BRIGHTNESS, HUE));
 
     public QuoteCanvas(Context context) {
         super(context);
-        mContext = context;
-        mImageView = new ImageView(mContext);
-        mHandler = new Handler(Looper.getMainLooper());
+        init(context, null);
     }
 
     public QuoteCanvas(Context context, AttributeSet attrs) {
         super(context, attrs);
+        init(context, attrs);
+    }
+
+    private void init(Context context, AttributeSet attrs) {
         mContext = context;
-        mImageView = new ImageView(mContext);
-        mImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        mImageView.setAdjustViewBounds(true);
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        mImageView.setLayoutParams(layoutParams);
-        addView(mImageView);
+        mGLSurfaceView = new GPUImageGLSurfaceView(context, attrs);
+        addView(mGLSurfaceView);
 
         progressBar = new ProgressBar(mContext, null,
                 android.R.attr.progressBarStyleHorizontal);
         progressBar.setIndeterminate(true);
         FrameLayout.LayoutParams progressLayoutParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         progressLayoutParams.gravity = Gravity.BOTTOM;
-        progressBar.setLayoutParams(progressLayoutParams);
+
+        mImageView = new GPUImage(getContext());
+        mImageView.setGLSurfaceView(mGLSurfaceView);
     }
 
-    public QuoteCanvas(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
 
-        mContext = context;
-        mImageView = new ImageView(mContext);
-        mImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        mImageView.setAdjustViewBounds(true);
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        mImageView.setLayoutParams(layoutParams);
-        addView(mImageView);
-    }
+    private class GPUImageGLSurfaceView extends GLSurfaceView {
+        public GPUImageGLSurfaceView(Context context) {
+            super(context);
+        }
 
-    public void setBackground(Bitmap bitmap) {
-        mOriginalBitmap = bitmap;
-        mBitmapWithEffect = mOriginalBitmap;
-        mImageView.setImageBitmap(bitmap);
-        updateFilter();
-    }
+        public GPUImageGLSurfaceView(Context context, AttributeSet attrs) {
+            super(context, attrs);
+        }
 
-    private void updateFilter() {
-        if (getFilter() != null) {
-            setFilter(getFilter());
+        @Override
+        protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+            if (mForceSize != null) {
+                super.onMeasure(MeasureSpec.makeMeasureSpec(mForceSize.width, MeasureSpec.EXACTLY),
+                        MeasureSpec.makeMeasureSpec(mForceSize.height, MeasureSpec.EXACTLY));
+            } else {
+                super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+            }
         }
     }
 
+    public static class Size {
+        int width;
+        int height;
+
+        public Size(int width, int height) {
+            this.width = width;
+            this.height = height;
+        }
+    }
+
+    public void setBackground(Bitmap bitmap) {
+        mImageView.deleteImage();
+        mImageView.setFilter(new GPUImageFilter());
+        mImageView.setImage(bitmap);
+        mOriginalBitmap = bitmap;
+    }
+
+
     public void setBackground(int color) {
-        mImageView.setImageDrawable(null);
-        mImageView.setBackgroundColor(color);
-        mOriginalBitmap = null;
-        mBitmapWithEffect = null;
+        Bitmap b = createImageFromColor(getWidth(), getHeight(), color);
+        setBackground(b);
+    }
+
+    /**
+     * A one color image.
+     *
+     * @param width
+     * @param height
+     * @param color
+     * @return A one color image with the given width and height.
+     */
+    public static Bitmap createImageFromColor(int width, int height, int color) {
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        Paint paint = new Paint();
+        paint.setColor(color);
+        canvas.drawRect(0F, 0F, (float) width, (float) height, paint);
+        return bitmap;
     }
 
     public void setBackground(Uri croppedImageUri) {
-        mImageView.setImageURI(croppedImageUri);
-        mOriginalBitmap = ((BitmapDrawable) mImageView.getDrawable()).getBitmap();
-        mBitmapWithEffect = mOriginalBitmap;
-        updateFilter();
+        mImageView.deleteImage();
+
+        mImageView.setImage(croppedImageUri);
+        mOriginalBitmap = mImageView.getBitmapWithFilterApplied();
     }
 
     public void setBackground(String imageUrl) {
@@ -163,10 +191,7 @@ public class QuoteCanvas extends SquareFrameLayout {
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                        mOriginalBitmap = resource;
-                        mBitmapWithEffect = mOriginalBitmap;
-                        mImageView.setImageBitmap(resource);
-                        updateFilter();
+                        setBackground(resource);
                     }
                 });
     }
@@ -200,478 +225,58 @@ public class QuoteCanvas extends SquareFrameLayout {
         }
     }
 
-    public void setFilter(final Filter filter) {
-
+    public void setFilter(Filter filter) {
         mFilter = filter;
+        if (mFilter.getFilter() != null) {
+            createGroupFiltersList(filter);
+            mImageView.setFilter(mGpuImageGroupFilter);
+            requestRender();
+        } else {
+            //create group filters
+            mGpuImageGroupFilter.getFilters().clear();
+            setBackground(mOriginalBitmap);
+        }
+    }
 
-        if (mOriginalBitmap != null) {
-            if (mFilter.getFilter() != null) {
+    private void createGroupFiltersList(Filter filter) {
 
-                final Handler handler = new Handler(Looper.getMainLooper());
-
-                addProgressBar();
-
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        mBitmapWithEffect = ImageFilter.applyFilter(mOriginalBitmap, mFilter.getFilter());
-
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-
-                                mImageView.setImageBitmap(mBitmapWithEffect);
-
-                                removeProgressBar();
-                            }
-                        });
-                    }
-                }).start();
-            } else {
-                mImageView.setImageBitmap(mOriginalBitmap);
-                mBitmapWithEffect = mOriginalBitmap;
+        if (mFilters != null) {
+            //Check if filter is already exist
+            for (Filter f : mFilters) {
+                if (f.getFilter().equals(filter.getFilter())) {
+                    mFilters.remove(f);
+                    createGroupFilter(mFilters);
+                    return;
+                }
             }
-        }
+            // check if filter can be grouped
+            if (allowMergeFilters.contains(filter.getFilter())) {
+                mFilters.add(filter);
+            } else {
 
-    }
-
-    public void applyBrightnessFilter(final int level, final bitmapFilterListener bitmapFilterListener) {
-
-        brightnessLevel = level;
-
-        if (mBitmapWithEffect != null) {
-
-            final Handler handler = new Handler(Looper.getMainLooper());
-
-            addProgressBar();
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-
-                    Bitmap bmOut = null;
-
-                    try {
-                        // image size
-                        int width = mBitmapWithEffect.getWidth();
-                        int height = mBitmapWithEffect.getHeight();
-                        // create output bitmap
-                        bmOut = Bitmap.createBitmap(width, height, mBitmapWithEffect.getConfig());
-                        // color information
-                        int A, R, G, B;
-                        int pixel;
-
-                        // scan through all pixels
-                        for (int x = 0; x < width; ++x) {
-                            for (int y = 0; y < height; ++y) {
-                                // get pixel color
-                                pixel = mBitmapWithEffect.getPixel(x, y);
-                                A = Color.alpha(pixel);
-                                R = Color.red(pixel);
-                                G = Color.green(pixel);
-                                B = Color.blue(pixel);
-
-                                // increase/decrease each channel
-                                R += level;
-                                if (R > 255) {
-                                    R = 255;
-                                } else if (R < 0) {
-                                    R = 0;
-                                }
-
-                                G += level;
-                                if (G > 255) {
-                                    G = 255;
-                                } else if (G < 0) {
-                                    G = 0;
-                                }
-
-                                B += level;
-                                if (B > 255) {
-                                    B = 255;
-                                } else if (B < 0) {
-                                    B = 0;
-                                }
-
-                                // apply new pixel color to output bitmap
-                                bmOut.setPixel(x, y, Color.argb(A, R, G, B));
-                            }
-                        }
-                    } catch (Exception e) {
-                        bitmapFilterListener.onError();
+                Iterator<Filter> iter = mFilters.iterator();
+                while (iter.hasNext()) {
+                    Filter g = iter.next();
+                    if (!allowMergeFilters.contains(g.getFilter())) {
+                        // delete filter
+                        mFilters.remove(g);
                     }
-
-                    mBitmapWithEffect = bmOut;
-
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (mBitmapWithEffect != null) {
-                                mImageView.setImageBitmap(mBitmapWithEffect);
-                                bitmapFilterListener.onSuccuess();
-                            } else {
-                                bitmapFilterListener.onError();
-                            }
-                            removeProgressBar();
-                        }
-                    });
                 }
-            }).start();
-
+                mFilters.add(filter);
+            }
+            createGroupFilter(mFilters);
         }
     }
 
-    public void applyContrastFilter(final int level, final bitmapFilterListener bitmapFilterListener) {
-
-        contrastLevel = level;
-
-        final double castedLevel = level;
-
-        if (mOriginalBitmap != null) {
-
-            final Handler handler = new Handler(Looper.getMainLooper());
-
-            addProgressBar();
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-
-                    Bitmap bmOut = null;
-
-                    try {
-                        // image size
-                        int width = mOriginalBitmap.getWidth();
-                        int height = mOriginalBitmap.getHeight();
-                        // create output bitmap
-
-                        // create a mutable empty bitmap
-                        bmOut = Bitmap.createBitmap(width, height, mOriginalBitmap.getConfig());
-
-                        // create a canvas so that we can draw the bmOut Bitmap from source bitmap
-                        Canvas c = new Canvas();
-                        c.setBitmap(bmOut);
-
-                        // draw bitmap to bmOut from src bitmap so we can modify it
-                        c.drawBitmap(mOriginalBitmap, 0, 0, new Paint(Color.BLACK));
-
-
-                        // color information
-                        int A, R, G, B;
-                        int pixel;
-                        // get contrast value
-                        double contrast = Math.pow((100 + castedLevel) / 100, 2);
-
-                        // scan through all pixels
-                        for (int x = 0; x < width; ++x) {
-                            for (int y = 0; y < height; ++y) {
-                                // get pixel color
-                                pixel = mOriginalBitmap.getPixel(x, y);
-                                A = Color.alpha(pixel);
-                                // apply filter contrast for every channel R, G, B
-                                R = Color.red(pixel);
-                                R = (int) (((((R / 255.0) - 0.5) * contrast) + 0.5) * 255.0);
-                                if (R < 0) {
-                                    R = 0;
-                                } else if (R > 255) {
-                                    R = 255;
-                                }
-
-                                G = Color.green(pixel);
-                                G = (int) (((((G / 255.0) - 0.5) * contrast) + 0.5) * 255.0);
-                                if (G < 0) {
-                                    G = 0;
-                                } else if (G > 255) {
-                                    G = 255;
-                                }
-
-                                B = Color.blue(pixel);
-                                B = (int) (((((B / 255.0) - 0.5) * contrast) + 0.5) * 255.0);
-                                if (B < 0) {
-                                    B = 0;
-                                } else if (B > 255) {
-                                    B = 255;
-                                }
-
-                                // set new pixel color to output bitmap
-                                bmOut.setPixel(x, y, Color.argb(A, R, G, B));
-                            }
-                        }
-
-                    } catch (Exception e) {
-                        bitmapFilterListener.onError();
-                    }
-
-                    final Bitmap finalBmOut = bmOut;
-
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (finalBmOut != null) {
-                                mImageView.setImageBitmap(finalBmOut);
-                                bitmapFilterListener.onSuccuess();
-                            } else {
-                                bitmapFilterListener.onError();
-                            }
-                            removeProgressBar();
-                        }
-                    });
-                }
-            }).start();
-
+    private void createGroupFilter(LinkedList<Filter> mFilters) {
+        //create group filters
+        mGpuImageGroupFilter.getFilters().clear();
+        for (Filter n : mFilters) {
+            mGpuImageGroupFilter.addFilter(GPUImageFilterTools.createFilterForType(mContext, n.getFilter()));
         }
     }
 
-    public void applySaturationFilter(final int level, final bitmapFilterListener bitmapFilterListener) {
-
-        saturationLevel = level;
-
-        if (mOriginalBitmap != null) {
-
-            final Handler handler = new Handler(Looper.getMainLooper());
-
-            addProgressBar();
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-
-                    Bitmap bmOut = null;
-
-                    try {
-                        float f_value = (float) (level / 100.0);
-
-                        int w = mOriginalBitmap.getWidth();
-                        int h = mOriginalBitmap.getHeight();
-
-                        bmOut = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-                        Canvas canvasResult = new Canvas(bmOut);
-                        Paint paint = new Paint();
-                        ColorMatrix colorMatrix = new ColorMatrix();
-                        colorMatrix.setSaturation(f_value);
-                        ColorMatrixColorFilter filter = new ColorMatrixColorFilter(colorMatrix);
-                        paint.setColorFilter(filter);
-                        canvasResult.drawBitmap(mOriginalBitmap, 0, 0, paint);
-
-                    } catch (Exception e) {
-                        bitmapFilterListener.onError();
-                    }
-
-                    final Bitmap finalBmOut = bmOut;
-
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (finalBmOut != null) {
-                                mImageView.setImageBitmap(finalBmOut);
-                                bitmapFilterListener.onSuccuess();
-                            } else {
-                                bitmapFilterListener.onError();
-                            }
-                            removeProgressBar();
-                        }
-                    });
-                }
-            }).start();
-
-        }
-    }
-
-    public void applyTint(final int color, final bitmapFilterListener bitmapFilterListener) {
-
-        if (mOriginalBitmap != null) {
-
-            final Handler handler = new Handler(Looper.getMainLooper());
-
-            addProgressBar();
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-
-                    Bitmap bmOut = null;
-
-                    try {
-                        // image size
-                        int width = mOriginalBitmap.getWidth();
-                        int height = mOriginalBitmap.getHeight();
-                        // create output bitmap
-
-                        // create a mutable empty bitmap
-                        bmOut = Bitmap.createBitmap(width, height, mOriginalBitmap.getConfig());
-
-                        Paint p = new Paint(Color.RED);
-                        ColorFilter filter = new LightingColorFilter(color, 1);
-                        p.setColorFilter(filter);
-
-                        Canvas c = new Canvas();
-                        c.setBitmap(bmOut);
-                        c.drawBitmap(mOriginalBitmap, 0, 0, p);
-
-                    } catch (Exception e) {
-                        bitmapFilterListener.onError();
-                    }
-
-                    final Bitmap finalBmOut = bmOut;
-
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (finalBmOut != null) {
-                                mImageView.setImageBitmap(finalBmOut);
-                                bitmapFilterListener.onSuccuess();
-                            } else {
-                                bitmapFilterListener.onError();
-                            }
-                            removeProgressBar();
-                        }
-                    });
-                }
-            }).start();
-
-        }
-    }
-
-    public void applyHueFilter(final int level, final bitmapFilterListener bitmapFilterListener) {
-
-        hueLevel = level;
-
-        final float castedHueLevel = level;
-
-        if (mOriginalBitmap != null) {
-
-            final Handler handler = new Handler(Looper.getMainLooper());
-
-            addProgressBar();
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-
-                    Bitmap bmOut = null;
-
-                    try {
-                        bmOut = mOriginalBitmap.copy(mOriginalBitmap.getConfig(), true);
-                        int width = bmOut.getWidth();
-                        int height = bmOut.getHeight();
-
-                        float[] hsv = new float[3];
-
-                        for (int y = 0; y < height; y++) {
-                            for (int x = 0; x < width; x++) {
-                                int pixel = bmOut.getPixel(x, y);
-                                Color.colorToHSV(pixel, hsv);
-                                hsv[0] = castedHueLevel;
-                                bmOut.setPixel(x, y, Color.HSVToColor(Color.alpha(pixel), hsv));
-                            }
-                        }
-
-                    } catch (Exception e) {
-                        bitmapFilterListener.onError();
-                    }
-
-                    final Bitmap finalBmOut = bmOut;
-
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (finalBmOut != null) {
-                                mImageView.setImageBitmap(finalBmOut);
-                                bitmapFilterListener.onSuccuess();
-                            } else {
-                                bitmapFilterListener.onError();
-                            }
-                            removeProgressBar();
-                        }
-                    });
-                }
-            }).start();
-
-        }
-    }
-
-    public void applyRotateFilter(final int angle, final boolean flipHorizontal, final boolean flipVertical, final bitmapFilterListener bitmapFilterListener) {
-
-        rotationAngel = angle;
-
-        if (mOriginalBitmap != null) {
-
-            final Handler handler = new Handler(Looper.getMainLooper());
-
-            addProgressBar();
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-
-                    Bitmap bmOut = null;
-
-                    try {
-                        bmOut = rotate(flip(mOriginalBitmap, flipHorizontal, flipVertical), (float) angle);
-                    } catch (Exception e) {
-                        bitmapFilterListener.onError();
-                    }
-
-                    final Bitmap finalBmOut = bmOut;
-
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (finalBmOut != null) {
-                                mImageView.setImageBitmap(finalBmOut);
-                                bitmapFilterListener.onSuccuess();
-                            } else {
-                                bitmapFilterListener.onError();
-                            }
-                            removeProgressBar();
-                        }
-                    });
-                }
-            }).start();
-
-        }
-    }
-
-    // [-360, +360] -> Default = 0
-    public static Bitmap rotate(Bitmap bitmap, float degrees) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(degrees);
-        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-    }
-
-    public static Bitmap flip(Bitmap bitmap, boolean horizontal, boolean vertical) {
-        Matrix matrix = new Matrix();
-        matrix.preScale(horizontal ? -1 : 1, vertical ? -1 : 1);
-        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-    }
-
-
-    public Filter getFilter() {
-        return mFilter;
-    }
-
-    public int getHueLevel() {
-        return hueLevel;
-    }
-
-    public int getBrightnessLevel() {
-        return brightnessLevel;
-    }
-
-    public int getContrastLevel() {
-        return contrastLevel;
-    }
-
-    public int getSaturationLevel() {
-        return saturationLevel;
-    }
-
-    public int getRotationAngle() {
-        return rotationAngel;
-    }
-
-    public void resetOriginalBitmap() {
-        mImageView.setImageBitmap(mOriginalBitmap);
+    public void requestRender() {
+        mGLSurfaceView.requestRender();
     }
 }

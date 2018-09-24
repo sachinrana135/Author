@@ -12,7 +12,7 @@
 
 package com.alfanse.author.Models;
 
-import net.alhazmy13.imagefilter.ImageFilter;
+import com.alfanse.author.Utilities.GPUImageFilterTools;
 
 /**
  * Created by Sachin on 4/17/2018.
@@ -21,10 +21,10 @@ import net.alhazmy13.imagefilter.ImageFilter;
 public class Filter {
 
     private String title;
-    private ImageFilter.Filter filter;
+    private GPUImageFilterTools.FilterType filter;
     private Boolean selected = false;
 
-    public Filter(String title, ImageFilter.Filter filter, Boolean selected) {
+    public Filter(String title, GPUImageFilterTools.FilterType filter, Boolean selected) {
         this.title = title;
         this.filter = filter;
         this.selected = selected;
@@ -38,11 +38,11 @@ public class Filter {
         this.title = title;
     }
 
-    public ImageFilter.Filter getFilter() {
+    public GPUImageFilterTools.FilterType getFilter() {
         return filter;
     }
 
-    public void setFilter(ImageFilter.Filter filter) {
+    public void setFilter(GPUImageFilterTools.FilterType filter) {
         this.filter = filter;
     }
 

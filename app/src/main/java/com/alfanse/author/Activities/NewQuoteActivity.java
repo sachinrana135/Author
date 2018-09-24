@@ -302,8 +302,10 @@ public class NewQuoteActivity extends BaseActivity implements
 
     public void loadEnhanceImageFragment() {
 
-        mEnhanceImageFragment = new EnhanceImageFragment();
-        mEnhanceImageFragment.setQuoteCanvas(mQuoteCanvas);
+        if (mEnhanceImageFragment == null) {
+            mEnhanceImageFragment = new EnhanceImageFragment();
+            mEnhanceImageFragment.setQuoteCanvas(mQuoteCanvas);
+        }
 
         mFragmentManager.beginTransaction()
                 .replace(R.id.option_container_new_quote, mEnhanceImageFragment)

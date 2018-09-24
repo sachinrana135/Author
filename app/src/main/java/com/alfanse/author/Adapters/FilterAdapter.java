@@ -21,9 +21,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alfanse.author.CustomViews.QuoteCanvas;
 import com.alfanse.author.Interfaces.onFilterItemClickListener;
 import com.alfanse.author.Models.Filter;
 import com.alfanse.author.R;
@@ -32,8 +32,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
-
-import net.alhazmy13.imagefilter.ImageFilter;
 
 import java.util.ArrayList;
 
@@ -88,7 +86,7 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
     public class FilterViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.filter_item_filter)
-        ImageView filterImage;
+        QuoteCanvas filterImage;
         @BindView(R.id.title_item_filter)
         TextView titleFilter;
 
@@ -120,22 +118,9 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
                     .into(new SimpleTarget<Bitmap>() {
                         @Override
                         public void onResourceReady(final Bitmap resource, Transition<? super Bitmap> transition) {
-                            filterImage.setImageBitmap(resource);
+                            filterImage.setBackground(resource);
                             if (filter.getFilter() != null) {
-                                new Thread(new Runnable() {
-                                    @Override
-                                    public void run() {
-
-                                        final Bitmap b = ImageFilter.applyFilter(resource, filter.getFilter());
-
-                                        handler.post(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                filterImage.setImageBitmap(b);
-                                            }
-                                        });
-                                    }
-                                }).start();
+                                applyFilter(filterImage, filter);
                             }
                         }
                     });
@@ -144,8 +129,15 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
                 @Override
                 public void onClick(View v) {
                     listener.onItemClick(filter);
+
                 }
             });
+        }
+
+        public void applyFilter(QuoteCanvas imageview, Filter filter) {
+            if (filter != null) {
+                imageview.setFilter(filter);
+            }
         }
     }
 }

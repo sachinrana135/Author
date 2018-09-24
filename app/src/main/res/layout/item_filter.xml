@@ -17,7 +17,7 @@
     android:padding="@dimen/spacing_xsmall">
 
 
-    <ImageView
+    <com.alfanse.author.CustomViews.QuoteCanvas
         android:id="@+id/filter_item_filter"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
