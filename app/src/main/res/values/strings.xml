@@ -173,6 +173,7 @@
     <string name="option_item_satur">Satur</string>
     <string name="option_item_temp">Temp</string>
     <string name="option_item_tint">Tint</string>
+    <string name="option_item_vignette">Vignette</string>
     <string name="option_item_enhance">Enhance</string>
 
     <!-- Action buttons -->

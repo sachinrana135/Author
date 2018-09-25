@@ -49,6 +49,9 @@ import jp.co.cyberagent.android.gpuimage.GPUImageFilterGroup;
 import static com.alfanse.author.Utilities.GPUImageFilterTools.FilterType.BRIGHTNESS;
 import static com.alfanse.author.Utilities.GPUImageFilterTools.FilterType.CONTRAST;
 import static com.alfanse.author.Utilities.GPUImageFilterTools.FilterType.HUE;
+import static com.alfanse.author.Utilities.GPUImageFilterTools.FilterType.SATURATION;
+import static com.alfanse.author.Utilities.GPUImageFilterTools.FilterType.TRANSFORM2D;
+import static com.alfanse.author.Utilities.GPUImageFilterTools.FilterType.VIGNETTE;
 
 
 /**
@@ -67,7 +70,7 @@ public class QuoteCanvas extends SquareFrameLayout {
     private Bitmap mOriginalBitmap = null;
     GPUImageFilterGroup mGpuImageGroupFilter = new GPUImageFilterGroup();
     private LinkedList<Filter> mFilters = new LinkedList<>();
-    private LinkedList<GPUImageFilterTools.FilterType> allowMergeFilters = new LinkedList<>(Arrays.asList(CONTRAST, BRIGHTNESS, HUE));
+    private LinkedList<GPUImageFilterTools.FilterType> allowMergeFilters = new LinkedList<>(Arrays.asList(BRIGHTNESS, CONTRAST, HUE, SATURATION, VIGNETTE, TRANSFORM2D));
 
     public QuoteCanvas(Context context) {
         super(context);
@@ -248,8 +251,8 @@ public class QuoteCanvas extends SquareFrameLayout {
             mImageView.setFilter(mGpuImageGroupFilter);
             requestRender();
         } else {
-            //create group filters
-            mGpuImageGroupFilter.getFilters().clear();
+            //clear group filters
+            mFilters.clear();
             setBackground(mOriginalBitmap);
         }
     }
@@ -258,9 +261,13 @@ public class QuoteCanvas extends SquareFrameLayout {
 
         if (mFilters != null) {
             //Check if filter is already exist
-            for (Filter f : mFilters) {
+            Iterator<Filter> iterator = mFilters.iterator();
+            while (iterator.hasNext()) {
+                Filter f = iterator.next();
                 if (f.getFilter().equals(filter.getFilter())) {
-                    mFilters.remove(f);
+                    if (!allowMergeFilters.contains(filter.getFilter())) {
+                        iterator.remove();
+                    }
                     createGroupFilter(mFilters);
                     return;
                 }
@@ -269,13 +276,12 @@ public class QuoteCanvas extends SquareFrameLayout {
             if (allowMergeFilters.contains(filter.getFilter())) {
                 mFilters.add(filter);
             } else {
-
                 Iterator<Filter> iter = mFilters.iterator();
                 while (iter.hasNext()) {
                     Filter g = iter.next();
                     if (!allowMergeFilters.contains(g.getFilter())) {
                         // delete filter
-                        mFilters.remove(g);
+                        iter.remove();
                     }
                 }
                 mFilters.add(filter);

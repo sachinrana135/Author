@@ -17,8 +17,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.BitmapFactory;
 import android.graphics.PointF;
+import android.opengl.Matrix;
 
 import com.alfanse.author.R;
+import com.alfanse.author.Utilities.GPUFilters.GPUImageHalftoneFilter;
+import com.alfanse.author.Utilities.GPUFilters.GPUImageTransformFilter;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -365,13 +368,13 @@ public class GPUImageFilterTools {
                 levelsFilter.setMin(0.0f, 3.0f, 1.0f);
                 return levelsFilter;
             case HALFTONE:
-                //return new GPUImageHalftoneFilter();
+                return new GPUImageHalftoneFilter();
 
             case BILATERAL_BLUR:
                 return new GPUImageBilateralFilter();
 
             case TRANSFORM2D:
-                //return new GPUImageTransformFilter();
+                return new GPUImageTransformFilter();
 
             default:
                 throw new IllegalStateException("No filter of that type!");
@@ -477,9 +480,9 @@ public class GPUImageFilterTools {
                 adjuster = new LevelsMinMidAdjuster().filter(filter);
             } else if (filter instanceof GPUImageBilateralFilter) {
                 adjuster = new BilateralAdjuster().filter(filter);
-            } /*else if (filter instanceof GPUImageTransformFilter) {
+            } else if (filter instanceof GPUImageTransformFilter) {
                 adjuster = new RotateAdjuster().filter(filter);
-            }*/ else {
+            } else {
 
                 adjuster = null;
             }
@@ -742,14 +745,14 @@ public class GPUImageFilterTools {
             }
         }
 
-        /*private class RotateAdjuster extends Adjuster<GPUImageTransformFilter> {
+        private class RotateAdjuster extends Adjuster<GPUImageTransformFilter> {
             @Override
             public void adjust(final int percentage) {
                 float[] transform = new float[16];
                 Matrix.setRotateM(transform, 0, 360 * percentage / 100, 0, 0, 1.0f);
                 getFilter().setTransform3D(transform);
             }
-        }*/
+        }
 
     }
 }

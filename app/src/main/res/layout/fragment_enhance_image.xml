@@ -85,31 +85,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/layout_tint_option_item"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:clickable="true"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="@dimen/spacing_xsmall">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_tint" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/option_item_tint"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/font_xsmall" />
-
-            </LinearLayout>
-
-            <LinearLayout
                 android:id="@+id/layout_bright_option_item"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -212,7 +187,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/layout_flip_option_item"
+                android:id="@+id/layout_vignette_option_item"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -225,12 +200,37 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_flip_white" />
+                    app:srcCompat="@drawable/ic_vignette" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/text_flip"
+                    android:text="@string/option_item_vignette"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/font_xsmall" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_rotate_option_item"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_xsmall">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_2d_rotation" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_rotate"
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/font_xsmall" />
 
@@ -256,7 +256,8 @@
                     android:id="@+id/seekbar_filter_adjuster"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="invisible" />
+                    android:visibility="invisible"
+                    android:layout_marginBottom="@dimen/spacing_xsmall" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_filters_fragment_enhance_image"
@@ -287,8 +288,7 @@
                     android:id="@+id/seekbar_bright_fragment_component_textview_options"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:max="200"
-                    android:progress="100" />
+                    android:max="100" />
 
             </LinearLayout>
 
@@ -312,8 +312,7 @@
                     android:id="@+id/seekbar_contrast_fragment_component_textview_options"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:max="200"
-                    android:progress="100" />
+                    android:max="100" />
 
             </LinearLayout>
 
@@ -337,15 +336,8 @@
                     android:id="@+id/seekbar_hue_fragment_component_textview_options"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:progress="0"
-                    android:max="360" />
+                    android:max="100" />
 
-                <ImageView
-                    android:id="@+id/img_cancel_hue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_cancel"
-                    android:layout_marginTop="@dimen/spacing_normal" />
 
             </LinearLayout>
 
@@ -369,13 +361,29 @@
                     android:id="@+id/seekbar_satur_fragment_component_textview_options"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:max="200"
-                    android:progress="100" />
+                    android:max="100" />
 
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/layout_flip_fragment_enhance_image"
+                android:id="@+id/layout_vignette_fragment_enhance_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <SeekBar
+                    android:id="@+id/seekbar_vignette_fragment_component_textview_options"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:max="100" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_rotate_fragment_enhance_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
@@ -394,233 +402,8 @@
                     android:id="@+id/seekbar_rotate_fragment_component_textview_options"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:max="200"
-                    android:progress="100" />
+                    android:max="100" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_small"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/flip_v"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/text_horizon"
-                        android:background="@color/colorAccent"
-                        android:textSize="18sp" />
-
-                    <Button
-                        android:id="@+id/flip_h"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/text_vertical"
-                        android:background="@color/colorAccent"
-                        android:textSize="18sp" />
-                </LinearLayout>
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_tint_fragment_enhance_image"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <HorizontalScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scrollbars="none">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="@dimen/width_tint_color"
-                            android:layout_height="match_parent"
-                            android:background="@color/black_overlay"
-                            android:src="@drawable/ic_cancel"
-                            android:clickable="true"
-                            android:onClick="applyTint"
-                            android:layout_gravity="center"
-                            android:tag="@string/text_original" />
-                        <!--    GREEEN-->
-                        <View
-                            android:layout_width="@dimen/width_tint_color"
-                            android:layout_height="match_parent"
-                            android:background="#1E8D24"
-                            android:clickable="true"
-                            android:onClick="applyTint"
-                            android:tag="#FF1E8D24" />
-
-                        <View
-                            android:layout_width="@dimen/width_tint_color"
-                            android:layout_height="match_parent"
-                            android:background="#374D1F"
-                            android:clickable="true"
-                            android:tag="#FF374D1F" />
-
-                        <View
-                            android:layout_width="@dimen/width_tint_color"
-                            android:layout_height="match_parent"
-                            android:background="#04A639"
-                            android:clickable="true"
-                            android:onClick="applyTint"
-                            android:tag="#FF04A639" />
-
-                        <View
-                            android:layout_width="@dimen/width_tint_color"
-                            android:layout_height="match_parent"
-                            android:background="#A0D722"
-                            android:clickable="true"
-                            android:onClick="applyTint"
-                            android:tag="#FFA0D722" />
-
-                        <!-- RED -->
-
-                        <View
-                            android:layout_width="@dimen/width_tint_color"
-                            android:layout_height="match_parent"
-                            android:background="#C41430"
-                            android:clickable="true"
-                            android:onClick="applyTint"
-                            android:tag="#FFC41430" />
-
-                        <View
-                            android:layout_width="@dimen/width_tint_color"
-                            android:layout_height="match_parent"
-                            android:background="#FF0000"
-                            android:clickable="true"
-                            android:onClick="applyTint"
-                            android:tag="#FFFF0000" />
-
-                        <View
-                            android:layout_width="@dimen/width_tint_color"
-                            android:layout_height="match_parent"
-                            android:background="#FF3300"
-                            android:clickable="true"
-                            android:onClick="applyTint"
-                            android:tag="#FFFF3300" />
-
-                        <View
-                            android:layout_width="@dimen/width_tint_color"
-                            android:layout_height="match_parent"
-                            android:background="#AD343A"
-                            android:clickable="true"
-                            android:onClick="applyTint"
-                            android:tag="#FFAD343A" />
-
-                        <View
-                            android:layout_width="@dimen/width_tint_color"
-                            android:layout_height="match_parent"
-                            android:background="#7B2A26"
-                            android:clickable="true"
-                            android:onClick="applyTint"
-                            android:tag="#FF7B2A26" />
-
-                        <View
-                            android:layout_width="@dimen/width_tint_color"
-                            android:layout_height="match_parent"
-                            android:background="#9B162F"
-                            android:clickable="true"
-                            android:onClick="applyTint"
-                            android:tag="#FF9B162F" />
-
-                        <!-- PURPLE -->
-
-                        <View
-                            android:layout_width="@dimen/width_tint_color"
-                            android:layout_height="match_parent"
-                            android:background="#FF29E8"
-                            android:clickable="true"
-                            android:onClick="applyTint"
-                            android:tag="#FFFF29E8" />
-
-                        <View
-                            android:layout_width="@dimen/width_tint_color"
-                            android:layout_height="match_parent"
-                            android:background="#862B73"
-                            android:clickable="true"
-                            android:onClick="applyTint"
-                            android:tag="#FF862B73" />
-
-                        <!-- BLUE -->
-
-                        <View
-                            android:layout_width="@dimen/width_tint_color"
-                            android:layout_height="match_parent"
-                            android:background="#01A6A8"
-                            android:clickable="true"
-                            android:onClick="applyTint"
-                            android:tag="#FF01A6A8" />
-
-                        <View
-                            android:layout_width="@dimen/width_tint_color"
-                            android:layout_height="match_parent"
-                            android:background="#147C87"
-                            android:clickable="true"
-                            android:onClick="applyTint"
-                            android:tag="#FF147C87" />
-
-                        <View
-                            android:layout_width="@dimen/width_tint_color"
-                            android:layout_height="match_parent"
-                            android:background="#3C4056"
-                            android:clickable="true"
-                            android:onClick="applyTint"
-                            android:tag="#FF3C4056" />
-
-                        <View
-                            android:layout_width="@dimen/width_tint_color"
-                            android:layout_height="match_parent"
-                            android:background="#0120C1"
-                            android:clickable="true"
-                            android:onClick="applyTint"
-                            android:tag="#FF0120C1" />
-
-                        <!-- OTHER -->
-
-                        <View
-                            android:layout_width="@dimen/width_tint_color"
-                            android:layout_height="match_parent"
-                            android:background="#F3C538"
-                            android:clickable="true"
-                            android:onClick="applyTint"
-                            android:tag="#FFF3C538" />
-
-                        <View
-                            android:layout_width="@dimen/width_tint_color"
-                            android:layout_height="match_parent"
-                            android:background="#0A1D19"
-                            android:clickable="true"
-                            android:onClick="applyTint"
-                            android:tag="#FF0A1D19" />
-
-                        <View
-                            android:layout_width="@dimen/width_tint_color"
-                            android:layout_height="match_parent"
-                            android:background="#F27B35"
-                            android:clickable="true"
-                            android:onClick="applyTint"
-                            android:tag="#FFF27B35" />
-
-                        <View
-                            android:layout_width="@dimen/width_tint_color"
-                            android:layout_height="match_parent"
-                            android:background="#F2B885"
-                            android:clickable="true"
-                            android:onClick="applyTint"
-                            android:tag="#FFF2B885" />
-                    </LinearLayout>
-                </HorizontalScrollView>
 
             </LinearLayout>
 

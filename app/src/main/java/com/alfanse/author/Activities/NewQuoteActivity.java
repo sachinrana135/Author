@@ -602,10 +602,6 @@ public class NewQuoteActivity extends BaseActivity implements
         }
     }
 
-    public void applyTint(View view) {
-        mEnhanceImageFragment.tintItemClick(view);
-    }
-
     private class CanvasTouchListener implements View.OnTouchListener {
         @Override
         public boolean onTouch(View v, MotionEvent event) {

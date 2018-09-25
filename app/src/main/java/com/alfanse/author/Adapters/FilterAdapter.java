@@ -19,6 +19,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -127,7 +128,13 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
                                 if (originalBitmap == null) {
                                     originalBitmap = ((BitmapDrawable) filterImage.getDrawable()).getBitmap();
                                 }
-                                GPUImageFilter gpuImageFilter = GPUImageFilterTools.createFilterForType(mContext, filter.getFilter());
+
+                                GPUImageFilter gpuImageFilter = null;
+                                try {
+                                    gpuImageFilter = GPUImageFilterTools.createFilterForType(mContext, filter.getFilter());
+                                } catch (IllegalStateException e) {
+                                    Log.d("Filter exception", e.getMessage());
+                                }
                                 filterImage.setImageBitmap(getBitmapWithFilterApplied(originalBitmap, gpuImageFilter));
                             }
                         }

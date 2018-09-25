@@ -28,11 +28,11 @@ import android.widget.TextView;
 
 import com.alfanse.author.Adapters.FilterAdapter;
 import com.alfanse.author.CustomViews.QuoteCanvas;
-import com.alfanse.author.Interfaces.XmlClickable;
 import com.alfanse.author.Interfaces.onFilterItemClickListener;
 import com.alfanse.author.Models.Filter;
 import com.alfanse.author.R;
 import com.alfanse.author.Utilities.GPUImageFilterTools;
+import com.alfanse.author.Utilities.SimpleSeekBarChangeListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,7 +46,7 @@ import jp.co.cyberagent.android.gpuimage.GPUImageFilter;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EnhanceImageFragment extends BaseFragment implements XmlClickable {
+public class EnhanceImageFragment extends BaseFragment {
 
     @BindView(R.id.layout_back_option_item)
     ViewGroup layoutBack;
@@ -60,10 +60,10 @@ public class EnhanceImageFragment extends BaseFragment implements XmlClickable {
     ViewGroup layoutHueOption;
     @BindView(R.id.layout_saturation_option_item)
     ViewGroup layoutSaturationOption;
-    @BindView(R.id.layout_flip_option_item)
+    @BindView(R.id.layout_rotate_option_item)
     ViewGroup layoutRotateOption;
-    @BindView(R.id.layout_tint_option_item)
-    ViewGroup layoutTintOption;
+    @BindView(R.id.layout_vignette_option_item)
+    ViewGroup layoutVignetteOption;
     @BindView(R.id.layout_filters_list_fragment_enhance_image)
     ViewGroup layoutFilterList;
     @BindView(R.id.rv_filters_fragment_enhance_image)
@@ -92,16 +92,18 @@ public class EnhanceImageFragment extends BaseFragment implements XmlClickable {
     SeekBar optionSeekBarHue;
     @BindView(R.id.hue_value_seekbar_fragment_component_textview_options)
     TextView optionSeekBarHueValue;
-    @BindView(R.id.layout_flip_fragment_enhance_image)
+    @BindView(R.id.layout_rotate_fragment_enhance_image)
     ViewGroup layoutRotate;
     @BindView(R.id.seekbar_rotate_fragment_component_textview_options)
     SeekBar optionSeekBarRotate;
     @BindView(R.id.rotate_value_seekbar_fragment_component_textview_options)
     TextView optionSeekBarRotateValue;
-    @BindView(R.id.layout_tint_fragment_enhance_image)
-    ViewGroup layoutTint;
+    @BindView(R.id.layout_vignette_fragment_enhance_image)
+    ViewGroup layoutVignette;
     @BindView(R.id.seekbar_filter_adjuster)
     SeekBar filterAdjuster;
+    @BindView(R.id.seekbar_vignette_fragment_component_textview_options)
+    SeekBar optionSeekBarVignette;
 
     private LinearLayoutManager mFilterLinearLayoutManager;
     private QuoteCanvas mCanvas;
@@ -111,151 +113,47 @@ public class EnhanceImageFragment extends BaseFragment implements XmlClickable {
     private Activity mActivity;
     private FilterAdapter mFiltersAdapter;
     private ArrayList<Filter> mListFilters = new ArrayList<Filter>();
-    private boolean isApplyingFilter = false;
-    private int tint_color = 0xFF1E8D24;
-    private boolean flipVertical = false;
-    private boolean flipHorizontal = false;
-    private int rotationAngle;
     private GPUImageFilterTools.FilterAdjuster mFilterAdjuster;
 
-    private SeekBar.OnSeekBarChangeListener brightnessSeekBarListener = new SeekBar.OnSeekBarChangeListener() {
+    private SeekBar.OnSeekBarChangeListener brightnessSeekBarListener = new SimpleSeekBarChangeListener() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            optionSeekBarBrightnessValue.setText(Integer.toString(progress - 100) + "%");
-        }
-
-        @Override
-        public void onStartTrackingTouch(SeekBar seekBar) {
-        }
-
-        @Override
-        public void onStopTrackingTouch(SeekBar seekBar) {
-
-            optionSeekBarBrightness.setEnabled(false);
-            isApplyingFilter = true;
-
-//            mCanvas.applyBrightnessFilter(seekBar.getProgress() - 100, new bitmapFilterListener() {
-//                @Override
-//                public void onSuccuess() {
-//                    optionSeekBarBrightness.setEnabled(true);
-//                    isApplyingFilter = false;
-//                }
-//
-//                @Override
-//                public void onError() {
-//                    optionSeekBarBrightness.setEnabled(true);
-//                    isApplyingFilter = false;
-//                }
-//            });
+            adjustFilter(progress);
         }
     };
 
-    private SeekBar.OnSeekBarChangeListener contrastSeekBarListener = new SeekBar.OnSeekBarChangeListener() {
+    private SeekBar.OnSeekBarChangeListener contrastSeekBarListener = new SimpleSeekBarChangeListener() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            optionSeekBarContrastValue.setText(Integer.toString(progress - 100) + "%");
-        }
-
-        @Override
-        public void onStartTrackingTouch(SeekBar seekBar) {
-        }
-
-        @Override
-        public void onStopTrackingTouch(SeekBar seekBar) {
-            optionSeekBarContrast.setEnabled(false);
-            isApplyingFilter = true;
-
-//            mCanvas.applyContrastFilter(seekBar.getProgress() - 100, new bitmapFilterListener() {
-//                @Override
-//                public void onSuccuess() {
-//                    optionSeekBarContrast.setEnabled(true);
-//                    isApplyingFilter = false;
-//                }
-//
-//                @Override
-//                public void onError() {
-//                    optionSeekBarContrast.setEnabled(true);
-//                    isApplyingFilter = false;
-//                }
-//            });
+            adjustFilter(progress);
         }
     };
 
-    private SeekBar.OnSeekBarChangeListener saturSeekBarListener = new SeekBar.OnSeekBarChangeListener() {
+    private SeekBar.OnSeekBarChangeListener saturSeekBarListener = new SimpleSeekBarChangeListener() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            optionSeekBarSaturValue.setText(Integer.toString(progress));
-        }
-
-        @Override
-        public void onStartTrackingTouch(SeekBar seekBar) {
-        }
-
-        @Override
-        public void onStopTrackingTouch(SeekBar seekBar) {
-            optionSeekBarSatur.setEnabled(false);
-            isApplyingFilter = true;
-
-//            mCanvas.applySaturationFilter(seekBar.getProgress(), new bitmapFilterListener() {
-//                @Override
-//                public void onSuccuess() {
-//                    optionSeekBarSatur.setEnabled(true);
-//                    isApplyingFilter = false;
-//                }
-//
-//                @Override
-//                public void onError() {
-//                    optionSeekBarSatur.setEnabled(true);
-//                    isApplyingFilter = false;
-//                }
-//            });
+            adjustFilter(progress);
         }
     };
 
-    private SeekBar.OnSeekBarChangeListener hueSeekBarListener = new SeekBar.OnSeekBarChangeListener() {
+    private SeekBar.OnSeekBarChangeListener hueSeekBarListener = new SimpleSeekBarChangeListener() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            optionSeekBarHueValue.setText(Integer.toString(progress));
-        }
-
-        @Override
-        public void onStartTrackingTouch(SeekBar seekBar) {
-        }
-
-        @Override
-        public void onStopTrackingTouch(SeekBar seekBar) {
-            optionSeekBarHue.setEnabled(false);
-            isApplyingFilter = true;
-//            mCanvas.applyHueFilter(seekBar.getProgress(), new bitmapFilterListener() {
-//                @Override
-//                public void onSuccuess() {
-//                    optionSeekBarHue.setEnabled(true);
-//                    isApplyingFilter = false;
-//                }
-//
-//                @Override
-//                public void onError() {
-//                    optionSeekBarHue.setEnabled(true);
-//                    isApplyingFilter = false;
-//                }
-//            });
+            adjustFilter(progress);
         }
     };
 
-    private SeekBar.OnSeekBarChangeListener rotateSeekBarListener = new SeekBar.OnSeekBarChangeListener() {
+    private SeekBar.OnSeekBarChangeListener rotateSeekBarListener = new SimpleSeekBarChangeListener() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            rotationAngle = progress;
-            optionSeekBarRotateValue.setText(Integer.toString(progress));
+            adjustFilter(progress);
         }
+    };
 
+    private SeekBar.OnSeekBarChangeListener filterSeekBarListener = new SimpleSeekBarChangeListener() {
         @Override
-        public void onStartTrackingTouch(SeekBar seekBar) {
-        }
-
-        @Override
-        public void onStopTrackingTouch(SeekBar seekBar) {
-            flipCanvas();
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            adjustFilter(progress);
         }
     };
 
@@ -280,7 +178,7 @@ public class EnhanceImageFragment extends BaseFragment implements XmlClickable {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_enhance_image, container, false);
         ButterKnife.bind(this, view);
-        optionsLayout = Arrays.asList(layoutFilterList, layoutBrightness, layoutContrast, layoutSatur, layoutHue, layoutRotate, layoutTint);
+        optionsLayout = Arrays.asList(layoutFilterList, layoutBrightness, layoutContrast, layoutSatur, layoutHue, layoutRotate, layoutVignette);
         mFilterLinearLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
         recyclerViewFilters.setLayoutManager(mFilterLinearLayoutManager);
         recyclerViewFilters.setAdapter(mFiltersAdapter);
@@ -290,21 +188,7 @@ public class EnhanceImageFragment extends BaseFragment implements XmlClickable {
         optionSeekBarSatur.setOnSeekBarChangeListener(saturSeekBarListener);
         optionSeekBarHue.setOnSeekBarChangeListener(hueSeekBarListener);
         optionSeekBarRotate.setOnSeekBarChangeListener(rotateSeekBarListener);
-
-//        optionSeekBarHue.setProgress(mCanvas.getHueLevel());
-//        optionSeekBarHueValue.setText(Integer.toString(mCanvas.getHueLevel()));
-//
-//        optionSeekBarBrightness.setProgress(mCanvas.getBrightnessLevel() + 100);
-//        optionSeekBarBrightnessValue.setText(Integer.toString(mCanvas.getBrightnessLevel()) + "%");
-//
-//        optionSeekBarContrast.setProgress(mCanvas.getContrastLevel() + 100);
-//        optionSeekBarContrastValue.setText(Integer.toString(mCanvas.getContrastLevel()) + "%");
-//
-//        optionSeekBarSatur.setProgress(mCanvas.getSaturationLevel());
-//        optionSeekBarSaturValue.setText(Integer.toString(mCanvas.getSaturationLevel()));
-//
-//        optionSeekBarRotate.setProgress(mCanvas.getRotationAngle());
-//        optionSeekBarSaturValue.setText(Integer.toString(mCanvas.getRotationAngle()));
+        filterAdjuster.setOnSeekBarChangeListener(filterSeekBarListener);
 
         return view;
     }
@@ -315,106 +199,74 @@ public class EnhanceImageFragment extends BaseFragment implements XmlClickable {
 
     @OnClick(R.id.layout_back_option_item)
     void onBackLayoutClick() {
-        if (!isApplyingFilter) {
-            mListener.onFragmentBackPressed();
-        }
+        mListener.onFragmentBackPressed();
     }
 
     @OnClick(R.id.layout_filter_option_item)
     void onFilterListLayoutClick() {
+        Filter filter = getActiveFilter();
+        GPUImageFilter gpuImageFilter = mCanvas.getFilterByType(filter);
+        mFilterAdjuster = new GPUImageFilterTools.FilterAdjuster(gpuImageFilter);
         showLayout(layoutFilterList);
     }
 
     @OnClick(R.id.layout_bright_option_item)
     void onBrightLayoutClick() {
+        Filter filter = new Filter("Brightness", GPUImageFilterTools.FilterType.BRIGHTNESS, false);
+        mCanvas.setFilter(filter);
+        GPUImageFilter gpuImageFilter = mCanvas.getFilterByType(filter);
+        mFilterAdjuster = new GPUImageFilterTools.FilterAdjuster(gpuImageFilter);
         showLayout(layoutBrightness);
     }
 
     @OnClick(R.id.layout_contrast_option_item)
     void onContrastLayoutClick() {
+        Filter filter = new Filter("Contrast", GPUImageFilterTools.FilterType.CONTRAST, false);
+        mCanvas.setFilter(filter);
+        GPUImageFilter gpuImageFilter = mCanvas.getFilterByType(filter);
+        mFilterAdjuster = new GPUImageFilterTools.FilterAdjuster(gpuImageFilter);
         showLayout(layoutContrast);
     }
 
     @OnClick(R.id.layout_hue_option_item)
     void onHueLayoutClick() {
+        Filter filter = new Filter("Hue", GPUImageFilterTools.FilterType.HUE, false);
+        mCanvas.setFilter(filter);
+        GPUImageFilter gpuImageFilter = mCanvas.getFilterByType(filter);
+        mFilterAdjuster = new GPUImageFilterTools.FilterAdjuster(gpuImageFilter);
         showLayout(layoutHue);
     }
 
     @OnClick(R.id.layout_saturation_option_item)
     void onSaturationLayoutClick() {
+        Filter filter = new Filter("Saturation", GPUImageFilterTools.FilterType.SATURATION, false);
+        mCanvas.setFilter(filter);
+        GPUImageFilter gpuImageFilter = mCanvas.getFilterByType(filter);
+        mFilterAdjuster = new GPUImageFilterTools.FilterAdjuster(gpuImageFilter);
         showLayout(layoutSatur);
     }
 
-    @OnClick(R.id.layout_flip_option_item)
+    @OnClick(R.id.layout_vignette_fragment_enhance_image)
+    void onVignetteLayoutClick() {
+        Filter filter = new Filter("Vignette", GPUImageFilterTools.FilterType.VIGNETTE, false);
+        mCanvas.setFilter(filter);
+        GPUImageFilter gpuImageFilter = mCanvas.getFilterByType(filter);
+        mFilterAdjuster = new GPUImageFilterTools.FilterAdjuster(gpuImageFilter);
+        showLayout(layoutVignette);
+    }
+
+    @OnClick(R.id.layout_rotate_option_item)
     void onRotateLayoutClick() {
+        Filter filter = new Filter("Transform (2-D, false))", GPUImageFilterTools.FilterType.TRANSFORM2D, false);
+        mCanvas.setFilter(filter);
+        GPUImageFilter gpuImageFilter = mCanvas.getFilterByType(filter);
+        mFilterAdjuster = new GPUImageFilterTools.FilterAdjuster(gpuImageFilter);
         showLayout(layoutRotate);
     }
 
-    @OnClick(R.id.layout_tint_option_item)
-    void onTintLayoutClick() {
-        showLayout(layoutTint);
-    }
-
-    @OnClick(R.id.flip_v)
-    void onVerticalFlipClick() {
-        flipVertical = !flipVertical;
-        flipCanvas();
-    }
-
-    @OnClick(R.id.flip_h)
-    void onHorizonFlipClick() {
-        flipHorizontal = !flipHorizontal;
-        flipCanvas();
-    }
-
-    private void flipCanvas() {
-
-        optionSeekBarRotate.setEnabled(false);
-        isApplyingFilter = true;
-
-//        mCanvas.applyRotateFilter(rotationAngle, flipHorizontal, flipVertical, new bitmapFilterListener() {
-//            @Override
-//            public void onSuccuess() {
-//                optionSeekBarRotate.setEnabled(true);
-//                isApplyingFilter = false;
-//            }
-//
-//            @Override
-//            public void onError() {
-//                optionSeekBarRotate.setEnabled(true);
-//                isApplyingFilter = false;
-//            }
-//        });
-    }
-
-    @OnClick(R.id.img_cancel_hue)
-    void onCancelHueClick() {
-        //mCanvas.resetOriginalBitmap();
-        optionSeekBarHue.setProgress(0);
-        optionSeekBarHueValue.setText("0");
-    }
-
     void showLayout(ViewGroup view) {
-
         for (ViewGroup v : optionsLayout) {
-            if (v == view) {
-                v.setVisibility(View.VISIBLE);
-                if (view == layoutFilterList) {
-//                    int scrollPosition = mCanvas.getFilter() != null ? mListFilters.indexOf(mCanvas.getFilter()) : 0;
-//                    if (scrollPosition < (mListFilters.size() - 1)) {
-//                        scrollPosition = scrollPosition + 1;
-//                    }
-//                    final int finalScrollPosition = scrollPosition;
-//                    new Handler().post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            recyclerViewFilters.smoothScrollToPosition(finalScrollPosition);
-//                        }
-//                    });
-                }
-            } else {
-                v.setVisibility(View.GONE);
-            }
+            v.setVisibility(v == view ? View.VISIBLE : View.GONE);
         }
     }
 
@@ -439,29 +291,6 @@ public class EnhanceImageFragment extends BaseFragment implements XmlClickable {
         mListener = null;
     }
 
-    @Override
-    public void tintItemClick(View view) {
-//        if (view.getTag().toString().equalsIgnoreCase(getString(R.string.text_original))) {
-//            mCanvas.resetOriginalBitmap();
-//        } else {
-//            if (tint_color != Color.parseColor(view.getTag().toString())) {
-//                isApplyingFilter = true;
-//                tint_color = Color.parseColor(view.getTag().toString());
-//                mCanvas.applyTint(tint_color, new bitmapFilterListener() {
-//                    @Override
-//                    public void onSuccuess() {
-//                        isApplyingFilter = false;
-//                    }
-//
-//                    @Override
-//                    public void onError() {
-//                        isApplyingFilter = false;
-//                    }
-//                });
-//            }
-//        }
-    }
-
     public interface OnFragmentInteractionListener {
         void onFragmentBackPressed();
     }
@@ -472,12 +301,9 @@ public class EnhanceImageFragment extends BaseFragment implements XmlClickable {
 
         Filter originalFilter = new Filter(getString(R.string.original), null, true);
         mListFilters.add(originalFilter);
-        mListFilters.add(new Filter("Contrast", GPUImageFilterTools.FilterType.CONTRAST, false));
         mListFilters.add(new Filter("Invert", GPUImageFilterTools.FilterType.INVERT, false));
         mListFilters.add(new Filter("Pixelation", GPUImageFilterTools.FilterType.PIXELATION, false));
-        mListFilters.add(new Filter("Hue", GPUImageFilterTools.FilterType.HUE, false));
         mListFilters.add(new Filter("Gamma", GPUImageFilterTools.FilterType.GAMMA, false));
-        mListFilters.add(new Filter("Brightness", GPUImageFilterTools.FilterType.BRIGHTNESS, false));
         mListFilters.add(new Filter("Sepia", GPUImageFilterTools.FilterType.SEPIA, false));
         mListFilters.add(new Filter("Grayscale", GPUImageFilterTools.FilterType.GRAYSCALE, false));
         mListFilters.add(new Filter("Sharpness", GPUImageFilterTools.FilterType.SHARPEN, false));
@@ -486,14 +312,12 @@ public class EnhanceImageFragment extends BaseFragment implements XmlClickable {
         mListFilters.add(new Filter("Emboss", GPUImageFilterTools.FilterType.EMBOSS, false));
         mListFilters.add(new Filter("Posterize", GPUImageFilterTools.FilterType.POSTERIZE, false));
         mListFilters.add(new Filter("Grouped filters", GPUImageFilterTools.FilterType.FILTER_GROUP, false));
-        mListFilters.add(new Filter("Saturation", GPUImageFilterTools.FilterType.SATURATION, false));
         mListFilters.add(new Filter("Exposure", GPUImageFilterTools.FilterType.EXPOSURE, false));
         mListFilters.add(new Filter("Highlight Shadow", GPUImageFilterTools.FilterType.HIGHLIGHT_SHADOW, false));
         mListFilters.add(new Filter("Monochrome", GPUImageFilterTools.FilterType.MONOCHROME, false));
         mListFilters.add(new Filter("Opacity", GPUImageFilterTools.FilterType.OPACITY, false));
         mListFilters.add(new Filter("RGB", GPUImageFilterTools.FilterType.RGB, false));
         mListFilters.add(new Filter("White Balance", GPUImageFilterTools.FilterType.WHITE_BALANCE, false));
-        mListFilters.add(new Filter("Vignette", GPUImageFilterTools.FilterType.VIGNETTE, false));
         mListFilters.add(new Filter("ToneCurve", GPUImageFilterTools.FilterType.TONE_CURVE, false));
         mListFilters.add(new Filter("Lookup (Amatorka, false))", GPUImageFilterTools.FilterType.LOOKUP_AMATORKA, false));
         mListFilters.add(new Filter("Gaussian Blur", GPUImageFilterTools.FilterType.GAUSSIAN_BLUR, false));
@@ -519,7 +343,6 @@ public class EnhanceImageFragment extends BaseFragment implements XmlClickable {
         mListFilters.add(new Filter("Color Balance", GPUImageFilterTools.FilterType.COLOR_BALANCE, false));
         mListFilters.add(new Filter("Levels Min (Mid Adjust, false))", GPUImageFilterTools.FilterType.LEVELS_FILTER_MIN, false));
         mListFilters.add(new Filter("Bilateral Blur", GPUImageFilterTools.FilterType.BILATERAL_BLUR, false));
-        mListFilters.add(new Filter("Transform (2-D, false))", GPUImageFilterTools.FilterType.TRANSFORM2D, false));
 
         setActiveFilter(originalFilter);
         mCanvas.setFilter(originalFilter);
@@ -529,22 +352,32 @@ public class EnhanceImageFragment extends BaseFragment implements XmlClickable {
     }
 
     private void setActiveFilter(Filter filter) {
-        for (Filter filter1 : mListFilters) {
-            filter1.setSelected(false);
+        for (Filter f : mListFilters) {
+            f.setSelected(false);
         }
         mListFilters.get(mListFilters.indexOf(filter)).setSelected(true);
         mFiltersAdapter.notifyDataSetChanged();
     }
 
-    private onFilterItemClickListener mOnFilterItemClickListener = new onFilterItemClickListener() {
+    private Filter getActiveFilter() {
+        Filter filter = null;
+        for (Filter f : mListFilters) {
+            if (f.isSelected() == true) {
+                filter = f;
+                break;
+            }
+        }
+        return filter;
+    }
 
+    private onFilterItemClickListener mOnFilterItemClickListener = new onFilterItemClickListener() {
         @Override
         public void onItemClick(Filter filter) {
             setActiveFilter(filter);
             mCanvas.setFilter(filter);
             GPUImageFilter gpuImageFilter = mCanvas.getFilterByType(filter);
             mFilterAdjuster = new GPUImageFilterTools.FilterAdjuster(gpuImageFilter);
-            filterAdjuster.setVisibility(mFilterAdjuster.canAdjust() ? View.VISIBLE : View.GONE);
+            filterAdjuster.setVisibility(mFilterAdjuster.canAdjust() ? View.VISIBLE : View.INVISIBLE);
         }
     };
 
@@ -568,5 +401,12 @@ public class EnhanceImageFragment extends BaseFragment implements XmlClickable {
                 return false;
             }
         });*/
+    }
+
+    public void adjustFilter(int progress) {
+        if (mFilterAdjuster != null) {
+            mFilterAdjuster.adjust(progress);
+        }
+        mCanvas.requestRender();
     }
 }
