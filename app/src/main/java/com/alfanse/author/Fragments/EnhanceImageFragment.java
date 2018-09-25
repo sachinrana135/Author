@@ -41,6 +41,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import jp.co.cyberagent.android.gpuimage.GPUImageFilter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -99,6 +100,8 @@ public class EnhanceImageFragment extends BaseFragment implements XmlClickable {
     TextView optionSeekBarRotateValue;
     @BindView(R.id.layout_tint_fragment_enhance_image)
     ViewGroup layoutTint;
+    @BindView(R.id.seekbar_filter_adjuster)
+    SeekBar filterAdjuster;
 
     private LinearLayoutManager mFilterLinearLayoutManager;
     private QuoteCanvas mCanvas;
@@ -113,6 +116,7 @@ public class EnhanceImageFragment extends BaseFragment implements XmlClickable {
     private boolean flipVertical = false;
     private boolean flipHorizontal = false;
     private int rotationAngle;
+    private GPUImageFilterTools.FilterAdjuster mFilterAdjuster;
 
     private SeekBar.OnSeekBarChangeListener brightnessSeekBarListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
@@ -469,12 +473,56 @@ public class EnhanceImageFragment extends BaseFragment implements XmlClickable {
         Filter originalFilter = new Filter(getString(R.string.original), null, true);
         mListFilters.add(originalFilter);
         mListFilters.add(new Filter("Contrast", GPUImageFilterTools.FilterType.CONTRAST, false));
-        mListFilters.add(new Filter("GrayScale", GPUImageFilterTools.FilterType.GRAYSCALE, false));
         mListFilters.add(new Filter("Invert", GPUImageFilterTools.FilterType.INVERT, false));
+        mListFilters.add(new Filter("Pixelation", GPUImageFilterTools.FilterType.PIXELATION, false));
+        mListFilters.add(new Filter("Hue", GPUImageFilterTools.FilterType.HUE, false));
+        mListFilters.add(new Filter("Gamma", GPUImageFilterTools.FilterType.GAMMA, false));
+        mListFilters.add(new Filter("Brightness", GPUImageFilterTools.FilterType.BRIGHTNESS, false));
+        mListFilters.add(new Filter("Sepia", GPUImageFilterTools.FilterType.SEPIA, false));
+        mListFilters.add(new Filter("Grayscale", GPUImageFilterTools.FilterType.GRAYSCALE, false));
+        mListFilters.add(new Filter("Sharpness", GPUImageFilterTools.FilterType.SHARPEN, false));
+        mListFilters.add(new Filter("Sobel Edge Detection", GPUImageFilterTools.FilterType.SOBEL_EDGE_DETECTION, false));
+        mListFilters.add(new Filter("3x3 Convolution", GPUImageFilterTools.FilterType.THREE_X_THREE_CONVOLUTION, false));
+        mListFilters.add(new Filter("Emboss", GPUImageFilterTools.FilterType.EMBOSS, false));
+        mListFilters.add(new Filter("Posterize", GPUImageFilterTools.FilterType.POSTERIZE, false));
+        mListFilters.add(new Filter("Grouped filters", GPUImageFilterTools.FilterType.FILTER_GROUP, false));
+        mListFilters.add(new Filter("Saturation", GPUImageFilterTools.FilterType.SATURATION, false));
+        mListFilters.add(new Filter("Exposure", GPUImageFilterTools.FilterType.EXPOSURE, false));
+        mListFilters.add(new Filter("Highlight Shadow", GPUImageFilterTools.FilterType.HIGHLIGHT_SHADOW, false));
+        mListFilters.add(new Filter("Monochrome", GPUImageFilterTools.FilterType.MONOCHROME, false));
+        mListFilters.add(new Filter("Opacity", GPUImageFilterTools.FilterType.OPACITY, false));
+        mListFilters.add(new Filter("RGB", GPUImageFilterTools.FilterType.RGB, false));
+        mListFilters.add(new Filter("White Balance", GPUImageFilterTools.FilterType.WHITE_BALANCE, false));
         mListFilters.add(new Filter("Vignette", GPUImageFilterTools.FilterType.VIGNETTE, false));
+        mListFilters.add(new Filter("ToneCurve", GPUImageFilterTools.FilterType.TONE_CURVE, false));
+        mListFilters.add(new Filter("Lookup (Amatorka, false))", GPUImageFilterTools.FilterType.LOOKUP_AMATORKA, false));
+        mListFilters.add(new Filter("Gaussian Blur", GPUImageFilterTools.FilterType.GAUSSIAN_BLUR, false));
+        mListFilters.add(new Filter("Crosshatch", GPUImageFilterTools.FilterType.CROSSHATCH, false));
+        mListFilters.add(new Filter("Box Blur", GPUImageFilterTools.FilterType.BOX_BLUR, false));
+        mListFilters.add(new Filter("CGA Color Space", GPUImageFilterTools.FilterType.CGA_COLORSPACE, false));
+        mListFilters.add(new Filter("Dilation", GPUImageFilterTools.FilterType.DILATION, false));
+        mListFilters.add(new Filter("Kuwahara", GPUImageFilterTools.FilterType.KUWAHARA, false));
+        mListFilters.add(new Filter("RGB Dilation", GPUImageFilterTools.FilterType.RGB_DILATION, false));
+        mListFilters.add(new Filter("Sketch", GPUImageFilterTools.FilterType.SKETCH, false));
+        mListFilters.add(new Filter("Toon", GPUImageFilterTools.FilterType.TOON, false));
+        mListFilters.add(new Filter("Smooth Toon", GPUImageFilterTools.FilterType.SMOOTH_TOON, false));
+        mListFilters.add(new Filter("Halftone", GPUImageFilterTools.FilterType.HALFTONE, false));
+        mListFilters.add(new Filter("Bulge Distortion", GPUImageFilterTools.FilterType.BULGE_DISTORTION, false));
+        mListFilters.add(new Filter("Glass Sphere", GPUImageFilterTools.FilterType.GLASS_SPHERE, false));
+        mListFilters.add(new Filter("Haze", GPUImageFilterTools.FilterType.HAZE, false));
+        mListFilters.add(new Filter("Laplacian", GPUImageFilterTools.FilterType.LAPLACIAN, false));
+        mListFilters.add(new Filter("Non Maximum Suppression", GPUImageFilterTools.FilterType.NON_MAXIMUM_SUPPRESSION, false));
+        mListFilters.add(new Filter("Sphere Refraction", GPUImageFilterTools.FilterType.SPHERE_REFRACTION, false));
+        mListFilters.add(new Filter("Swirl", GPUImageFilterTools.FilterType.SWIRL, false));
+        mListFilters.add(new Filter("Weak Pixel Inclusion", GPUImageFilterTools.FilterType.WEAK_PIXEL_INCLUSION, false));
+        mListFilters.add(new Filter("False Color", GPUImageFilterTools.FilterType.FALSE_COLOR, false));
+        mListFilters.add(new Filter("Color Balance", GPUImageFilterTools.FilterType.COLOR_BALANCE, false));
+        mListFilters.add(new Filter("Levels Min (Mid Adjust, false))", GPUImageFilterTools.FilterType.LEVELS_FILTER_MIN, false));
+        mListFilters.add(new Filter("Bilateral Blur", GPUImageFilterTools.FilterType.BILATERAL_BLUR, false));
+        mListFilters.add(new Filter("Transform (2-D, false))", GPUImageFilterTools.FilterType.TRANSFORM2D, false));
 
         setActiveFilter(originalFilter);
-        // mCanvas.setFilter(originalFilter);
+        mCanvas.setFilter(originalFilter);
 
         mFiltersAdapter.notifyDataSetChanged();
 
@@ -492,8 +540,11 @@ public class EnhanceImageFragment extends BaseFragment implements XmlClickable {
 
         @Override
         public void onItemClick(Filter filter) {
-            //setActiveFilter(filter);
+            setActiveFilter(filter);
             mCanvas.setFilter(filter);
+            GPUImageFilter gpuImageFilter = mCanvas.getFilterByType(filter);
+            mFilterAdjuster = new GPUImageFilterTools.FilterAdjuster(gpuImageFilter);
+            filterAdjuster.setVisibility(mFilterAdjuster.canAdjust() ? View.VISIBLE : View.GONE);
         }
     };
 

@@ -94,6 +94,22 @@ public class QuoteCanvas extends SquareFrameLayout {
         mImageView.setGLSurfaceView(mGLSurfaceView);
     }
 
+    public GPUImageFilter getFilterByType(Filter filter) {
+        int key = getFilterKeyFromGroup(filter);
+        return key != -1 ? mGpuImageGroupFilter.getMergedFilters().get(key) : null;
+    }
+
+    private int getFilterKeyFromGroup(Filter filter) {
+        int i = -1;
+        for (Filter n : mFilters) {
+            i++;
+            if (n.getFilter() == filter.getFilter()) {
+                break;
+            }
+        }
+        return i;
+    }
+
 
     private class GPUImageGLSurfaceView extends GLSurfaceView {
         public GPUImageGLSurfaceView(Context context) {

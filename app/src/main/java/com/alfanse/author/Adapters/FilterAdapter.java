@@ -14,6 +14,7 @@ package com.alfanse.author.Adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.content.ContextCompat;
@@ -21,12 +22,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.alfanse.author.CustomViews.QuoteCanvas;
 import com.alfanse.author.Interfaces.onFilterItemClickListener;
 import com.alfanse.author.Models.Filter;
 import com.alfanse.author.R;
+import com.alfanse.author.Utilities.GPUImageFilterTools;
 import com.alfanse.author.Utilities.Utils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -37,6 +39,8 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import jp.co.cyberagent.android.gpuimage.GPUImage;
+import jp.co.cyberagent.android.gpuimage.GPUImageFilter;
 
 /**
  * Created by Velocity-1601 on 4/19/2017.
@@ -48,6 +52,8 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
     private Context mContext;
     private ArrayList<Filter> mListFilters;
     private Handler handler;
+    private GPUImage mImage;
+    private Bitmap originalBitmap = null;
 
     public FilterAdapter(Context context, ArrayList<Filter> listFilters, onFilterItemClickListener listener) {
         mContext = context;
@@ -79,16 +85,14 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
         return mListFilters.size();
     }
 
-    public interface OnItemClickListener {
-        void onItemClick(Filter filter);
-    }
-
     public class FilterViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.filter_item_filter)
-        QuoteCanvas filterImage;
+        ImageView filterImage;
         @BindView(R.id.title_item_filter)
         TextView titleFilter;
+
+        private Boolean isAdjustable;
 
 
         public FilterViewHolder(View view) {
@@ -118,9 +122,13 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
                     .into(new SimpleTarget<Bitmap>() {
                         @Override
                         public void onResourceReady(final Bitmap resource, Transition<? super Bitmap> transition) {
-                            filterImage.setBackground(resource);
+                            filterImage.setImageBitmap(resource);
                             if (filter.getFilter() != null) {
-                                applyFilter(filterImage, filter);
+                                if (originalBitmap == null) {
+                                    originalBitmap = ((BitmapDrawable) filterImage.getDrawable()).getBitmap();
+                                }
+                                GPUImageFilter gpuImageFilter = GPUImageFilterTools.createFilterForType(mContext, filter.getFilter());
+                                filterImage.setImageBitmap(getBitmapWithFilterApplied(originalBitmap, gpuImageFilter));
                             }
                         }
                     });
@@ -129,15 +137,17 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
                 @Override
                 public void onClick(View v) {
                     listener.onItemClick(filter);
-
                 }
             });
         }
 
-        public void applyFilter(QuoteCanvas imageview, Filter filter) {
-            if (filter != null) {
-                imageview.setFilter(filter);
-            }
+    }
+
+    public Bitmap getBitmapWithFilterApplied(Bitmap bitmap, GPUImageFilter filter) {
+        if (mImage == null) {
+            mImage = new GPUImage(mContext);
         }
+        mImage.setFilter(filter);
+        return mImage.getBitmapWithFilterApplied(bitmap);
     }
 }

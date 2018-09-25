@@ -249,7 +249,14 @@
                 android:id="@+id/layout_filters_list_fragment_enhance_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <SeekBar
+                    android:id="@+id/seekbar_filter_adjuster"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="invisible" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_filters_fragment_enhance_image"
