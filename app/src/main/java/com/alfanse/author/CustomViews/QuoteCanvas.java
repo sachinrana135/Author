@@ -208,7 +208,6 @@ public class QuoteCanvas extends SquareFrameLayout {
 
     public void setBackground(Uri croppedImageUri) {
         mImageView.deleteImage();
-
         mImageView.setImage(croppedImageUri);
         mOriginalBitmap = mImageView.getBitmapWithFilterApplied();
     }

@@ -18,13 +18,16 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.ColorInt;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +55,7 @@ import com.jrummyapps.android.colorpicker.ColorPickerDialog;
 import com.jrummyapps.android.colorpicker.ColorPickerDialogListener;
 import com.theartofdev.edmodo.cropper.CropImage;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -374,7 +378,12 @@ public class CanvasOptionsFragment extends BaseFragment implements ColorPickerDi
 
                     if (imageRequiredFor.equalsIgnoreCase(IMAGE_REQUIRED_FOR_CANVAS)) {
                         Uri croppedImageUri = result.getUri();
-                        mCanvas.setBackground(croppedImageUri);
+                        try {
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), croppedImageUri);
+                            mCanvas.setBackground(bitmap);
+                        } catch (IOException e) {
+                            Log.d(CanvasOptionsFragment.this.getClass().getSimpleName(), e.getMessage());
+                        }
                     } else if (imageRequiredFor.equalsIgnoreCase(IMAGE_REQUIRED_FOR_COMPONENT_IMAGEVIEW)) {
                         addComponentImageView(result.getUri());
                     }

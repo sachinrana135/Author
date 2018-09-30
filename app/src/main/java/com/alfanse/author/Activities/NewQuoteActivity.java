@@ -21,6 +21,8 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -494,6 +496,18 @@ public class NewQuoteActivity extends BaseActivity implements
             FileOutputStream output = new FileOutputStream(file);
             bitmap.compress(Bitmap.CompressFormat.JPEG, Constants.QUOTE_QUALITY, output);
             output.close();
+
+            MediaScannerConnection.scanFile(mContext,
+                    new String[]{
+                            file.toString()
+                    }, null,
+                    new MediaScannerConnection.OnScanCompletedListener() {
+                        @Override
+                        public void onScanCompleted(final String path, final Uri uri) {
+                            Log.d("ExternalStorage", "Scanned " + path + ":");
+                        }
+                    });
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
