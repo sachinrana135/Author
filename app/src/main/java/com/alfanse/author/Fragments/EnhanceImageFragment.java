@@ -115,42 +115,14 @@ public class EnhanceImageFragment extends BaseFragment {
     private ArrayList<Filter> mListFilters = new ArrayList<Filter>();
     private GPUImageFilterTools.FilterAdjuster mFilterAdjuster;
 
-    private SeekBar.OnSeekBarChangeListener brightnessSeekBarListener = new SimpleSeekBarChangeListener() {
-        @Override
-        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            adjustFilter(progress);
-        }
-    };
+    private int defaultBrightnessLevel = 50;
+    private int defaultContrastLevel = 50;
+    private int defaultHueLevel = 0;
+    private int defaultSaturLevel = 50;
+    private int defaultVignetteLevel = 75;
+    private int defaultRotateLevel = 0;
 
-    private SeekBar.OnSeekBarChangeListener contrastSeekBarListener = new SimpleSeekBarChangeListener() {
-        @Override
-        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            adjustFilter(progress);
-        }
-    };
-
-    private SeekBar.OnSeekBarChangeListener saturSeekBarListener = new SimpleSeekBarChangeListener() {
-        @Override
-        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            adjustFilter(progress);
-        }
-    };
-
-    private SeekBar.OnSeekBarChangeListener hueSeekBarListener = new SimpleSeekBarChangeListener() {
-        @Override
-        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            adjustFilter(progress);
-        }
-    };
-
-    private SeekBar.OnSeekBarChangeListener rotateSeekBarListener = new SimpleSeekBarChangeListener() {
-        @Override
-        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            adjustFilter(progress);
-        }
-    };
-
-    private SeekBar.OnSeekBarChangeListener filterSeekBarListener = new SimpleSeekBarChangeListener() {
+    private SeekBar.OnSeekBarChangeListener seekBarListener = new SimpleSeekBarChangeListener() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             adjustFilter(progress);
@@ -183,12 +155,20 @@ public class EnhanceImageFragment extends BaseFragment {
         recyclerViewFilters.setLayoutManager(mFilterLinearLayoutManager);
         recyclerViewFilters.setAdapter(mFiltersAdapter);
 
-        optionSeekBarBrightness.setOnSeekBarChangeListener(brightnessSeekBarListener);
-        optionSeekBarContrast.setOnSeekBarChangeListener(contrastSeekBarListener);
-        optionSeekBarSatur.setOnSeekBarChangeListener(saturSeekBarListener);
-        optionSeekBarHue.setOnSeekBarChangeListener(hueSeekBarListener);
-        optionSeekBarRotate.setOnSeekBarChangeListener(rotateSeekBarListener);
-        filterAdjuster.setOnSeekBarChangeListener(filterSeekBarListener);
+        optionSeekBarBrightness.setOnSeekBarChangeListener(seekBarListener);
+
+        optionSeekBarContrast.setOnSeekBarChangeListener(seekBarListener);
+
+        optionSeekBarHue.setOnSeekBarChangeListener(seekBarListener);
+
+        optionSeekBarSatur.setOnSeekBarChangeListener(seekBarListener);
+
+        optionSeekBarVignette.setMax(75);
+        optionSeekBarVignette.setOnSeekBarChangeListener(seekBarListener);
+
+        optionSeekBarRotate.setOnSeekBarChangeListener(seekBarListener);
+
+        filterAdjuster.setOnSeekBarChangeListener(seekBarListener);
 
         return view;
     }
@@ -213,54 +193,79 @@ public class EnhanceImageFragment extends BaseFragment {
     @OnClick(R.id.layout_bright_option_item)
     void onBrightLayoutClick() {
         Filter filter = new Filter("Brightness", GPUImageFilterTools.FilterType.BRIGHTNESS, false);
-        mCanvas.setFilter(filter);
+        boolean isFilterApplied = mCanvas.isFilterApplied(filter);
+        if (!isFilterApplied) {
+            mCanvas.setFilter(filter);
+        }
         GPUImageFilter gpuImageFilter = mCanvas.getFilterByType(filter);
         mFilterAdjuster = new GPUImageFilterTools.FilterAdjuster(gpuImageFilter);
+        optionSeekBarBrightness.setProgress(isFilterApplied ? optionSeekBarBrightness.getProgress() : defaultBrightnessLevel);
         showLayout(layoutBrightness);
     }
 
     @OnClick(R.id.layout_contrast_option_item)
     void onContrastLayoutClick() {
         Filter filter = new Filter("Contrast", GPUImageFilterTools.FilterType.CONTRAST, false);
-        mCanvas.setFilter(filter);
+        boolean isFilterApplied = mCanvas.isFilterApplied(filter);
+        if (!isFilterApplied) {
+            mCanvas.setFilter(filter);
+        }
         GPUImageFilter gpuImageFilter = mCanvas.getFilterByType(filter);
         mFilterAdjuster = new GPUImageFilterTools.FilterAdjuster(gpuImageFilter);
+        optionSeekBarContrast.setProgress(optionSeekBarContrast.getProgress() == 0 ? defaultContrastLevel : optionSeekBarContrast.getProgress());
+        optionSeekBarContrast.setProgress(isFilterApplied ? optionSeekBarContrast.getProgress() : defaultContrastLevel);
         showLayout(layoutContrast);
     }
 
     @OnClick(R.id.layout_hue_option_item)
     void onHueLayoutClick() {
         Filter filter = new Filter("Hue", GPUImageFilterTools.FilterType.HUE, false);
-        mCanvas.setFilter(filter);
+        boolean isFilterApplied = mCanvas.isFilterApplied(filter);
+        if (!isFilterApplied) {
+            mCanvas.setFilter(filter);
+        }
         GPUImageFilter gpuImageFilter = mCanvas.getFilterByType(filter);
         mFilterAdjuster = new GPUImageFilterTools.FilterAdjuster(gpuImageFilter);
+        optionSeekBarHue.setProgress(isFilterApplied ? optionSeekBarHue.getProgress() : defaultHueLevel);
         showLayout(layoutHue);
     }
 
     @OnClick(R.id.layout_saturation_option_item)
     void onSaturationLayoutClick() {
         Filter filter = new Filter("Saturation", GPUImageFilterTools.FilterType.SATURATION, false);
-        mCanvas.setFilter(filter);
+        boolean isFilterApplied = mCanvas.isFilterApplied(filter);
+        if (!isFilterApplied) {
+            mCanvas.setFilter(filter);
+        }
         GPUImageFilter gpuImageFilter = mCanvas.getFilterByType(filter);
         mFilterAdjuster = new GPUImageFilterTools.FilterAdjuster(gpuImageFilter);
+        optionSeekBarSatur.setProgress(isFilterApplied ? optionSeekBarSatur.getProgress() : defaultSaturLevel);
         showLayout(layoutSatur);
     }
 
-    @OnClick(R.id.layout_vignette_fragment_enhance_image)
+    @OnClick(R.id.layout_vignette_option_item)
     void onVignetteLayoutClick() {
         Filter filter = new Filter("Vignette", GPUImageFilterTools.FilterType.VIGNETTE, false);
-        mCanvas.setFilter(filter);
+        boolean isFilterApplied = mCanvas.isFilterApplied(filter);
+        if (!isFilterApplied) {
+            mCanvas.setFilter(filter);
+        }
         GPUImageFilter gpuImageFilter = mCanvas.getFilterByType(filter);
         mFilterAdjuster = new GPUImageFilterTools.FilterAdjuster(gpuImageFilter);
+        optionSeekBarVignette.setProgress(isFilterApplied ? optionSeekBarVignette.getProgress() : defaultVignetteLevel);
         showLayout(layoutVignette);
     }
 
     @OnClick(R.id.layout_rotate_option_item)
     void onRotateLayoutClick() {
         Filter filter = new Filter("Transform (2-D, false))", GPUImageFilterTools.FilterType.TRANSFORM2D, false);
-        mCanvas.setFilter(filter);
+        boolean isFilterApplied = mCanvas.isFilterApplied(filter);
+        if (!isFilterApplied) {
+            mCanvas.setFilter(filter);
+        }
         GPUImageFilter gpuImageFilter = mCanvas.getFilterByType(filter);
         mFilterAdjuster = new GPUImageFilterTools.FilterAdjuster(gpuImageFilter);
+        optionSeekBarRotate.setProgress(isFilterApplied ? optionSeekBarRotate.getProgress() : defaultRotateLevel);
         showLayout(layoutRotate);
     }
 

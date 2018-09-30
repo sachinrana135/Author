@@ -99,7 +99,7 @@ public class QuoteCanvas extends SquareFrameLayout {
 
     public GPUImageFilter getFilterByType(Filter filter) {
         int key = getFilterKeyFromGroup(filter);
-        return key != -1 ? mGpuImageGroupFilter.getMergedFilters().get(key) : null;
+        return key != -1 ? mGpuImageGroupFilter.getFilters().get(key) : null;
     }
 
     private int getFilterKeyFromGroup(Filter filter) {
@@ -111,6 +111,19 @@ public class QuoteCanvas extends SquareFrameLayout {
             }
         }
         return i;
+    }
+
+    public boolean isFilterApplied(Filter filter) {
+        for (Filter n : mFilters) {
+            if (n.getFilter() == filter.getFilter()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public GPUImageFilter getFilter() {
+        return mGpuImageGroupFilter;
     }
 
 
@@ -265,36 +278,29 @@ public class QuoteCanvas extends SquareFrameLayout {
             while (iterator.hasNext()) {
                 Filter f = iterator.next();
                 if (f.getFilter().equals(filter.getFilter())) {
-                    if (!allowMergeFilters.contains(filter.getFilter())) {
-                        iterator.remove();
-                    }
-                    createGroupFilter(mFilters);
                     return;
                 }
             }
             // check if filter can be grouped
             if (allowMergeFilters.contains(filter.getFilter())) {
                 mFilters.add(filter);
+                mGpuImageGroupFilter.getFilters().add(GPUImageFilterTools.createFilterForType(mContext, filter.getFilter()));
             } else {
                 Iterator<Filter> iter = mFilters.iterator();
+                int i = -0;
                 while (iter.hasNext()) {
                     Filter g = iter.next();
                     if (!allowMergeFilters.contains(g.getFilter())) {
                         // delete filter
                         iter.remove();
+                        mGpuImageGroupFilter.getFilters().remove(i);
                     }
+                    i++;
                 }
                 mFilters.add(filter);
+                mGpuImageGroupFilter.getFilters().add(GPUImageFilterTools.createFilterForType(mContext, filter.getFilter()));
             }
-            createGroupFilter(mFilters);
-        }
-    }
-
-    private void createGroupFilter(LinkedList<Filter> mFilters) {
-        //create group filters
-        mGpuImageGroupFilter.getFilters().clear();
-        for (Filter n : mFilters) {
-            mGpuImageGroupFilter.addFilter(GPUImageFilterTools.createFilterForType(mContext, n.getFilter()));
+            mGpuImageGroupFilter = new GPUImageFilterGroup(mGpuImageGroupFilter.getFilters());
         }
     }
 
