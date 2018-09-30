@@ -23,6 +23,7 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.alfanse.author.Models.Filter;
@@ -63,6 +64,7 @@ public class QuoteCanvas extends SquareFrameLayout {
     private GLSurfaceView mGLSurfaceView;
     private Context mContext;
     private GPUImage mImageView;
+    private ImageView mTempImageView;
     private ProgressBar progressBar;
     private Filter mFilter = null;
     public Size mForceSize = null;
@@ -95,6 +97,14 @@ public class QuoteCanvas extends SquareFrameLayout {
 
         mImageView = new GPUImage(getContext());
         mImageView.setGLSurfaceView(mGLSurfaceView);
+
+        mTempImageView = new ImageView(mContext);
+        mTempImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        mTempImageView.setAdjustViewBounds(true);
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        mTempImageView.setLayoutParams(layoutParams);
+        mTempImageView.setVisibility(GONE);
+        addView(mTempImageView);
     }
 
     public GPUImageFilter getFilterByType(Filter filter) {
@@ -125,7 +135,6 @@ public class QuoteCanvas extends SquareFrameLayout {
     public GPUImageFilter getFilter() {
         return mGpuImageGroupFilter;
     }
-
 
     private class GPUImageGLSurfaceView extends GLSurfaceView {
         public GPUImageGLSurfaceView(Context context) {
@@ -162,6 +171,16 @@ public class QuoteCanvas extends SquareFrameLayout {
         mImageView.setFilter(new GPUImageFilter());
         mImageView.setImage(bitmap);
         mOriginalBitmap = bitmap;
+    }
+
+    public void showTempImageView(Bitmap b) {
+        mTempImageView.setImageBitmap(b);
+        mTempImageView.setVisibility(VISIBLE);
+    }
+
+    public void hideTempImageView() {
+        mTempImageView.setImageBitmap(null);
+        mTempImageView.setVisibility(GONE);
     }
 
 
@@ -306,5 +325,9 @@ public class QuoteCanvas extends SquareFrameLayout {
 
     public void requestRender() {
         mGLSurfaceView.requestRender();
+    }
+
+    public Bitmap getBitmapWithFilterApplied() {
+        return mImageView.getBitmapWithFilterApplied();
     }
 }
