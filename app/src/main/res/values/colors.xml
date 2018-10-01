@@ -17,6 +17,7 @@
     <color name="colorOptionsBackground">#212121</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorBlack">#000000</color>
+    <color name="colorBlackOverlay">#73000000</color>
     <color name="colorComponentViewStateFocused">#3F000000</color>
     <color name="colorComponentViewStroke">#3F000000</color>
     <color name="colorComponentViewActionButton">#9e9e9e</color>
@@ -49,4 +50,8 @@
         <item>@color/colorDarkOrange</item>
         <item>@color/colorDarkRed</item>
     </integer-array>
+
+    <color name="seek_bar_background">#ababab</color>
+    <color name="seek_bar_progress">#ffb600</color>
+    <color name="seek_bar_secondary_progress">#3399CC</color>
 </resources>

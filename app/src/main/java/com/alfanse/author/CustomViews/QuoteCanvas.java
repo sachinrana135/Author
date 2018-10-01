@@ -284,6 +284,7 @@ public class QuoteCanvas extends SquareFrameLayout {
         } else {
             //clear group filters
             mFilters.clear();
+            mGpuImageGroupFilter.getFilters().clear();
             setBackground(mOriginalBitmap);
         }
     }

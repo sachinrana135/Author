@@ -59,7 +59,7 @@ public class ComponentTextView extends ComponentView {
     private void Draw() {
 
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
+        layoutParams.gravity = Gravity.CENTER;
 
         mTextView.setText(mText);
 

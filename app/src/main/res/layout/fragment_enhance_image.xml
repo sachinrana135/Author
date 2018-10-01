@@ -257,7 +257,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="invisible"
-                    android:layout_marginBottom="@dimen/spacing_xsmall" />
+                    android:layout_marginBottom="@dimen/spacing_xsmall"
+                    android:layout_marginLeft="@dimen/spacing_small"
+                    android:layout_marginRight="@dimen/spacing_small"
+                    android:progressDrawable="@drawable/seekbar"
+                    android:thumb="@drawable/seekbar_thumb" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_filters_fragment_enhance_image"
@@ -288,6 +292,10 @@
                     android:id="@+id/seekbar_bright_fragment_component_textview_options"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/spacing_small"
+                    android:layout_marginRight="@dimen/spacing_small"
+                    android:progressDrawable="@drawable/seekbar"
+                    android:thumb="@drawable/seekbar_thumb"
                     android:max="100" />
 
             </LinearLayout>
@@ -312,6 +320,10 @@
                     android:id="@+id/seekbar_contrast_fragment_component_textview_options"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/spacing_small"
+                    android:layout_marginRight="@dimen/spacing_small"
+                    android:progressDrawable="@drawable/seekbar"
+                    android:thumb="@drawable/seekbar_thumb"
                     android:max="100" />
 
             </LinearLayout>
@@ -336,6 +348,10 @@
                     android:id="@+id/seekbar_hue_fragment_component_textview_options"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/spacing_small"
+                    android:layout_marginRight="@dimen/spacing_small"
+                    android:progressDrawable="@drawable/seekbar"
+                    android:thumb="@drawable/seekbar_thumb"
                     android:progress="5"
                     android:max="100" />
 
@@ -362,6 +378,10 @@
                     android:id="@+id/seekbar_satur_fragment_component_textview_options"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/spacing_small"
+                    android:layout_marginRight="@dimen/spacing_small"
+                    android:progressDrawable="@drawable/seekbar"
+                    android:thumb="@drawable/seekbar_thumb"
                     android:max="100" />
 
             </LinearLayout>
@@ -378,6 +398,10 @@
                     android:id="@+id/seekbar_vignette_fragment_component_textview_options"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/spacing_small"
+                    android:layout_marginRight="@dimen/spacing_small"
+                    android:progressDrawable="@drawable/seekbar"
+                    android:thumb="@drawable/seekbar_thumb"
                     android:max="100" />
 
 
@@ -403,6 +427,10 @@
                     android:id="@+id/seekbar_rotate_fragment_component_textview_options"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/spacing_small"
+                    android:layout_marginRight="@dimen/spacing_small"
+                    android:progressDrawable="@drawable/seekbar"
+                    android:thumb="@drawable/seekbar_thumb"
                     android:max="100" />
 
 
