@@ -380,7 +380,7 @@ public class CanvasOptionsFragment extends BaseFragment implements ColorPickerDi
                         Uri croppedImageUri = result.getUri();
                         try {
                             Bitmap bitmap = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), croppedImageUri);
-                            mCanvas.setBackground(croppedImageUri);
+                            mCanvas.setBackground(bitmap);
                         } catch (IOException e) {
                             Log.d(CanvasOptionsFragment.this.getClass().getSimpleName(), e.getMessage());
                         }
