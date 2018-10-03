@@ -1,0 +1,443 @@
+<!--
+  ~ Copyright (c) 2018. Alfanse Developers
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+  ~  in compliance with the License. You may obtain a copy of the License at
+  ~  http://www.apache.org/licenses/LICENSE-2.0
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the License
+  ~ is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+  ~ either express or implied. See the License for the specific language governing permissions
+  ~ and limitations under the License.
+  -->
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.alfanse.author.Fragments.EnhanceImageFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/layout_options_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="33"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/layout_back_option_item"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_xsmall">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:tag="@string/option_item_image_tag"
+                    app:srcCompat="@drawable/ic_arrow_back_white_24dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:tag="@string/option_item_text_tag"
+                    android:text="@string/option_item_back"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/font_xsmall" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_filter_option_item"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_xsmall">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:tag="@string/option_item_image_tag"
+                    app:srcCompat="@drawable/ic_image_filter_white_24dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:tag="@string/option_item_text_tag"
+                    android:text="@string/option_item_canvas_filter"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/font_xsmall" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_bright_option_item"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_xsmall">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:tag="@string/option_item_image_tag"
+                    app:srcCompat="@drawable/ic_bright" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:tag="@string/option_item_bright"
+                    android:text="@string/option_item_bright"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/font_xsmall" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_contrast_option_item"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_xsmall">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_contrast" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/option_item_contrast"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/font_xsmall" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_hue_option_item"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_xsmall">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_hue" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/option_item_hue"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/font_xsmall" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_saturation_option_item"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_xsmall">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_saturation" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/option_item_satur"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/font_xsmall" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_vignette_option_item"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_xsmall">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_vignette" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/option_item_vignette"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/font_xsmall" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_rotate_option_item"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_xsmall">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_2d_rotation" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_rotate"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/font_xsmall" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="66"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/layout_filters_list_fragment_enhance_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <SeekBar
+                    android:id="@+id/seekbar_filter_adjuster"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="invisible"
+                    android:layout_marginBottom="@dimen/spacing_xsmall"
+                    android:layout_marginLeft="@dimen/spacing_small"
+                    android:layout_marginRight="@dimen/spacing_small"
+                    android:progressDrawable="@drawable/seekbar"
+                    android:thumb="@drawable/seekbar_thumb" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_filters_fragment_enhance_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </android.support.v7.widget.RecyclerView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_bright_fragment_enhance_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/bright_value_seekbar_fragment_component_textview_options"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/font_xlarge" />
+
+                <SeekBar
+                    android:id="@+id/seekbar_bright_fragment_component_textview_options"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/spacing_small"
+                    android:layout_marginRight="@dimen/spacing_small"
+                    android:progressDrawable="@drawable/seekbar"
+                    android:thumb="@drawable/seekbar_thumb"
+                    android:max="100" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_contrast_fragment_enhance_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/contrast_value_seekbar_fragment_component_textview_options"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/font_xlarge" />
+
+                <SeekBar
+                    android:id="@+id/seekbar_contrast_fragment_component_textview_options"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/spacing_small"
+                    android:layout_marginRight="@dimen/spacing_small"
+                    android:progressDrawable="@drawable/seekbar"
+                    android:thumb="@drawable/seekbar_thumb"
+                    android:max="100" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_hue_fragment_enhance_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/hue_value_seekbar_fragment_component_textview_options"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/font_xlarge" />
+
+                <SeekBar
+                    android:id="@+id/seekbar_hue_fragment_component_textview_options"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/spacing_small"
+                    android:layout_marginRight="@dimen/spacing_small"
+                    android:progressDrawable="@drawable/seekbar"
+                    android:thumb="@drawable/seekbar_thumb"
+                    android:progress="5"
+                    android:max="100" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_satur_fragment_enhance_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/satur_value_seekbar_fragment_component_textview_options"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/font_xlarge" />
+
+                <SeekBar
+                    android:id="@+id/seekbar_satur_fragment_component_textview_options"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/spacing_small"
+                    android:layout_marginRight="@dimen/spacing_small"
+                    android:progressDrawable="@drawable/seekbar"
+                    android:thumb="@drawable/seekbar_thumb"
+                    android:max="100" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_vignette_fragment_enhance_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <SeekBar
+                    android:id="@+id/seekbar_vignette_fragment_component_textview_options"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/spacing_small"
+                    android:layout_marginRight="@dimen/spacing_small"
+                    android:progressDrawable="@drawable/seekbar"
+                    android:thumb="@drawable/seekbar_thumb"
+                    android:max="100" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_rotate_fragment_enhance_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/rotate_value_seekbar_fragment_component_textview_options"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/font_xlarge" />
+
+                <SeekBar
+                    android:id="@+id/seekbar_rotate_fragment_component_textview_options"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/spacing_small"
+                    android:layout_marginRight="@dimen/spacing_small"
+                    android:progressDrawable="@drawable/seekbar"
+                    android:thumb="@drawable/seekbar_thumb"
+                    android:max="100" />
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+</FrameLayout>

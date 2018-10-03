@@ -91,7 +91,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/layout_filter_fragment_canvas_options"
+                    android:id="@+id/layout_enhance_fragment_canvas_options"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -102,15 +102,15 @@
                     android:padding="@dimen/spacing_xsmall">
 
                     <ImageView
-                        android:id="@+id/image_filter_fragment_canvas_options"
+                        android:id="@+id/image_enhance_fragment_canvas_options"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/ic_image_filter_white_24dp" />
+                        app:srcCompat="@drawable/ic_enhance" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/option_item_canvas_filter"
+                        android:text="@string/option_item_enhance"
                         android:textColor="@color/colorWhite"
                         android:textSize="@dimen/font_xsmall" />
 
@@ -214,29 +214,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-
             </android.support.v7.widget.RecyclerView>
 
         </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/layout_filters_list_fragment_canvas_options"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:visibility="gone">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_filters_fragment_canvas_options"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-
-            </android.support.v7.widget.RecyclerView>
-
-        </LinearLayout>
-
-
     </LinearLayout>
 
 </FrameLayout>

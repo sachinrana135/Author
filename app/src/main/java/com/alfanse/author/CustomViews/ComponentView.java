@@ -50,6 +50,7 @@ public class ComponentView extends FrameLayout {
     private int mMaximumWidth;
     private int mMinimumHeight;
     private int mMaximumHeight;
+    private int iconSize = 40;
     private onComponentViewInteractionListener mListener;
 
     public ComponentView(@NonNull Context context, @NonNull QuoteCanvas canvas) {
@@ -81,7 +82,7 @@ public class ComponentView extends FrameLayout {
         Drawable drawableRemove = Utils.getInstance(mContext).getDrawable(R.drawable.ic_delete_grey_24dp);
         mImgRemove.setImageDrawable(drawableRemove);
 
-        FrameLayout.LayoutParams imgRemoveLayoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+        FrameLayout.LayoutParams imgRemoveLayoutParams = new FrameLayout.LayoutParams(iconSize, iconSize);
         imgRemoveLayoutParams.gravity = Gravity.TOP | Gravity.RIGHT;
         mImgRemove.setLayoutParams(imgRemoveLayoutParams);
         this.addView(mImgRemove);
@@ -90,7 +91,7 @@ public class ComponentView extends FrameLayout {
         Drawable drawableResize = Utils.getInstance(mContext).getDrawable(R.drawable.ic_resize_grey_24dp);
         mImgResize.setImageDrawable(drawableResize);
 
-        FrameLayout.LayoutParams imgResizeLayoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+        FrameLayout.LayoutParams imgResizeLayoutParams = new FrameLayout.LayoutParams(iconSize, iconSize);
         imgResizeLayoutParams.gravity = Gravity.BOTTOM | Gravity.RIGHT;
 
         mImgResize.setLayoutParams(imgResizeLayoutParams);

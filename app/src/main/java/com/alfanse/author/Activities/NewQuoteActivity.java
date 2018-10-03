@@ -21,8 +21,11 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GestureDetectorCompat;
@@ -52,6 +55,7 @@ import com.alfanse.author.Fragments.CanvasOptionsFragment;
 import com.alfanse.author.Fragments.ComponentBoxViewOptionsFragment;
 import com.alfanse.author.Fragments.ComponentImageViewOptionsFragment;
 import com.alfanse.author.Fragments.ComponentTextViewOptionsFragment;
+import com.alfanse.author.Fragments.EnhanceImageFragment;
 import com.alfanse.author.Interfaces.NetworkCallback;
 import com.alfanse.author.Models.Author;
 import com.alfanse.author.Models.CanvasTheme;
@@ -91,7 +95,9 @@ public class NewQuoteActivity extends BaseActivity implements
         ComponentImageViewOptionsFragment.OnFragmentInteractionListener,
         ComponentBoxViewOptionsFragment.OnFragmentInteractionListener,
         ColorPickerDialogListener,
-        ComponentView.onComponentViewInteractionListener {
+        ComponentView.onComponentViewInteractionListener,
+        EnhanceImageFragment.OnFragmentInteractionListener {
+
 
     private static final int REQUEST_CODE_WRITE_EXTERNAL_STORAGE = 3242;
     private static final int REQUEST_CODE_PUBLISH_QUOTE = 5235;
@@ -112,6 +118,7 @@ public class NewQuoteActivity extends BaseActivity implements
     private ComponentImageViewOptionsFragment mComponentImageViewOptionsFragment;
     private ComponentTextViewOptionsFragment mComponentTextViewOptionsFragment;
     private ComponentBoxViewOptionsFragment mComponentBoxViewOptionsFragment;
+    private EnhanceImageFragment mEnhanceImageFragment;
     private android.support.v4.app.Fragment mActiveOptionFragment = null;
 
     private ComponentTextView mActiveComponentTextView;
@@ -226,14 +233,10 @@ public class NewQuoteActivity extends BaseActivity implements
             mCanvasOptionsFragment.setQuoteCanvas(mQuoteCanvas);
         }
 
-        if (!mCanvasOptionsFragment.isAdded()) {
-            mFragmentManager.beginTransaction()
-                    .replace(R.id.option_container_new_quote, mCanvasOptionsFragment)
-                    .addToBackStack(null)
-                    .commitAllowingStateLoss();
-        } else {
-            mCanvasOptionsFragment.showCanvasThemes();
-        }
+        mFragmentManager.beginTransaction()
+                .replace(R.id.option_container_new_quote, mCanvasOptionsFragment)
+                .addToBackStack(null)
+                .commitAllowingStateLoss();
     }
 
     @Override
@@ -293,6 +296,24 @@ public class NewQuoteActivity extends BaseActivity implements
 
         componentBoxView.setOnTouchListener(new componentBoxViewTouchListener());
         mActiveComponentBoxView = componentBoxView;
+    }
+
+    @Override
+    public void onEnhanceImageOptionClicked() {
+        loadEnhanceImageFragment();
+    }
+
+    public void loadEnhanceImageFragment() {
+
+        if (mEnhanceImageFragment == null) {
+            mEnhanceImageFragment = new EnhanceImageFragment();
+            mEnhanceImageFragment.setQuoteCanvas(mQuoteCanvas);
+        }
+
+        mFragmentManager.beginTransaction()
+                .replace(R.id.option_container_new_quote, mEnhanceImageFragment)
+                .commit();
+
     }
 
     @Override
@@ -397,25 +418,38 @@ public class NewQuoteActivity extends BaseActivity implements
         mQuoteCanvas.removeProgressBar();// to fix the issue of loading icon seen in some quotes
         loadCanvasOptionsFragment();
 
-        String localImagePath = saveCanvasIntoImage();
+        CommonView.getInstance(mContext).showTransparentProgressDialog(mActivity, getString(R.string.text_loading_save_quote));
 
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+        mQuoteCanvas.showTempImageView(mQuoteCanvas.getBitmapWithFilterApplied());
 
-            Quote quote = new Quote();
-            quote.setLocalImagePath(localImagePath);
-            quote.setContent(getQuoteContent());
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
 
-            Author author = new Author();
-            author.setId(mLoggedAuthor.getId());
-            quote.setAuthor(author);
+                String localImagePath = saveCanvasIntoImage();
 
-            Intent publishQuoteIntent = new Intent(mActivity, PublishQuoteActivity.class);
-            publishQuoteIntent.putExtra(BUNDLE_KEY_QUOTE, quote);
-            startActivityForResult(publishQuoteIntent, REQUEST_CODE_PUBLISH_QUOTE);
-        } else {
-            Intent signInIntent = new Intent(mActivity, SignInActivity.class);
-            startActivity(signInIntent);
-        }
+                CommonView.getInstance(mContext).dismissProgressDialog();
+
+                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+
+                    Quote quote = new Quote();
+                    quote.setLocalImagePath(localImagePath);
+                    quote.setContent(getQuoteContent());
+
+                    Author author = new Author();
+                    author.setId(mLoggedAuthor.getId());
+                    quote.setAuthor(author);
+
+                    Intent publishQuoteIntent = new Intent(mActivity, PublishQuoteActivity.class);
+                    publishQuoteIntent.putExtra(BUNDLE_KEY_QUOTE, quote);
+                    startActivityForResult(publishQuoteIntent, REQUEST_CODE_PUBLISH_QUOTE);
+                } else {
+                    Intent signInIntent = new Intent(mActivity, SignInActivity.class);
+                    startActivity(signInIntent);
+                }
+            }
+        }, 2000);
+
     }
 
     private ArrayList<String> getQuoteContent() {
@@ -443,8 +477,6 @@ public class NewQuoteActivity extends BaseActivity implements
 
     private String saveCanvasIntoImage() {
 
-        CommonView.getInstance(mContext).showTransparentProgressDialog(mActivity, getString(R.string.text_loading_save_quote));
-
         Bitmap bitmap = Bitmap.createBitmap(mQuoteCanvas.getWidth(), mQuoteCanvas.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         mQuoteCanvas.draw(canvas);
@@ -464,12 +496,24 @@ public class NewQuoteActivity extends BaseActivity implements
             FileOutputStream output = new FileOutputStream(file);
             bitmap.compress(Bitmap.CompressFormat.JPEG, Constants.QUOTE_QUALITY, output);
             output.close();
+
+            MediaScannerConnection.scanFile(mContext,
+                    new String[]{
+                            file.toString()
+                    }, null,
+                    new MediaScannerConnection.OnScanCompletedListener() {
+                        @Override
+                        public void onScanCompleted(final String path, final Uri uri) {
+                            Log.d("ExternalStorage", "Scanned " + path + ":");
+                        }
+                    });
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        CommonView.getInstance(mContext).dismissProgressDialog();
+
         return file.getAbsolutePath();
     }
 
@@ -576,7 +620,7 @@ public class NewQuoteActivity extends BaseActivity implements
                         }
 
                     } else {
-                        // Do nothing
+                        mQuoteCanvas.hideTempImageView();
                     }
                 }
                 break;
