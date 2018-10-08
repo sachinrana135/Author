@@ -116,6 +116,8 @@
     <string name="text_loading_updating_country">Updating country...</string>
     <string name="text_loading_creating_new_account">Creating account...</string>
     <string name="text_loading_updating_image">Updating image...</string>
+    <string name="text_maintenance_title">Author under maintenance</string>
+    <string name="text_maintenance_message">Sorry for the inconvenience but We\'ll be up soon.</string>
 
 
     <!-- Button -->
@@ -131,6 +133,8 @@
     <string name="button_update">Update</string>
     <string name="button_explore">Explore</string>
     <string name="button_apply">Apply</string>
+    <string name="button_exit">Exit</string>
+    <string name="button_skip">Skip</string>
 
     <!-- Hint -->
     <string name="hint_email">Email*</string>

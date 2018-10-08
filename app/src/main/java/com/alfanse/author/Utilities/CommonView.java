@@ -228,34 +228,6 @@ public class CommonView {
 
     }
 
-    public void showMaintenanceDialog(Activity activity) {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-
-        WebView wv = new WebView(activity);
-        wv.loadUrl(Constants.WEB_URL_WEBSERVICE_MAINTENANCE);
-        wv.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                return true;
-            }
-        });
-
-        builder.setView(wv);
-        // Add the buttons
-        builder.setPositiveButton(R.string.action_ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                Utils.getInstance(mContext).closeApplication();
-            }
-        });
-        // Set other dialog properties
-        builder.setCancelable(false);
-
-        // Create the AlertDialog
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
 
     public void showNoInternetDialog(final Activity activity) {
 

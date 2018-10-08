@@ -16,12 +16,24 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ProgressBar;
 
+import com.alfanse.author.Interfaces.NetworkCallback;
 import com.alfanse.author.R;
+import com.alfanse.author.Utilities.ApiUtils;
+import com.alfanse.author.Utilities.Constants;
+import com.alfanse.author.Utilities.NetworkUtils;
+import com.alfanse.author.Utilities.StartUpConfig;
+import com.alfanse.author.Utilities.Utils;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.gson.Gson;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_FORCE_UPGRADE;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -29,17 +41,21 @@ import com.google.firebase.auth.FirebaseAuth;
  */
 public class SplashActivity extends AppCompatActivity {
 
-    // Splash screen timer
-    private static int SPLASH_TIME_OUT = 3000;
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
+
     private Context mContext;
     private Activity mActivity;
     private View mContentView;
+    private StartUpConfig instance;
+    private boolean mIsNetworkConnected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_splash);
+        ButterKnife.bind(this);
         mContentView = findViewById(R.id.fullscreen_content_splash);
         mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -48,32 +64,77 @@ public class SplashActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
                 | View.SYSTEM_UI_FLAG_IMMERSIVE);
 
+    }
+
+    private void getStartUpConfig() {
+        progressBar.setVisibility(View.VISIBLE);
+        ApiUtils api = new ApiUtils(mContext)
+                .setActivity(mActivity)
+                .setUrl(Constants.API_URL_GET_STARTUP_CONFIG)
+                .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
+                    @Override
+                    public void onSuccessCallBack(String stringResponse) {
+                        try {
+                            progressBar.setVisibility(View.GONE);
+
+                            instance = StartUpConfig.getInstance();
+                            instance = new Gson().fromJson(stringResponse, StartUpConfig.class);
+
+                            //check if api is on maintenance
+                            if (!instance.getApiStatus()) {
+                                Intent intent = new Intent(mActivity, ApiMaintenanceActivity.class);
+                                startActivity(intent);
+                                finish();
+                                return;
+                            }
+
+                            //Check if update is available
+                            if (instance.isUpdateAvailable()) {
+                                Intent intent = new Intent(mActivity, AppUpgradeActivity.class);
+                                intent.putExtra(BUNDLE_KEY_FORCE_UPGRADE, instance.isForceUpdate());
+                                startActivity(intent);
+                                finish();
+                                return;
+                            }
+
+                            Intent targetIntent;
+                            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                                targetIntent = new Intent(mActivity, HomeActivity.class);
+                            } else {
+                                targetIntent = new Intent(mActivity, SignInActivity.class);
+                            }
+                            startActivity(targetIntent);
+                            finish();
+
+                        } catch (Exception e) {
+                            Utils.getInstance(mContext).logException(e);
+                        }
+                    }
+
+                    @Override
+                    public void onFailureCallBack(Exception e) {
+                        progressBar.setVisibility(View.GONE);
+                    }
+                });
+        api.call();
+        //endregion API_CALL_END
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         mContext = getApplicationContext();
         mActivity = SplashActivity.this;
+        checkInternetConnectivity();
+    }
 
-
-        new Handler().postDelayed(new Runnable() {
-
-            /*
-             * Showing splash screen with a timer. This will be useful when you
-             * want to show case your app logo / company
-             */
-
-            @Override
-            public void run() {
-                // This method will be executed once the timer is over
-                // Start Home activity
-                // close this activity
-
-                Intent targetIntent;
-                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                    targetIntent = new Intent(mActivity, HomeActivity.class);
-                } else {
-                    targetIntent = new Intent(mActivity, SignInActivity.class);
-                }
-                startActivity(targetIntent);
-                finish();
-            }
-        }, SPLASH_TIME_OUT);
+    private void checkInternetConnectivity() {
+        mIsNetworkConnected = NetworkUtils.getInstance(mContext).isNetworkConnected();
+        if (!mIsNetworkConnected) {
+            Intent intent = new Intent(mActivity, NoInternetConnectionActivity.class);
+            startActivity(intent);
+        } else {
+            getStartUpConfig();
+        }
     }
 }

@@ -120,6 +120,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Activities.ApiMaintenanceActivity" />
+        <activity android:name=".Activities.NoInternetConnectionActivity" />
+        <activity android:name=".Activities.AppUpgradeActivity"></activity>
     </application>
 
 </manifest>

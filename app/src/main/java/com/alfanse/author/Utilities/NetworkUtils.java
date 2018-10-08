@@ -15,6 +15,7 @@ package com.alfanse.author.Utilities;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.alfanse.author.BuildConfig;
@@ -157,6 +158,7 @@ public class NetworkUtils {
                                 message = message + "\t" + apiUtils.getHeaderParams().get(Constants.API_HEADER_PARAM_KEY_CORRELATION_ID);
                                 message = message + "\t" + "RESPONSE";
                                 message = message + "\t" + response;
+                                Log.d("API Response", message);
                                 Utils.logInfo(message);
                             }
                             parseApiResponse(response, apiUtils);
@@ -245,22 +247,6 @@ public class NetworkUtils {
 
         ApiResponse apiResponse = new Gson().fromJson(response, ApiResponse.class);
 
-        // Checking if webservice is on maintenance
-        if (apiResponse.getConfig() != null) {
-            if (apiResponse.getConfig().getApiStatus() != null) {
-                if (apiResponse.getConfig().getApiStatus().equalsIgnoreCase("false")) {
-                    CommonView.getInstance(mContext).showMaintenanceDialog(apiUtils.getActivity());
-                    return;
-                }
-            }
-            // Checking if webservice supports app version
-            if (apiResponse.getConfig().getMinSupportVersion() != null) {
-                if (Utils.getInstance(mContext).getAppVersionCode() < Integer.parseInt(apiResponse.getConfig().getMinSupportVersion())) {
-                    CommonView.getInstance(mContext).showAppUpgradeDialog(apiUtils.getActivity());
-                    return;
-                }
-            }
-        }
         // Checking if any error in webservice response
         if (apiResponse.getError() != null) {
             if (apiResponse.getError().getMessage() != null && !apiResponse.getError().getMessage().trim().isEmpty()) {

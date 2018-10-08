@@ -19,17 +19,8 @@ import com.google.gson.JsonElement;
  */
 
 public class ApiResponse {
-    private ApiConfig config;
     private JsonElement response;
     private ApiError error;
-
-    public ApiConfig getConfig() {
-        return config;
-    }
-
-    public void setConfig(ApiConfig config) {
-        this.config = config;
-    }
 
     public JsonElement getResponse() {
         return response;
