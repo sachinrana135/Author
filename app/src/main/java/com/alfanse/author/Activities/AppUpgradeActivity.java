@@ -33,6 +33,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_AUTO_UPGRADE;
 import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_FORCE_UPGRADE;
 
 public class AppUpgradeActivity extends AppCompatActivity {
@@ -50,6 +51,7 @@ public class AppUpgradeActivity extends AppCompatActivity {
     private Context mContext;
     private Activity mActivity;
     private boolean isForcedUpgrade = false;
+    private boolean isAutoUpgrade = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +66,13 @@ public class AppUpgradeActivity extends AppCompatActivity {
         if (intent.getExtras() != null) {
             if (intent.hasExtra(BUNDLE_KEY_FORCE_UPGRADE)) {
                 isForcedUpgrade = intent.getBooleanExtra(BUNDLE_KEY_FORCE_UPGRADE, false);
+            }
+
+            if (intent.hasExtra(BUNDLE_KEY_AUTO_UPGRADE)) {
+                isAutoUpgrade = intent.getBooleanExtra(BUNDLE_KEY_AUTO_UPGRADE, true);
+                if (isAutoUpgrade) {
+                    Utils.getInstance(mContext).goToPlayStore();
+                }
             }
         }
         if (isForcedUpgrade) {

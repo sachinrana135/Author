@@ -22,6 +22,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 
+import com.alfanse.author.Activities.AppUpgradeActivity;
 import com.alfanse.author.Activities.SignInActivity;
 import com.alfanse.author.Models.FirebaseRemoteMessageData;
 import com.alfanse.author.R;
@@ -39,11 +40,14 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
 
+import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_AUTO_UPGRADE;
+
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     public final static String PUSH_TYPE_QUOTE = "quote";
     public final static String PUSH_TYPE_COMMENT = "comment";
     public final static String PUSH_TYPE_AUTHOR = "author";
+    public final static String PUSH_APP_UPGRADE = "app_upgrade";
 
     /**
      * Called when message is received.
@@ -87,7 +91,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         Intent intent;
 
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+        if (FCMData.getPushType() != null && FCMData.getPushType().equals(PUSH_APP_UPGRADE)) {
+            if (Integer.parseInt(FCMData.getAppLiveVersionCode()) > Utils.getInstance(getApplicationContext()).getAppVersionCode()) {
+                intent = new Intent(getApplicationContext(), AppUpgradeActivity.class);
+                intent.putExtra(BUNDLE_KEY_AUTO_UPGRADE, FCMData.isAutoUpgrade());
+            } else {
+                return;
+            }
+        } else if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             intent = Utils.getInstance(getApplicationContext()).getFirebaseMessageTargetIntent(FCMData);
         } else {
             intent = new Intent(this, SignInActivity.class);
@@ -122,8 +133,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     /*
-    *To get a Bitmap image from the URL received
-    * */
+     *To get a Bitmap image from the URL received
+     * */
     public Bitmap getBitmapfromUrl(String imageUrl) {
         try {
             URL url = new URL(imageUrl);

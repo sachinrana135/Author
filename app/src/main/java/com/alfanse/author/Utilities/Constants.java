@@ -37,6 +37,7 @@ public class Constants {
     public static final String BUNDLE_KEY_FCM_MESSAGE_DATA = "fcmData";
     public static final String BUNDLE_KEY_CAME_VIA_NOTIFICATION = "viaNotification";
     public static final String BUNDLE_KEY_FORCE_UPGRADE = "isForceUpgrade";
+    public static final String BUNDLE_KEY_AUTO_UPGRADE = "isAutoUpgrade";
 
     public static final String TAG_DEFAULT_CANVASE_TEXT_VIEW = "TAG_DEFAULT_CANVASE_TEXT_VIEW";
     public static final String DEFAULT_COMPONENT_TEXTVIEW_FONT = "Helvetica";

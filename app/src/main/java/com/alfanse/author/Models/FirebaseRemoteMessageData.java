@@ -27,6 +27,8 @@ public class FirebaseRemoteMessageData implements Serializable {
     String pushType;
     String quoteId;
     String authorId;
+    String appLiveVersionCode;
+    Boolean autoUpgrade;
 
     public String getTitle() {
         return title;
@@ -82,5 +84,21 @@ public class FirebaseRemoteMessageData implements Serializable {
 
     public void setAuthorId(String authorId) {
         this.authorId = authorId;
+    }
+
+    public String getAppLiveVersionCode() {
+        return appLiveVersionCode;
+    }
+
+    public void setAppLiveVersionCode(String appLiveVersionCode) {
+        this.appLiveVersionCode = appLiveVersionCode;
+    }
+
+    public Boolean isAutoUpgrade() {
+        return autoUpgrade;
+    }
+
+    public void setAutoUpgrade(Boolean autoUpgrade) {
+        this.autoUpgrade = autoUpgrade;
     }
 }
