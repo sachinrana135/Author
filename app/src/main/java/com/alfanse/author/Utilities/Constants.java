@@ -155,5 +155,7 @@ public class Constants {
 
     public static String ACTIVITY_PACKAGE_PATH = "com.alfanse.author.Activities";
 
+    public static int APP_UPGRADE_NOTIFICATION_FREQUENCY = 5;
+
 
 }

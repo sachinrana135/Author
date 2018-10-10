@@ -118,6 +118,7 @@
     <string name="text_loading_updating_image">Updating image...</string>
     <string name="text_maintenance_title">Author under maintenance</string>
     <string name="text_maintenance_message">Sorry for the inconvenience but We\'ll be up soon.</string>
+    <string name="text_dont_ask_again">Don\'t ask again for this version.</string>
 
 
     <!-- Button -->

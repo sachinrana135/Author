@@ -633,4 +633,20 @@ public class Utils {
             }
         }
     }
+
+    public Boolean shouldShowUpgrade() {
+
+        Boolean shouldShowUpgrade = true;
+
+        String versionCode = Integer.toString(getAppVersionCode());
+        int totalUpgradeLaunches = SharedManagement.getInstance(mContext).getInt(SharedManagement.TOTAL_APP_LAUNCHED);
+
+        if (SharedManagement.getInstance(mContext).getBoolean(SharedManagement.APP_UPGRADE + versionCode)
+                || !(totalUpgradeLaunches % Constants.APP_UPGRADE_NOTIFICATION_FREQUENCY == 0)) {
+
+            shouldShowUpgrade = false;
+        }
+
+        return shouldShowUpgrade;
+    }
 }

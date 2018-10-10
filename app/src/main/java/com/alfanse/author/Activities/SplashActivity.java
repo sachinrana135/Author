@@ -25,6 +25,7 @@ import com.alfanse.author.R;
 import com.alfanse.author.Utilities.ApiUtils;
 import com.alfanse.author.Utilities.Constants;
 import com.alfanse.author.Utilities.NetworkUtils;
+import com.alfanse.author.Utilities.SharedManagement;
 import com.alfanse.author.Utilities.StartUpConfig;
 import com.alfanse.author.Utilities.Utils;
 import com.google.firebase.auth.FirebaseAuth;
@@ -89,7 +90,9 @@ public class SplashActivity extends AppCompatActivity {
                             }
 
                             //Check if update is available
-                            if (instance.isUpdateAvailable()) {
+                            Boolean shouldShowUpgrade = Utils.getInstance(mContext).shouldShowUpgrade();
+                            SharedManagement.getInstance(mContext).setInt(SharedManagement.TOTAL_APP_LAUNCHED, SharedManagement.getInstance(mContext).getInt(SharedManagement.TOTAL_APP_LAUNCHED) + 1);
+                            if (instance.isUpdateAvailable() && shouldShowUpgrade) {
                                 Intent intent = new Intent(mActivity, AppUpgradeActivity.class);
                                 intent.putExtra(BUNDLE_KEY_FORCE_UPGRADE, instance.isForceUpdate());
                                 startActivity(intent);

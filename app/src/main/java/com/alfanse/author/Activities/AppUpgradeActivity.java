@@ -22,10 +22,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.alfanse.author.R;
 import com.alfanse.author.Utilities.Constants;
+import com.alfanse.author.Utilities.SharedManagement;
 import com.alfanse.author.Utilities.Utils;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -44,9 +46,10 @@ public class AppUpgradeActivity extends AppCompatActivity {
     ViewGroup layoutLoading;
     @BindView(R.id.layout_content)
     ViewGroup layoutcontent;
-
     @BindView(R.id.text_skip)
     TextView textSkip;
+    @BindView(R.id.cbDontAskAgain)
+    CheckBox cbDontAskAgain;
 
     private Context mContext;
     private Activity mActivity;
@@ -108,6 +111,11 @@ public class AppUpgradeActivity extends AppCompatActivity {
 
     @OnClick(R.id.text_skip)
     public void onSkipClick() {
+
+        String versionCode = Integer.toString(Utils.getInstance(mContext).getAppVersionCode());
+
+        SharedManagement.getInstance(mContext).setBoolean(SharedManagement.APP_UPGRADE + versionCode, cbDontAskAgain.isChecked());
+
         Intent targetIntent;
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             targetIntent = new Intent(mActivity, HomeActivity.class);
@@ -122,5 +130,6 @@ public class AppUpgradeActivity extends AppCompatActivity {
     public void onUpgradeClick() {
         Utils.getInstance(mContext).goToPlayStore();
     }
+
 }
 

@@ -32,6 +32,8 @@ public class SharedManagement {
     public final static String LAST_LOGIN_EMAIL = "LAST_LOGIN_EMAIL";
     public final static String LOGGED_USER = "LOGGED_USER";
     public final static String FIREBASE_TOKEN = "FIREBASE_TOKEN";
+    public final static String APP_UPGRADE = "APP_UPGRADE";
+    public final static String TOTAL_APP_LAUNCHED = "TOTAL_APP_LAUNCHED";
     public static Context mContext;
     private static SharedManagement mInstance;
     private SharedPreferences sharedpreferences;
@@ -66,6 +68,15 @@ public class SharedManagement {
 
     public int getInt(String key) {
         return sharedpreferences.getInt(key, 0);
+    }
+
+    public void setBoolean(String key, boolean value) {
+        editor.putBoolean(key, value);
+        editor.apply();
+    }
+
+    public Boolean getBoolean(String key) {
+        return sharedpreferences.getBoolean(key, false);
     }
 
     public void remove(String key) {
