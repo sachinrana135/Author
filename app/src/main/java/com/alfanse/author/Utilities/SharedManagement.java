@@ -105,8 +105,7 @@ public class SharedManagement {
         mAuth.signOut();
         remove(LOGGED_USER);
         Intent signInIntent = new Intent(mContext, SignInActivity.class);
-        signInIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        signInIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        signInIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         mContext.startActivity(signInIntent);
     }
 }

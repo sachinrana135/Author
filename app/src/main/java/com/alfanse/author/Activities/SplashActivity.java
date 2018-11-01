@@ -23,6 +23,7 @@ import android.widget.ProgressBar;
 import com.alfanse.author.Interfaces.NetworkCallback;
 import com.alfanse.author.R;
 import com.alfanse.author.Utilities.ApiUtils;
+import com.alfanse.author.Utilities.CommonView;
 import com.alfanse.author.Utilities.Constants;
 import com.alfanse.author.Utilities.NetworkUtils;
 import com.alfanse.author.Utilities.SharedManagement;
@@ -90,7 +91,7 @@ public class SplashActivity extends AppCompatActivity {
                             }
 
                             //Check if update is available
-                            Boolean shouldShowUpgrade = Utils.getInstance(mContext).shouldShowUpgrade();
+                            Boolean shouldShowUpgrade = Utils.getInstance(mContext).shouldShowUpgrade(Integer.parseInt(instance.getNotifyUpdateFrequency()));
                             SharedManagement.getInstance(mContext).setInt(SharedManagement.TOTAL_APP_LAUNCHED, SharedManagement.getInstance(mContext).getInt(SharedManagement.TOTAL_APP_LAUNCHED) + 1);
                             if (instance.isUpdateAvailable() && shouldShowUpgrade) {
                                 Intent intent = new Intent(mActivity, AppUpgradeActivity.class);
@@ -116,7 +117,7 @@ public class SplashActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailureCallBack(Exception e) {
-                        progressBar.setVisibility(View.GONE);
+                        CommonView.getInstance(mContext).showRetrySnackBar(mContext.getString(R.string.error_exception), mActivity);
                     }
                 });
         api.call();

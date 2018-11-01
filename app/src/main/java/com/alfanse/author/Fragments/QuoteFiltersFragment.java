@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alfanse.author.Activities.ChooseCategoryActivity;
+import com.alfanse.author.Interfaces.ExceptionDialogButtonListener;
 import com.alfanse.author.Interfaces.NetworkCallback;
 import com.alfanse.author.Interfaces.quoteFiltersUpdateListener;
 import com.alfanse.author.Models.Category;
@@ -173,6 +174,7 @@ public class QuoteFiltersFragment extends BaseFragment {
                 .setActivity(mActivity)
                 .setUrl(Constants.API_URL_GET_LANGUAGES)
                 .setParams(param)
+                .setShowError(false)
                 .setMessage("PublishQuoteActivity.java|getLanguages")
                 .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
                     @Override
@@ -187,7 +189,17 @@ public class QuoteFiltersFragment extends BaseFragment {
 
                     @Override
                     public void onFailureCallBack(Exception e) {
-                        CommonView.getInstance(mContext).dismissProgressDialog();
+                        CommonView.getInstance(mContext).showExceptionErrorDialog(mActivity, Utils.getInstance(mContext).getErrorMessage(e), new ExceptionDialogButtonListener() {
+                            @Override
+                            public void onRetryClick() {
+                                getLanguages();
+                            }
+
+                            @Override
+                            public void onCancelClick() {
+                                mActivity.onBackPressed();
+                            }
+                        });
                     }
                 });
 

@@ -33,6 +33,7 @@ public class StartUpConfig {
     private Boolean apiStatus;
     private Boolean isForceUpdate;
     private Boolean isUpdateAvailable;
+    private String notifyUpdateFrequency;
 
     public Boolean getApiStatus() {
         return apiStatus;
@@ -46,4 +47,7 @@ public class StartUpConfig {
         return isUpdateAvailable;
     }
 
+    public String getNotifyUpdateFrequency() {
+        return notifyUpdateFrequency;
+    }
 }

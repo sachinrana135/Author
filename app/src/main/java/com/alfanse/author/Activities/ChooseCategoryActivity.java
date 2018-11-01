@@ -32,6 +32,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.alfanse.author.CustomViews.FlowLayout;
+import com.alfanse.author.Interfaces.ExceptionDialogButtonListener;
 import com.alfanse.author.Interfaces.NetworkCallback;
 import com.alfanse.author.Models.Category;
 import com.alfanse.author.R;
@@ -178,6 +179,7 @@ public class ChooseCategoryActivity extends BaseActivity {
                 .setActivity(mActivity)
                 .setUrl(Constants.API_URL_GET_CATEGORIES)
                 .setParams(param)
+                .setShowError(false)
                 .setMessage("ChooseCategoryActivity.java|getCategories")
                 .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
                     @Override
@@ -192,7 +194,17 @@ public class ChooseCategoryActivity extends BaseActivity {
 
                     @Override
                     public void onFailureCallBack(Exception e) {
-                        CommonView.getInstance(mContext).dismissProgressDialog();
+                        CommonView.getInstance(mContext).showExceptionErrorDialog(mActivity, Utils.getInstance(mContext).getErrorMessage(e), new ExceptionDialogButtonListener() {
+                            @Override
+                            public void onRetryClick() {
+                                getCategories();
+                            }
+
+                            @Override
+                            public void onCancelClick() {
+                                onBackPressed();
+                            }
+                        });
                     }
                 });
 

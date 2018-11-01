@@ -29,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alfanse.author.Fragments.QuotesFragment;
+import com.alfanse.author.Interfaces.ExceptionDialogButtonListener;
 import com.alfanse.author.Interfaces.NetworkCallback;
 import com.alfanse.author.Models.Author;
 import com.alfanse.author.Models.AuthorFilters;
@@ -134,6 +135,7 @@ public class AuthorActivity extends BaseActivity {
                 .setUrl(Constants.API_URL_GET_AUTHOR)
                 .setParams(param)
                 .setMessage("AuthorActivity.java|getAuthor")
+                .setShowError(false)
                 .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
                     @Override
                     public void onSuccessCallBack(String stringResponse) {
@@ -147,7 +149,17 @@ public class AuthorActivity extends BaseActivity {
 
                     @Override
                     public void onFailureCallBack(Exception e) {
-                        CommonView.getInstance(mContext).dismissProgressDialog();
+                        CommonView.getInstance(mContext).showExceptionErrorDialog(mActivity, Utils.getInstance(mContext).getErrorMessage(e), new ExceptionDialogButtonListener() {
+                            @Override
+                            public void onRetryClick() {
+                                getAuthor();
+                            }
+
+                            @Override
+                            public void onCancelClick() {
+                                onBackPressed();
+                            }
+                        });
                     }
                 });
 

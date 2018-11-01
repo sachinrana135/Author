@@ -40,6 +40,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alfanse.author.CustomViews.DialogBuilder;
+import com.alfanse.author.Interfaces.ExceptionDialogButtonListener;
 import com.alfanse.author.Interfaces.NetworkCallback;
 import com.alfanse.author.Models.Author;
 import com.alfanse.author.Models.CustomDialog;
@@ -556,6 +557,7 @@ public class SignInActivity extends BaseActivity implements
                 .setActivity(mActivity)
                 .setUrl(Constants.API_URL_SAVE_AUTHOR)
                 .setParams(param)
+                .setShowError(false)
                 .setMessage("AuthorActivity.java|addOrUpdateAuthor")
                 .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
                     @Override
@@ -569,7 +571,17 @@ public class SignInActivity extends BaseActivity implements
 
                     @Override
                     public void onFailureCallBack(Exception e) {
-                        CommonView.getInstance(mContext).dismissProgressDialog();
+                        CommonView.getInstance(mContext).showExceptionErrorDialog(mActivity, Utils.getInstance(mContext).getErrorMessage(e), new ExceptionDialogButtonListener() {
+                            @Override
+                            public void onRetryClick() {
+                                addOrUpdateAuthor();
+                            }
+
+                            @Override
+                            public void onCancelClick() {
+                                onBackPressed();
+                            }
+                        });
                     }
                 });
 

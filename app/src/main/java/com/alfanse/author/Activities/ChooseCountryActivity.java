@@ -20,6 +20,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.widget.ArrayAdapter;
 
+import com.alfanse.author.Interfaces.ExceptionDialogButtonListener;
 import com.alfanse.author.Interfaces.NetworkCallback;
 import com.alfanse.author.Models.Author;
 import com.alfanse.author.Models.Country;
@@ -131,6 +132,7 @@ public class ChooseCountryActivity extends BaseActivity {
                 .setActivity(mActivity)
                 .setUrl(Constants.API_URL_GET_COUNTRIES)
                 .setParams(param)
+                .setShowError(false)
                 .setMessage("ChooseCountryActivity.java|getCountries")
                 .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
                     @Override
@@ -145,7 +147,17 @@ public class ChooseCountryActivity extends BaseActivity {
 
                     @Override
                     public void onFailureCallBack(Exception e) {
-                        CommonView.getInstance(mContext).dismissProgressDialog();
+                        CommonView.getInstance(mContext).showExceptionErrorDialog(mActivity, Utils.getInstance(mContext).getErrorMessage(e), new ExceptionDialogButtonListener() {
+                            @Override
+                            public void onRetryClick() {
+                                getCountries();
+                            }
+
+                            @Override
+                            public void onCancelClick() {
+                                onBackPressed();
+                            }
+                        });
                     }
                 });
 

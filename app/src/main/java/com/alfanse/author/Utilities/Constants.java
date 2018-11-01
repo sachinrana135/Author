@@ -154,8 +154,4 @@ public class Constants {
     public static String FIREBASE_SUBSCRIPTION_TOPIC_ANDROID_USERS = "ANDROID_USERS";
 
     public static String ACTIVITY_PACKAGE_PATH = "com.alfanse.author.Activities";
-
-    public static int APP_UPGRADE_NOTIFICATION_FREQUENCY = 5;
-
-
 }

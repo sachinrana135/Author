@@ -19,6 +19,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -29,6 +31,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.alfanse.author.CustomViews.DialogBuilder;
+import com.alfanse.author.Interfaces.ExceptionDialogButtonListener;
 import com.alfanse.author.Interfaces.onReportItemSubmitListener;
 import com.alfanse.author.Models.CustomDialog;
 import com.alfanse.author.R;
@@ -47,6 +50,7 @@ public class CommonView {
     private static CommonView sInstance;
     private static Context mContext;
     private ProgressDialog mProgressDialog;
+    private Snackbar mSnackbar;
 
     private CommonView(Context context) {
         mContext = context;
@@ -91,7 +95,7 @@ public class CommonView {
         }
     }
 
-    public void showTransparentProgressDialog(Activity activity, String message) {
+    public void showTransparentProgressDialog(final Activity activity, String message) {
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             return;
         }
@@ -102,16 +106,16 @@ public class CommonView {
 
         View view = layoutInflater.inflate(R.layout.item_progress_bar, null);
 
-        TextView messageView = (TextView) view.findViewById(R.id.message_item_progress);
+        TextView messageView = view.findViewById(R.id.message_item_progress);
 
         messageView.setText(message);
 
         mProgressDialog = new ProgressDialog(activity);
+
         mProgressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         mProgressDialog.setIndeterminate(false);
         mProgressDialog.show();
         mProgressDialog.setContentView(view);
-
     }
 
     public void showProgressDialog(Activity activity, String message, String title) {
@@ -157,6 +161,32 @@ public class CommonView {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
+    public void showExceptionErrorDialog(Activity activity, String errorMessage, final ExceptionDialogButtonListener listener) {
+
+        DialogBuilder builder = new DialogBuilder(activity);
+        // Add the buttons
+        builder.setPositiveButton(R.string.action_retry, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                listener.onRetryClick();
+            }
+        });
+        builder.setNegativeButton(R.string.action_cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                listener.onCancelClick();
+            }
+        });
+        // Set other dialog properties
+        builder.setTitle(R.string.error_exception);
+        builder.setMessage(errorMessage);
+        builder.setDialogType(DialogBuilder.ERROR);
+        builder.setCancelable(false);
+
+        // Create the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
 
     public void showReportDialog(ArrayList<String> listReport, Activity activity, final onReportItemSubmitListener listener) {
 
@@ -254,6 +284,25 @@ public class CommonView {
         });
 
         dialog.show();
+    }
+
+    public void showRetrySnackBar(String errorMessage, final Activity activity) {
+        mSnackbar = Snackbar
+                .make(activity.findViewById(android.R.id.content), errorMessage, Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.action_retry, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Handle user action
+                        mSnackbar.dismiss();
+                        activity.recreate();
+                    }
+                });
+        mSnackbar.setActionTextColor(ContextCompat.getColor(mContext, R.color.colorSuccess));
+        View snackbarView = mSnackbar.getView();
+        snackbarView.setBackgroundColor(Color.DKGRAY);
+        TextView textView = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextColor(Color.YELLOW);
+        mSnackbar.show();
     }
 
     public class ToastType {

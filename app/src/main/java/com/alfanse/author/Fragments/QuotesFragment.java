@@ -41,6 +41,7 @@ import com.alfanse.author.Activities.CommentsActivity;
 import com.alfanse.author.Activities.QuoteActivity;
 import com.alfanse.author.Adapters.QuotesAdapter;
 import com.alfanse.author.CustomViews.DialogBuilder;
+import com.alfanse.author.Interfaces.ExceptionDialogButtonListener;
 import com.alfanse.author.Interfaces.NetworkCallback;
 import com.alfanse.author.Interfaces.UpdatableFragment;
 import com.alfanse.author.Interfaces.bitmapRequestListener;
@@ -293,6 +294,7 @@ public class QuotesFragment extends BaseFragment implements UpdatableFragment {
                 .setActivity(mActivity)
                 .setUrl(Constants.API_URL_GET_REPORT_REASONS)
                 .setParams(param)
+                .setShowError(false)
                 .setMessage("QuotesFragment.java|getReportReasonsAndShowDialog")
                 .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
                     @Override
@@ -307,7 +309,17 @@ public class QuotesFragment extends BaseFragment implements UpdatableFragment {
 
                     @Override
                     public void onFailureCallBack(Exception e) {
-                        CommonView.getInstance(mContext).dismissProgressDialog();
+                        CommonView.getInstance(mContext).showExceptionErrorDialog(mActivity, Utils.getInstance(mContext).getErrorMessage(e), new ExceptionDialogButtonListener() {
+                            @Override
+                            public void onRetryClick() {
+                                getReportReasonsAndShowDialog();
+                            }
+
+                            @Override
+                            public void onCancelClick() {
+                                mActivity.onBackPressed();
+                            }
+                        });
                     }
                 });
 

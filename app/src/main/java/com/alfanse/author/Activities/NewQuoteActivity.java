@@ -56,6 +56,7 @@ import com.alfanse.author.Fragments.ComponentBoxViewOptionsFragment;
 import com.alfanse.author.Fragments.ComponentImageViewOptionsFragment;
 import com.alfanse.author.Fragments.ComponentTextViewOptionsFragment;
 import com.alfanse.author.Fragments.EnhanceImageFragment;
+import com.alfanse.author.Interfaces.ExceptionDialogButtonListener;
 import com.alfanse.author.Interfaces.NetworkCallback;
 import com.alfanse.author.Models.Author;
 import com.alfanse.author.Models.CanvasTheme;
@@ -181,6 +182,7 @@ public class NewQuoteActivity extends BaseActivity implements
                 .setActivity(mActivity)
                 .setUrl(Constants.API_URL_GET_CANVAS_THEMES)
                 .setParams(param)
+                .setShowError(false)
                 .setMessage("NewQuoteActivity.java|getDefaultCanvasTheme")
                 .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
                     @Override
@@ -195,7 +197,17 @@ public class NewQuoteActivity extends BaseActivity implements
 
                     @Override
                     public void onFailureCallBack(Exception e) {
-                        CommonView.getInstance(mContext).dismissProgressDialog();
+                        CommonView.getInstance(mContext).showExceptionErrorDialog(mActivity, Utils.getInstance(mContext).getErrorMessage(e), new ExceptionDialogButtonListener() {
+                            @Override
+                            public void onRetryClick() {
+                                getDefaultCanvasTheme();
+                            }
+
+                            @Override
+                            public void onCancelClick() {
+                                onBackPressed();
+                            }
+                        });
                     }
                 });
 
@@ -267,7 +279,6 @@ public class NewQuoteActivity extends BaseActivity implements
     }
 
     public void loadComponentTextViewOptionsFragment() {
-
 
         mComponentTextViewOptionsFragment = new ComponentTextViewOptionsFragment();
         mComponentTextViewOptionsFragment.setQuoteCanvas(mQuoteCanvas);
