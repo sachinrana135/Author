@@ -19,7 +19,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
+import com.alfanse.author.Interfaces.ExceptionDialogButtonListener;
 import com.alfanse.author.Interfaces.NetworkCallback;
 import com.alfanse.author.R;
 import com.alfanse.author.Utilities.ApiUtils;
@@ -46,6 +48,9 @@ public class SplashActivity extends AppCompatActivity {
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
 
+    @BindView(R.id.text_version_name)
+    TextView txtVersionName;
+
     private Context mContext;
     private Activity mActivity;
     private View mContentView;
@@ -65,6 +70,8 @@ public class SplashActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
                 | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
                 | View.SYSTEM_UI_FLAG_IMMERSIVE);
+
+        txtVersionName.setText(getString(R.string.app_name) + " " + Utils.getInstance(mContext).getAppVersionName());
 
     }
 
@@ -117,7 +124,17 @@ public class SplashActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailureCallBack(Exception e) {
-                        CommonView.getInstance(mContext).showRetrySnackBar(mContext.getString(R.string.error_exception), mActivity);
+                        CommonView.getInstance(mContext).showExceptionErrorDialog(mActivity, Utils.getInstance(mContext).getErrorMessage(e), new ExceptionDialogButtonListener() {
+                            @Override
+                            public void onRetryClick() {
+                                getStartUpConfig();
+                            }
+
+                            @Override
+                            public void onCancelClick() {
+                                onBackPressed();
+                            }
+                        });
                     }
                 });
         api.call();
