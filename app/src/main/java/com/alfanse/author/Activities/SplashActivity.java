@@ -23,13 +23,13 @@ import android.widget.TextView;
 
 import com.alfanse.author.Interfaces.ExceptionDialogButtonListener;
 import com.alfanse.author.Interfaces.NetworkCallback;
+import com.alfanse.author.Models.StartUpConfig;
 import com.alfanse.author.R;
 import com.alfanse.author.Utilities.ApiUtils;
 import com.alfanse.author.Utilities.CommonView;
 import com.alfanse.author.Utilities.Constants;
 import com.alfanse.author.Utilities.NetworkUtils;
 import com.alfanse.author.Utilities.SharedManagement;
-import com.alfanse.author.Utilities.StartUpConfig;
 import com.alfanse.author.Utilities.Utils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
@@ -71,7 +71,10 @@ public class SplashActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
                 | View.SYSTEM_UI_FLAG_IMMERSIVE);
 
-        txtVersionName.setText(getString(R.string.app_name) + " " + Utils.getInstance(mContext).getAppVersionName());
+        txtVersionName.setText(getString(R.string.app_name) + "-" + Utils.getInstance(mContext).getAppVersionName());
+        mContext = getApplicationContext();
+        mActivity = SplashActivity.this;
+        checkInternetConnectivity();
 
     }
 
@@ -80,6 +83,8 @@ public class SplashActivity extends AppCompatActivity {
         ApiUtils api = new ApiUtils(mContext)
                 .setActivity(mActivity)
                 .setUrl(Constants.API_URL_GET_STARTUP_CONFIG)
+                .setShowError(false)
+                .setMessage("SplashActivity.java|getStartUpConfig")
                 .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
                     @Override
                     public void onSuccessCallBack(String stringResponse) {
@@ -144,9 +149,6 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        mContext = getApplicationContext();
-        mActivity = SplashActivity.this;
-        checkInternetConnectivity();
     }
 
     private void checkInternetConnectivity() {

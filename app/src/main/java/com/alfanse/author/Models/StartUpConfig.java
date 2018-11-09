@@ -10,13 +10,15 @@
  * and limitations under the License.
  */
 
-package com.alfanse.author.Utilities;
+package com.alfanse.author.Models;
+
+import java.io.Serializable;
 
 /**
  * Created by srana on 8/23/2017.
  */
 
-public class StartUpConfig {
+public class StartUpConfig implements Serializable {
 
     private static StartUpConfig mInstance;
 
