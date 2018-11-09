@@ -32,7 +32,9 @@
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -120,6 +122,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Activities.ApiMaintenanceActivity" />
+        <activity android:name=".Activities.NoInternetConnectionActivity" />
+        <activity android:name=".Activities.AppUpgradeActivity"></activity>
     </application>
 
 </manifest>

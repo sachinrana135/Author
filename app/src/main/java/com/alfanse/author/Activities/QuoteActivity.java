@@ -42,6 +42,7 @@ import android.widget.Toast;
 
 import com.alfanse.author.CustomViews.DialogBuilder;
 import com.alfanse.author.CustomViews.FlowLayout;
+import com.alfanse.author.Interfaces.ExceptionDialogButtonListener;
 import com.alfanse.author.Interfaces.NetworkCallback;
 import com.alfanse.author.Interfaces.bitmapRequestListener;
 import com.alfanse.author.Interfaces.onReportItemSubmitListener;
@@ -451,6 +452,7 @@ public class QuoteActivity extends BaseActivity {
                 .setActivity(mActivity)
                 .setUrl(Constants.API_URL_GET_QUOTE)
                 .setParams(param)
+                .setShowError(false)
                 .setMessage("QuoteActivity.java|getQuote")
                 .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
                     @Override
@@ -465,7 +467,17 @@ public class QuoteActivity extends BaseActivity {
 
                     @Override
                     public void onFailureCallBack(Exception e) {
-                        CommonView.getInstance(mContext).dismissProgressDialog();
+                        CommonView.getInstance(mContext).showExceptionErrorDialog(mActivity, Utils.getInstance(mContext).getErrorMessage(e), new ExceptionDialogButtonListener() {
+                            @Override
+                            public void onRetryClick() {
+                                getQuote();
+                            }
+
+                            @Override
+                            public void onCancelClick() {
+                                onBackPressed();
+                            }
+                        });
                     }
                 });
 
@@ -816,7 +828,17 @@ public class QuoteActivity extends BaseActivity {
 
                     @Override
                     public void onFailureCallBack(Exception e) {
-                        CommonView.getInstance(mContext).dismissProgressDialog();
+                        CommonView.getInstance(mContext).showExceptionErrorDialog(mActivity, Utils.getInstance(mContext).getErrorMessage(e), new ExceptionDialogButtonListener() {
+                            @Override
+                            public void onRetryClick() {
+                                getReportReasonsAndShowDialog();
+                            }
+
+                            @Override
+                            public void onCancelClick() {
+                                onBackPressed();
+                            }
+                        });
                     }
                 });
 

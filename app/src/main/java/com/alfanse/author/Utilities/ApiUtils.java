@@ -14,6 +14,7 @@ package com.alfanse.author.Utilities;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 
 import com.alfanse.author.BuildConfig;
 import com.alfanse.author.Interfaces.NetworkCallback;
@@ -165,6 +166,7 @@ public class ApiUtils {
                 message = message + "\t" + getParams().toString();
                 message = message + "\t" + "HEADER_PARAM";
                 message = message + "\t" + getHeaderParams().toString();
+                Log.d("API Request", message);
                 Utils.logInfo(message);
             }
         } catch (Exception e) {

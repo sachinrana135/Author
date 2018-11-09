@@ -18,6 +18,7 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.ColorInt;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -147,7 +148,7 @@ public class ComponentTextViewOptionsFragment extends BaseFragment implements Co
             }
         });
 
-        if (mComponentTextView.getFont() != null) {
+        if (mComponentTextView != null) {
             setActiveFont(mComponentTextView.getFont());
         }
     }
@@ -394,7 +395,7 @@ public class ComponentTextViewOptionsFragment extends BaseFragment implements Co
         mCanvas = quoteCanvas;
     }
 
-    public void setComponentTextView(ComponentTextView componentTextView) {
+    public void setComponentTextView(@NonNull ComponentTextView componentTextView) {
         mComponentTextView = componentTextView;
     }
 

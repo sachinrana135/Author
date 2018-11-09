@@ -12,6 +12,7 @@
 
 package com.alfanse.author.CustomViews;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
@@ -51,7 +52,7 @@ public class DialogBuilder extends AlertDialog.Builder {
     private View mHeaderLayout;
     private TextView mMessageView;
     private CharSequence mDialogMessage;
-    private Boolean isHtml;
+    private Boolean isHtml = false;
 
 
 
@@ -70,7 +71,7 @@ public class DialogBuilder extends AlertDialog.Builder {
 
         mContext = context;
 
-        ContextThemeWrapper ctx = new ContextThemeWrapper(context, R.style.AppTheme);
+        @SuppressLint("RestrictedApi") ContextThemeWrapper ctx = new ContextThemeWrapper(context, R.style.AppTheme);
 
         LayoutInflater layoutInflater = LayoutInflater.from(ctx);
 

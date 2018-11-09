@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017. Alfanse Developers
+ * Copyright (c) 2018. Alfanse Developers
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  *  in compliance with the License. You may obtain a copy of the License at
@@ -10,33 +10,14 @@
  * and limitations under the License.
  */
 
-package com.alfanse.author.Models.Api;
-
-import com.google.gson.JsonElement;
+package com.alfanse.author.Interfaces;
 
 /**
- * Created by Velocity-1601 on 6/15/2017.
+ * Created by Sachin on 7/3/2018.
  */
 
-public class ApiResponse {
-    private JsonElement response;
-    private ApiError error;
+public interface ExceptionDialogButtonListener {
+    void onRetryClick();
 
-    public JsonElement getResponse() {
-        return response;
-    }
-
-    public void setResponse(JsonElement response) {
-        this.response = response;
-    }
-
-    public ApiError getError() {
-        return error;
-    }
-
-    public void setError(ApiError error) {
-        this.error = error;
-    }
+    void onCancelClick();
 }
-
-

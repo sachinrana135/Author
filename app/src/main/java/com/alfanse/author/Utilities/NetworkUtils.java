@@ -15,6 +15,7 @@ package com.alfanse.author.Utilities;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.alfanse.author.BuildConfig;
@@ -24,15 +25,10 @@ import com.alfanse.author.Models.CustomDialog;
 import com.alfanse.author.R;
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.NetworkError;
-import com.android.volley.NoConnectionError;
-import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.RetryPolicy;
-import com.android.volley.ServerError;
-import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -157,6 +153,7 @@ public class NetworkUtils {
                                 message = message + "\t" + apiUtils.getHeaderParams().get(Constants.API_HEADER_PARAM_KEY_CORRELATION_ID);
                                 message = message + "\t" + "RESPONSE";
                                 message = message + "\t" + response;
+                                Log.d("API Response", message);
                                 Utils.logInfo(message);
                             }
                             parseApiResponse(response, apiUtils);
@@ -180,21 +177,7 @@ public class NetworkUtils {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         if (apiUtils.showError()) {
-                            if (volleyError instanceof TimeoutError) {
-                                CommonView.showToast(mContext, mContext.getString(R.string.error_slow_network), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
-                            } else if (volleyError instanceof ServerError) {
-                                CommonView.showToast(mContext, mContext.getString(R.string.error_server_down), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
-                            } else if (volleyError instanceof AuthFailureError) {
-                                CommonView.showToast(mContext, mContext.getString(R.string.error_authentication_failed), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
-                            } else if (volleyError instanceof NetworkError) {
-                                CommonView.showToast(mContext, mContext.getString(R.string.error_bad_network), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
-                            } else if (volleyError instanceof NoConnectionError) {
-                                CommonView.showToast(mContext, mContext.getString(R.string.error_bad_network), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
-                            } else if (volleyError instanceof ParseError) {
-                                CommonView.showToast(mContext, mContext.getString(R.string.error_parsing), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
-                            } else {
-                                CommonView.showToast(mContext, mContext.getString(R.string.error_unknown_exception), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
-                            }
+                            CommonView.showToast(mContext, Utils.getInstance(mContext).getErrorMessage(volleyError), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
                         }
                         apiUtils.getStringResponseCallback().onFailureCallBack(volleyError);
                     }
@@ -245,22 +228,6 @@ public class NetworkUtils {
 
         ApiResponse apiResponse = new Gson().fromJson(response, ApiResponse.class);
 
-        // Checking if webservice is on maintenance
-        if (apiResponse.getConfig() != null) {
-            if (apiResponse.getConfig().getApiStatus() != null) {
-                if (apiResponse.getConfig().getApiStatus().equalsIgnoreCase("false")) {
-                    CommonView.getInstance(mContext).showMaintenanceDialog(apiUtils.getActivity());
-                    return;
-                }
-            }
-            // Checking if webservice supports app version
-            if (apiResponse.getConfig().getMinSupportVersion() != null) {
-                if (Utils.getInstance(mContext).getAppVersionCode() < Integer.parseInt(apiResponse.getConfig().getMinSupportVersion())) {
-                    CommonView.getInstance(mContext).showAppUpgradeDialog(apiUtils.getActivity());
-                    return;
-                }
-            }
-        }
         // Checking if any error in webservice response
         if (apiResponse.getError() != null) {
             if (apiResponse.getError().getMessage() != null && !apiResponse.getError().getMessage().trim().isEmpty()) {

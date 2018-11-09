@@ -45,8 +45,8 @@ android {
         applicationId "com.alfanse.author"
         minSdkVersion 17
         targetSdkVersion 27
-        versionCode 9
-        versionName "2.2"
+        versionCode 10
+        versionName "2.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 
@@ -84,6 +84,7 @@ android {
             applicationIdSuffix devProps["APPLICATION_ID_SUFFIX"]
             versionNameSuffix devProps["VERSION_NAME_SUFFIX"]
             buildConfigField("String", "API_BASE_URL", devProps["API_BASE_URL"])
+            buildConfigField("String", "WEB_BASE_URL", devProps["WEB_BASE_URL"])
             buildConfigField("String", "API_TOKEN", devProps["API_TOKEN"]);
             resValue("string", "app_name", devProps["APP_NAME"])
         }
@@ -92,6 +93,7 @@ android {
             def Properties prodProps = new Properties()
             prodProps.load(new FileInputStream(file(PRODUCTION_PROPS_FILE)))
             buildConfigField("String", "API_BASE_URL", prodProps["API_BASE_URL"])
+            buildConfigField("String", "WEB_BASE_URL", prodProps["WEB_BASE_URL"])
             buildConfigField("String", "API_TOKEN", prodProps["API_TOKEN"]);
             resValue("string", "app_name", prodProps["APP_NAME"])
         }
@@ -116,7 +118,7 @@ dependencies {
     implementation 'com.jrummyapps:colorpicker:2.1.6'
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.4.+'
     implementation 'com.android.support:palette-v7:27.0.2'
-    compile 'com.facebook.android:facebook-android-sdk:[4,5)'
+    implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
     implementation 'com.google.firebase:firebase-auth:16.0.3'
     implementation 'com.google.android.gms:play-services-auth:16.0.0'
     implementation 'com.android.volley:volley:1.0.0'

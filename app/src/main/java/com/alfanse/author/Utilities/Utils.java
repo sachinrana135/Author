@@ -45,6 +45,12 @@ import com.alfanse.author.Interfaces.bitmapRequestListener;
 import com.alfanse.author.Models.CommentFilters;
 import com.alfanse.author.Models.FirebaseRemoteMessageData;
 import com.alfanse.author.R;
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.auth.FirebaseAuth;
@@ -632,5 +638,43 @@ public class Utils {
                 cursor.close();
             }
         }
+    }
+
+    public Boolean shouldShowUpgrade(int updateFrequency) {
+
+        Boolean shouldShowUpgrade = true;
+
+        String versionCode = Integer.toString(getAppVersionCode());
+        int totalUpgradeLaunches = SharedManagement.getInstance(mContext).getInt(SharedManagement.TOTAL_APP_LAUNCHED);
+
+        if (SharedManagement.getInstance(mContext).getBoolean(SharedManagement.APP_UPGRADE + versionCode)
+                || !(totalUpgradeLaunches % updateFrequency == 0)) {
+
+            shouldShowUpgrade = false;
+        }
+
+        return shouldShowUpgrade;
+    }
+
+    public String getErrorMessage(Exception e) {
+
+        String message;
+
+        if (e instanceof TimeoutError) {
+            message = mContext.getString(R.string.error_slow_network);
+        } else if (e instanceof ServerError) {
+            message = mContext.getString(R.string.error_server_down);
+        } else if (e instanceof AuthFailureError) {
+            message = mContext.getString(R.string.error_authentication_failed);
+        } else if (e instanceof NetworkError) {
+            message = mContext.getString(R.string.error_bad_network);
+        } else if (e instanceof NoConnectionError) {
+            message = mContext.getString(R.string.error_bad_network);
+        } else if (e instanceof ParseError) {
+            message = mContext.getString(R.string.error_parsing);
+        } else {
+            message = mContext.getString(R.string.error_unknown_exception);
+        }
+        return message;
     }
 }

@@ -23,8 +23,9 @@
         android:orientation="vertical">
 
         <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:theme="?android:attr/progressBarStyleSmall" />
 
         <TextView
             android:id="@+id/message_item_progress"

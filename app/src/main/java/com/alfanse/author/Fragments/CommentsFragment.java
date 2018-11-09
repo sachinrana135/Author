@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.alfanse.author.Activities.AuthorActivity;
 import com.alfanse.author.Adapters.CommentsAdapter;
+import com.alfanse.author.Interfaces.ExceptionDialogButtonListener;
 import com.alfanse.author.Interfaces.NetworkCallback;
 import com.alfanse.author.Interfaces.onCommentItemClickListener;
 import com.alfanse.author.Interfaces.onReportItemSubmitListener;
@@ -233,6 +234,7 @@ public class CommentsFragment extends BaseFragment {
                 .setActivity(mActivity)
                 .setUrl(Constants.API_URL_GET_REPORT_REASONS)
                 .setParams(param)
+                .setShowError(false)
                 .setMessage("CommentsFragment.java|getReportReasonsAndShowDialog")
                 .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
                     @Override
@@ -247,7 +249,17 @@ public class CommentsFragment extends BaseFragment {
 
                     @Override
                     public void onFailureCallBack(Exception e) {
-                        CommonView.getInstance(mContext).dismissProgressDialog();
+                        CommonView.getInstance(mContext).showExceptionErrorDialog(mActivity, Utils.getInstance(mContext).getErrorMessage(e), new ExceptionDialogButtonListener() {
+                            @Override
+                            public void onRetryClick() {
+                                getReportReasonsAndShowDialog();
+                            }
+
+                            @Override
+                            public void onCancelClick() {
+                                mActivity.onBackPressed();
+                            }
+                        });
                     }
                 });
 

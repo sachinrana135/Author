@@ -36,6 +36,8 @@ public class Constants {
     public static final String BUNDLE_KEY_COMMENTS_FILTERS = "commentFilters";
     public static final String BUNDLE_KEY_FCM_MESSAGE_DATA = "fcmData";
     public static final String BUNDLE_KEY_CAME_VIA_NOTIFICATION = "viaNotification";
+    public static final String BUNDLE_KEY_FORCE_UPGRADE = "isForceUpgrade";
+    public static final String BUNDLE_KEY_AUTO_UPGRADE = "isAutoUpgrade";
 
     public static final String TAG_DEFAULT_CANVASE_TEXT_VIEW = "TAG_DEFAULT_CANVASE_TEXT_VIEW";
     public static final String DEFAULT_COMPONENT_TEXTVIEW_FONT = "Helvetica";
@@ -87,7 +89,7 @@ public class Constants {
 
 
     /***************************** API Url **************************/
-    public static final String WEB_URL = "http://author.alfanse.com/";
+    public static final String WEB_BASE_URL = BuildConfig.WEB_BASE_URL;
     public static final String API_BASE_URL = BuildConfig.API_BASE_URL;
     public static final String API_TOKEN = BuildConfig.API_TOKEN;
     public static final String API_URL_GET_QUOTES = API_BASE_URL + "getQuotes";
@@ -114,9 +116,9 @@ public class Constants {
     public static final String API_URL_UPDATE_USER_COUNTRY = API_BASE_URL + "updateUserCountry";
     public static final String API_URL_GET_USER_FEED = API_BASE_URL + "getUserFeed";
     public static final String API_URL_MAP_FCM_ID = API_BASE_URL + "mapFcmIdToUser";
+    public static final String API_URL_GET_STARTUP_CONFIG = API_BASE_URL + "getStartUpConfig";
 
-    public static final String WEB_URL_WEBSERVICE_MAINTENANCE = WEB_URL + "onMaintenance";
-    public static final String WEB_URL_UPGRADE_APP = WEB_URL + "upgradeApp";
+    public static final String WEB_URL_UPGRADE_APP = WEB_BASE_URL + "upgradeApp";
 
     /***************************** API param keys  **************************/
     public static final String API_PARAM_KEY_QUOTE_FILTERS = "quoteFilters";
@@ -152,6 +154,4 @@ public class Constants {
     public static String FIREBASE_SUBSCRIPTION_TOPIC_ANDROID_USERS = "ANDROID_USERS";
 
     public static String ACTIVITY_PACKAGE_PATH = "com.alfanse.author.Activities";
-
-
 }

@@ -38,6 +38,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alfanse.author.Interfaces.ExceptionDialogButtonListener;
 import com.alfanse.author.Interfaces.NetworkCallback;
 import com.alfanse.author.Models.Author;
 import com.alfanse.author.Models.AuthorFilters;
@@ -191,8 +192,7 @@ public class UserAccountActivity extends BaseActivity {
                 FirebaseAuth.getInstance().signOut();
                 SharedManagement.getInstance(mContext).remove(SharedManagement.LOGGED_USER);
                 Intent intent = new Intent(mActivity, SignInActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();
             }
@@ -274,7 +274,17 @@ public class UserAccountActivity extends BaseActivity {
 
                     @Override
                     public void onFailureCallBack(Exception e) {
-                        CommonView.getInstance(mContext).dismissProgressDialog();
+                        CommonView.getInstance(mContext).showExceptionErrorDialog(mActivity, Utils.getInstance(mContext).getErrorMessage(e), new ExceptionDialogButtonListener() {
+                            @Override
+                            public void onRetryClick() {
+                                getAuthor();
+                            }
+
+                            @Override
+                            public void onCancelClick() {
+                                onBackPressed();
+                            }
+                        });
                     }
                 });
 
@@ -593,5 +603,8 @@ public class UserAccountActivity extends BaseActivity {
         }
     }
 
-
+    @Override
+    public void recreate() {
+        super.recreate();
+    }
 }
