@@ -260,6 +260,7 @@ public class UserAccountActivity extends BaseActivity {
                 .setActivity(mActivity)
                 .setUrl(Constants.API_URL_GET_AUTHOR)
                 .setParams(param)
+                .setShowError(false)
                 .setMessage("AuthorActivity.java|getAuthor")
                 .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
                     @Override

@@ -814,6 +814,7 @@ public class QuoteActivity extends BaseActivity {
                 .setActivity(mActivity)
                 .setUrl(Constants.API_URL_GET_REPORT_REASONS)
                 .setParams(param)
+                .setShowError(false)
                 .setMessage("QuoteActivity.java|getReportReasonsAndShowDialog")
                 .setStringResponseCallback(new NetworkCallback.stringResponseCallback() {
                     @Override
