@@ -159,7 +159,9 @@ public class CommonView {
 
         // Create the AlertDialog
         AlertDialog dialog = builder.create();
-        dialog.show();
+        if (!customDialog.getActivity().isFinishing()) {
+            dialog.show();
+        }
     }
 
     public void showExceptionErrorDialog(Activity activity, String errorMessage, final ExceptionDialogButtonListener listener) {
@@ -184,7 +186,9 @@ public class CommonView {
 
         // Create the AlertDialog
         AlertDialog dialog = builder.create();
-        dialog.show();
+        if (!activity.isFinishing()) {
+            dialog.show();
+        }
     }
 
 
@@ -218,7 +222,9 @@ public class CommonView {
         });
         // Create the AlertDialog
         AlertDialog dialog = builder.create();
-        dialog.show();
+        if (!activity.isFinishing()) {
+            dialog.show();
+        }
     }
 
     public void showAppUpgradeDialog(Activity activity) {
@@ -282,8 +288,9 @@ public class CommonView {
                 activity.recreate();
             }
         });
-
-        dialog.show();
+        if (!activity.isFinishing()) {
+            dialog.show();
+        }
     }
 
     public void showRetrySnackBar(String errorMessage, final Activity activity) {

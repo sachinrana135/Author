@@ -600,6 +600,10 @@ public class QuotesFragment extends BaseFragment implements UpdatableFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+
+        if (activity instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) activity;
+        }
         mActivity = getActivity();
         mContext = mActivity.getApplicationContext();
     }

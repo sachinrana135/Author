@@ -157,8 +157,10 @@ public class ComponentTextViewOptionsFragment extends BaseFragment implements Co
         for (Font font : mListFonts) {
             font.setSelected(false);
         }
-        mListFonts.get(mListFonts.indexOf(activeFont)).setSelected(true);
-        mFontsAdapter.notifyDataSetChanged();
+        if (mListFonts.indexOf(activeFont) != -1) {
+            mListFonts.get(mListFonts.indexOf(activeFont)).setSelected(true);
+            mFontsAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
