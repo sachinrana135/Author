@@ -71,7 +71,7 @@ public class SplashActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
                 | View.SYSTEM_UI_FLAG_IMMERSIVE);
 
-        txtVersionName.setText(getString(R.string.app_name) + "-" + Utils.getInstance(mContext).getAppVersionName());
+        txtVersionName.setText(getString(R.string.app_name) + " " + Utils.getInstance(mContext).getAppVersionName());
         mContext = getApplicationContext();
         mActivity = SplashActivity.this;
         checkInternetConnectivity();
