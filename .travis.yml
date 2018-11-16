@@ -1,11 +1,34 @@
 language: android
+jdk: oraclejdk8
 android:
   components:
-  - build-tools-26.0.2
-  - android-26
+  - tools
+  - platform-tools
+  # The BuildTools version used by your project
+  - build-tools-$ANDROID_BUILD_TOOLS_VERSION
+  # The SDK version used to compile your project
+  - android-$ANDROID_API_LEVEL
+  # Additional components
+  - extra-google-google_play_services
+  - extra-google-m2repository
+  - extra-android-m2repository
+  - addon-google_apis-google-$ANDROID_API_LEVEL
+script:
+  - ./gradlew clean
+  - ./gradlew assembleDevRelease
+  - ./gradlew build check
+env:
+  global:
+  - secure: kJYTCK+QBP9QP6yJvJZ04kvzkc/NSDLLM7qW6hla0NFCxRDaqfGzDvwdZYT1n4T6nw5XI8jTZt18+BeHM6GMHFv+rN6C8mPbg1oZDuB0ZtTRaDdII8yekVwc3r0AIF1H45j9mVww6VUpWf3sz9pJ+44oVkL+1QDq16Z2lmp4EAszT8ijIbCF/zI5BFaCMCKdq10T4sEgxsMvmk8RkCJRVxUkSF0Jirknyl6Zd79e68XjcEKU8AStWRb6cX6TAxjl/MjWjcrsYMNrgyPLOV2GfMe/KfZ6KlLjrO0pJ/c4k1GyYI/eS/dJDAuHGTfidbwD3J2YpdBuPONkLQoizm/v3iuhOpGAVa8j2ncHPCQzc3+BpparLplgfg/wJu6a01O5anbUJDchI8yooCDTRyZSdKmHeF9hEQfOR1P+N2qv793vA2vddXkn79KJgANnpV8qunwmQ2VrLkhnJnD4kuBJz21AfFKuCUcNqR/l+EoDZPEqGDDdcY/2EpF8gIsj6ecyjGe1w6yfv48s8PdsI8HfG+0Z6O8d1QbuQqaySe4SShi0mtFjvSTK8MvWGHpApsOGs9We5pBCFXC9aYyGYKOGEpW4CoYrWgDekiQgwqGgIIkI5XW9Xgbtxd8CvocPn/PLczaL0UFDfTHzXwIRElqKNJ2hAbot/2h9B3dKLsMzQ10=
+  - secure: RC8BY5f+wxHlCTe4YUevi5OnGIzFAHr1QrvJCZI8YNF/ByvJPbbtLP5tylmNQbz2mZDqvRw2Afb9N2QXRYwTnvl0JB/4ShsvS+schb/+Ug7v8VW+BOa9sQIPSMoMNsWesZzc6xm20bluowvOGkq4N6y/3PVK/NsE1GKO1td9p+1bWqDIPVjOX3lqbMeUx4BUMdA04t3H6KkFMZzX0MQJWSywvJGpcbyzUBhvOs+/eGnv1ZwOTNhv8MD49kGLCMYJ1CbY3mlvJhwzXtVq4wqkZbmn+2NnVsCdzuxdpWYlHNWZt3ttTX7lOGlzqmTq2ohCiTOB619Chqf+hogp6QIsz/B/pcnbFHNJGOK1fxlzfsexRBOmc6cnlND1CqYc7B77BMYMdDhEni7PgRyoqhr0INirMHkr3z4WUr4b+NbmAx6q7i18PUbnoMMqC2i8y2/LkoZ8JIXD9ofR+pURxARyTHnBo8tybEdjUOv/vRxtzizwE3ytkbLcEaYeFz/sr0vf6QvaH6ShRvszciErYcyyxV65Agl+Atc9ItLIn08aJkny0wwEMhjiuflvppchSj4YGwWto7e/+G4+LYoU5AjgV6QgeZIZVxlHiREVoDjfNsOBs3kepKghC2uErA26cKs9msiFUIL3yVYX4yx1F3HaxA/wxOAn1t4SiFBiWBWlbhk=
+  - secure: QVFa64iYVgW9AEyXRq9vq1yQ9aOgkP0vJCSqM6rKqNpWLYQ4bsJfxikRmfWR5dgnGhP+ozdRVJczScGV4P5oQKIpwI8g/ThTHZaysKPKET+R/CFSAKIa3Tx+nVHPjO58KGM13PMBxrIbvanHBwl7JPOFHXApE5vopqqIY/8qwDepMV3fFTJA0n2V7cVR92n7PHmrrrLU+LNrfWTPTW8Gl+HNTWAFhI3U1tjMJaXfWB1tFtZ/6DiwOrgtJMkXcrHsKgQtIV4L4GIkMGeHuKoifuAtJUqEHKre+B07NXFScttnahtfmtHC/dl7Y2wbWSkL2rnY9t9bTEc7zte+ZgSUeCDqAgl6tEVPqv+6p9qTdLV2Vxv/dm/FAFRu9xAZiZol0RJpd9aIifwGBhSSQvsGd6Z0HAuPOcGT1xaI06fTSmaUO2Y9wZd1bappZ8KRp0PHqD9bRgQtKsHezTZnhpa9be+IT7oQgeAWnxtFyEyxjH+PjQR5ciWkqXr1EBV3sGN/PkUkFPRdAewFnHTFc5GKuXEmw/d8L/VDw9DJJdpAbjijc2269bIg6NH2wgMRfv6lQPhGMt1o1rsM0VoHOjjdYAchgyNxVnAYrwzhgUHeTjA0K6SqOEEucFXKzcUdo25KbA4qEWCrM9pispxxxCruu8H3CkqibEmpbYmnIN1qC38=
+  - secure: DAakUWwndqHDU3GKpFB9lzGNZDzMqZdaWBRhqNCdLbiKLAY25NC0IXhspgedlZnk+ChjptqEVEIU/MtpN6wiW5D/Lu+0D+qd3/KM+qKtQPLj1pT1PX3R8uZolDkF/tVLIfC4YKDdYFFNbO9NyRfiZ+a5T7PaxEo3Pz8se5keuv6dmsUayVhaSBGMR1YqjXAhiEjSsa+PChcnNb5ZaQyBBlvAn/sRIenlE1NzFWLu9EmKbiI+lD1N6bFd/rDt6dT5wDtz23EZS0iaSeTKD1gdppyyHhawAu4M4GdAtgsmK1Rv8JmOM1X5jSBiJsu56z5knL7GXlVq0P6cLxiKMOtF0dC/2ERMzXfyUTol/R4VntLQi6gegL/5cnmthl2tBcSrV3qswJKGzEe+brf9E6D+2Zdzdxa47D55TaippXQX+GqhTdLiTE+woO/mhvarfODK1cGSpTT6llUjGYZp6LmT+6manzIGQVExNE8FHKz2Etnk6AVf4n1AtD41BOvKdkva7UJR/eXIkJIUpz5WqSuG7qst49Pukpbo9ZNqKThNuKen//GBkes568qqMtj8fLtrbE9tMjYiXf7juZEQicrL1SRmHNLGU4BKNWEPGorB5VYQBG5rJ2MWht8PzR0nvMSDxq7qkiskTcTg3x7KduPZMeIHpAZrj0654KY+SJu6U94=
+  - ANDROID_API_LEVEL=27
+  - ANDROID_BUILD_TOOLS_VERSION=27.0.3
 before_install:
-- openssl aes-256-cbc -K $encrypted_779f5939505e_key -iv $encrypted_779f5939505e_iv
-  -in Author.jks.enc -out Author.jks -d
+- echo $signin_key_password | gpg --passphrase-fd 0 signin_keys/Author.jks.gpg
+- echo $keystore_secret_password | gpg --passphrase-fd 0 properties/keystore.properties.gpg
+- echo $prod_properties_secret_password | gpg --passphrase-fd 0 properties/prod.properties.gpg
 before_deploy:
 - git config --local user.name "YOUR GIT USER NAME"
 - git config --local user.email "YOUR GIT USER EMAIL"
@@ -13,12 +36,11 @@ before_deploy:
 branches: 
 only:
 - master
-- v2.2
 deploy: 
 provider: releases
-api_key: "f3d0b9252a5fa8db98e8938fb14277132a7245c2"
+api_key: 2a28c1879c2e4f373906eb6fd22a6edeac8508e8
 overwrite: true
-file: "app/build/outputs/apk/prod/release/app-prod-release.apk"
+file: app/build/outputs/apk/prod/release/app-prod-release.apk
 skip_cleanup: true
 true: 
 tags: true
