@@ -1,5 +1,4 @@
-# Author - Social writing app
-
+# Author - Social writing app  [![Build Status](https://travis-ci.org/sachinrana135/Author.svg?branch=master)](https://travis-ci.org/sachinrana135/Author)
 <h3>A beautiful app for writing quotes , poems , memes, stories , emotions , thoughts.</h3>
 
 Author is the most loved social writing app and blogging platform for connecting the global community of writers in a central space. In other words, Author is the social networking platform for writers. 
