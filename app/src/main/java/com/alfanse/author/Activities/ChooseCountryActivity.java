@@ -147,17 +147,7 @@ public class ChooseCountryActivity extends BaseActivity {
 
                     @Override
                     public void onFailureCallBack(Exception e) {
-                        CommonView.getInstance(mContext).showExceptionErrorDialog(mActivity, Utils.getInstance(mContext).getErrorMessage(e), new ExceptionDialogButtonListener() {
-                            @Override
-                            public void onRetryClick() {
-                                getCountries();
-                            }
-
-                            @Override
-                            public void onCancelClick() {
-                                onBackPressed();
-                            }
-                        });
+                        handleError(e);
                     }
                 });
 
@@ -174,27 +164,45 @@ public class ChooseCountryActivity extends BaseActivity {
         Type countryListType = new TypeToken<ArrayList<Country>>() {
         }.getType();
         mCountries = new Gson().fromJson(stringResponse, countryListType);
-        int defaultCountryIndex = -1;
-        int index = 0;
-        for (Country country : mCountries) {
-            mHashCountries.put(country.getCountryName(), country.getCountryId());
-            mReverseHashCountries.put(country.getCountryId(), country.getCountryName());
-            mListCountries.add(country.getCountryName());
-            if (countryISO3Code.equalsIgnoreCase(country.getIsoCode3())) {
-                defaultCountryIndex = index;
+        if (mCountries != null) {
+            int defaultCountryIndex = -1;
+            int index = 0;
+            for (Country country : mCountries) {
+                mHashCountries.put(country.getCountryName(), country.getCountryId());
+                mReverseHashCountries.put(country.getCountryId(), country.getCountryName());
+                mListCountries.add(country.getCountryName());
+                if (countryISO3Code.equalsIgnoreCase(country.getIsoCode3())) {
+                    defaultCountryIndex = index;
+                }
+                index++;
             }
-            index++;
+            mCountryAdapter = new ArrayAdapter<String>(mActivity, android.R.layout.simple_spinner_item, mListCountries);
+            mCountryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerCountries.setTitle(getString(R.string.text_select_country));
+            spinnerCountries.setAdapter(mCountryAdapter);
+
+            if (defaultCountryIndex != -1) {
+                spinnerCountries.setSelection(defaultCountryIndex);
+            }
+        } else {
+            Exception e = new Exception("Error while parsing countries|ChooseCountryActivity|parseGetCountriesResponse");
+            Utils.getInstance(mContext).logException(e);
+            handleError(e);
         }
-        mCountryAdapter = new ArrayAdapter<String>(mActivity, android.R.layout.simple_spinner_item, mListCountries);
-        mCountryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerCountries.setTitle(getString(R.string.text_select_country));
-        spinnerCountries.setAdapter(mCountryAdapter);
+    }
 
-        if (defaultCountryIndex != -1) {
-            spinnerCountries.setSelection(defaultCountryIndex);
-        }
+    private void handleError(Exception e) {
+        CommonView.getInstance(mContext).showExceptionErrorDialog(mActivity, Utils.getInstance(mContext).getErrorMessage(e), new ExceptionDialogButtonListener() {
+            @Override
+            public void onRetryClick() {
+                getCountries();
+            }
 
-
+            @Override
+            public void onCancelClick() {
+                onBackPressed();
+            }
+        });
     }
 
 

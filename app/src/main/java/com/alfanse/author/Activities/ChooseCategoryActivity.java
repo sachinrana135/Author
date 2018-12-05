@@ -83,7 +83,7 @@ public class ChooseCategoryActivity extends BaseActivity {
                 if ((categoryTag).getCompoundDrawables()[2] == null) { // Right drawable
 
                     if (((mSelectedCategories.size() < mMaximumSelectAllow) && (mMaximumSelectAllow != UNLIMITED)) || (mMaximumSelectAllow == UNLIMITED)) {
-                        categoryTag.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_check_circle_white_24dp, 0);
+                        categoryTag.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_check_circle_white_16dp, 0);
                         categoryTag.setCompoundDrawablePadding((int) getResources().getDimension(R.dimen.spacing_xsmall));
                         mSelectedCategories.add(category);
                         // Set result on maximum category selected
@@ -239,7 +239,7 @@ public class ChooseCategoryActivity extends BaseActivity {
                 for (Category preSelectedCategory : mPreSelectedCategories) {
                     if (preSelectedCategory.getId().equalsIgnoreCase(category.getId())) {
                         mSelectedCategories.add(category);
-                        categoryTag.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_check_circle_white_24dp, 0);
+                        categoryTag.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_check_circle_white_16dp, 0);
                         categoryTag.setCompoundDrawablePadding((int) getResources().getDimension(R.dimen.spacing_xsmall));
                     }
                 }

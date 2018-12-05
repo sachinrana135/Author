@@ -50,6 +50,7 @@ import com.alfanse.author.Utilities.Constants;
 import com.alfanse.author.Utilities.FontHelper;
 import com.alfanse.author.Utilities.SharedManagement;
 import com.alfanse.author.Utilities.Utils;
+import com.alfanse.author.Utilities.ZoomImage;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
@@ -68,6 +69,7 @@ import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.theartofdev.edmodo.cropper.CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE;
 
@@ -76,6 +78,8 @@ public class UserAccountActivity extends BaseActivity {
     private static final String IMAGE_REQUIRED_FOR_COVER = "IMAGE_REQUIRED_FOR_COVER";
     private static final String IMAGE_REQUIRED_FOR_PROFILE = "IMAGE_REQUIRED_FOR_PROFILE";
     private static final int ALL_PERMISSIONS_REQUEST_CODE = 54353;
+    @BindView(R.id.container)
+    View container;
     @BindView(R.id.toolbar_account_user)
     Toolbar mToolbar;
     @BindView(R.id.toolbar_layout_account_user)
@@ -85,7 +89,9 @@ public class UserAccountActivity extends BaseActivity {
     @BindView(R.id.fab_edit_cover_photo_account_user)
     FloatingActionButton fabChangeCoverImage;
     @BindView(R.id.image_view_profile_image_account_user)
-    ImageView imageProfile;
+    CircleImageView imageProfile;
+    @BindView(R.id.image_view_full_profile_image_author)
+    ImageView fullImageProfile;
     @BindView(R.id.fab_edit_profile_image_account_user)
     FloatingActionButton fabChangeProfileImage;
     @BindView(R.id.text_author_name_account_user)
@@ -127,6 +133,7 @@ public class UserAccountActivity extends BaseActivity {
     private String mImagePath;
     private ProgressDialog mProgressDialog;
     private Author mLoggedAuthor;
+    private Bitmap mFullBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,6 +157,13 @@ public class UserAccountActivity extends BaseActivity {
     }
 
     private void initListener() {
+
+        imageProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ZoomImage.zoom(mContext, imageProfile, fullImageProfile, container, mFullBitmap);
+            }
+        });
 
         fabChangeCoverImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -275,17 +289,7 @@ public class UserAccountActivity extends BaseActivity {
 
                     @Override
                     public void onFailureCallBack(Exception e) {
-                        CommonView.getInstance(mContext).showExceptionErrorDialog(mActivity, Utils.getInstance(mContext).getErrorMessage(e), new ExceptionDialogButtonListener() {
-                            @Override
-                            public void onRetryClick() {
-                                getAuthor();
-                            }
-
-                            @Override
-                            public void onCancelClick() {
-                                onBackPressed();
-                            }
-                        });
+                        handleError(e);
                     }
                 });
 
@@ -295,9 +299,29 @@ public class UserAccountActivity extends BaseActivity {
 
     private void parseGetAuthorResponse(String stringResponse) {
         mAuthor = new Gson().fromJson(stringResponse, Author.class);
-        SharedManagement.getInstance(mContext).setLoggedUser(mAuthor);
-        initToolbar();
-        renderView();
+        if (mAuthor != null) {
+            SharedManagement.getInstance(mContext).setLoggedUser(mAuthor);
+            initToolbar();
+            renderView();
+        } else {
+            Exception e = new Exception("Error while fetching Author| UserAccountActivity | parseGetAuthorResponse");
+            Utils.getInstance(mContext).logException(e);
+            handleError(e);
+        }
+    }
+
+    private void handleError(Exception e) {
+        CommonView.getInstance(mContext).showExceptionErrorDialog(mActivity, Utils.getInstance(mContext).getErrorMessage(e), new ExceptionDialogButtonListener() {
+            @Override
+            public void onRetryClick() {
+                getAuthor();
+            }
+
+            @Override
+            public void onCancelClick() {
+                onBackPressed();
+            }
+        });
     }
 
     private void shareApp() {
@@ -381,33 +405,37 @@ public class UserAccountActivity extends BaseActivity {
                         requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, CropImage.PICK_IMAGE_PERMISSIONS_REQUEST_CODE);
                     } else {
                         // no permissions required or already grunted, can start crop image activity
-                        startCropImageActivity(imageUri);
+                        if (imageUri != null) {
+                            startCropImageActivity(imageUri);
+                        }
                     }
                 }
                 break;
             }
 
             case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE: {
-                CropImage.ActivityResult result = CropImage.getActivityResult(data);
-                if (resultCode == Activity.RESULT_OK) {
-                    mCroppedImageUri = result.getUri();
-                    Bitmap imageBitmap = null;
-                    try {
-                        imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), mCroppedImageUri);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                if (data != null) {
+                    CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                    if (resultCode == Activity.RESULT_OK && result != null) {
+                        mCroppedImageUri = result.getUri();
+                        Bitmap imageBitmap = null;
+                        try {
+                            imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), mCroppedImageUri);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        if (imageRequiredFor.equalsIgnoreCase(IMAGE_REQUIRED_FOR_COVER)) {
+
+                            imageCover.setImageBitmap(imageBitmap);
+
+                            new saveImageTask().execute();
+
+                        } else if (imageRequiredFor.equalsIgnoreCase(IMAGE_REQUIRED_FOR_PROFILE)) {
+                            new saveImageTask().execute();
+                        }
+                    } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                        CommonView.showToast(mActivity, "Cropping failed: " + result.getError(), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
                     }
-                    if (imageRequiredFor.equalsIgnoreCase(IMAGE_REQUIRED_FOR_COVER)) {
-
-                        imageCover.setImageBitmap(imageBitmap);
-
-                        new saveImageTask().execute();
-
-                    } else if (imageRequiredFor.equalsIgnoreCase(IMAGE_REQUIRED_FOR_PROFILE)) {
-                        new saveImageTask().execute();
-                    }
-                } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                    CommonView.showToast(mActivity, "Cropping failed: " + result.getError(), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
                 }
                 break;
             }
@@ -534,21 +562,22 @@ public class UserAccountActivity extends BaseActivity {
 
         RequestOptions profileImageOptions = new RequestOptions()
                 .error(Utils.getInstance(mContext).getDrawable(R.drawable.ic_gallery_grey_24dp))
-                .fitCenter()
-                .circleCrop();
+                .centerCrop();
 
-        Glide.with(mActivity)
+        Glide.with(mContext)
+                .asBitmap()
                 .load(mAuthor.getProfileImage())
                 .apply(profileImageOptions)
-                .listener(new RequestListener<Drawable>() {
+                .listener(new RequestListener<Bitmap>() {
                     @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
                         progressBarProfileImage.setVisibility(View.GONE);
                         return false;
                     }
 
                     @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                    public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+                        mFullBitmap = resource;
                         progressBarProfileImage.setVisibility(View.GONE);
                         return false;
                     }

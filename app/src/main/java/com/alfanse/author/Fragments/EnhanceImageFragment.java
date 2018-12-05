@@ -104,6 +104,8 @@ public class EnhanceImageFragment extends BaseFragment {
     SeekBar filterAdjuster;
     @BindView(R.id.seekbar_vignette_fragment_component_textview_options)
     SeekBar optionSeekBarVignette;
+    @BindView(R.id.text_enhance_type)
+    TextView textEnhanceType;
 
     private LinearLayoutManager mFilterLinearLayoutManager;
     private QuoteCanvas mCanvas;
@@ -188,11 +190,12 @@ public class EnhanceImageFragment extends BaseFragment {
         GPUImageFilter gpuImageFilter = mCanvas.getFilterByType(filter);
         mFilterAdjuster = new GPUImageFilterTools.FilterAdjuster(gpuImageFilter);
         showLayout(layoutFilterList);
+        textEnhanceType.setVisibility(View.GONE);
     }
 
     @OnClick(R.id.layout_bright_option_item)
     void onBrightLayoutClick() {
-        Filter filter = new Filter("Brightness", GPUImageFilterTools.FilterType.BRIGHTNESS, false);
+        Filter filter = new Filter(getString(R.string.option_item_bright), GPUImageFilterTools.FilterType.BRIGHTNESS, false);
         boolean isFilterApplied = mCanvas.isFilterApplied(filter);
         if (!isFilterApplied) {
             mCanvas.setFilter(filter);
@@ -201,11 +204,13 @@ public class EnhanceImageFragment extends BaseFragment {
         mFilterAdjuster = new GPUImageFilterTools.FilterAdjuster(gpuImageFilter);
         optionSeekBarBrightness.setProgress(isFilterApplied ? optionSeekBarBrightness.getProgress() : defaultBrightnessLevel);
         showLayout(layoutBrightness);
+        textEnhanceType.setVisibility(View.VISIBLE);
+        textEnhanceType.setText(getString(R.string.option_item_bright));
     }
 
     @OnClick(R.id.layout_contrast_option_item)
     void onContrastLayoutClick() {
-        Filter filter = new Filter("Contrast", GPUImageFilterTools.FilterType.CONTRAST, false);
+        Filter filter = new Filter(getString(R.string.option_item_contrast), GPUImageFilterTools.FilterType.CONTRAST, false);
         boolean isFilterApplied = mCanvas.isFilterApplied(filter);
         if (!isFilterApplied) {
             mCanvas.setFilter(filter);
@@ -215,11 +220,13 @@ public class EnhanceImageFragment extends BaseFragment {
         optionSeekBarContrast.setProgress(optionSeekBarContrast.getProgress() == 0 ? defaultContrastLevel : optionSeekBarContrast.getProgress());
         optionSeekBarContrast.setProgress(isFilterApplied ? optionSeekBarContrast.getProgress() : defaultContrastLevel);
         showLayout(layoutContrast);
+        textEnhanceType.setVisibility(View.VISIBLE);
+        textEnhanceType.setText(getString(R.string.option_item_contrast));
     }
 
     @OnClick(R.id.layout_hue_option_item)
     void onHueLayoutClick() {
-        Filter filter = new Filter("Hue", GPUImageFilterTools.FilterType.HUE, false);
+        Filter filter = new Filter(getString(R.string.option_item_hue), GPUImageFilterTools.FilterType.HUE, false);
         boolean isFilterApplied = mCanvas.isFilterApplied(filter);
         if (!isFilterApplied) {
             mCanvas.setFilter(filter);
@@ -228,11 +235,13 @@ public class EnhanceImageFragment extends BaseFragment {
         mFilterAdjuster = new GPUImageFilterTools.FilterAdjuster(gpuImageFilter);
         optionSeekBarHue.setProgress(isFilterApplied ? optionSeekBarHue.getProgress() : defaultHueLevel);
         showLayout(layoutHue);
+        textEnhanceType.setVisibility(View.VISIBLE);
+        textEnhanceType.setText(getString(R.string.option_item_hue));
     }
 
     @OnClick(R.id.layout_saturation_option_item)
     void onSaturationLayoutClick() {
-        Filter filter = new Filter("Saturation", GPUImageFilterTools.FilterType.SATURATION, false);
+        Filter filter = new Filter(getString(R.string.option_item_satur), GPUImageFilterTools.FilterType.SATURATION, false);
         boolean isFilterApplied = mCanvas.isFilterApplied(filter);
         if (!isFilterApplied) {
             mCanvas.setFilter(filter);
@@ -241,11 +250,13 @@ public class EnhanceImageFragment extends BaseFragment {
         mFilterAdjuster = new GPUImageFilterTools.FilterAdjuster(gpuImageFilter);
         optionSeekBarSatur.setProgress(isFilterApplied ? optionSeekBarSatur.getProgress() : defaultSaturLevel);
         showLayout(layoutSatur);
+        textEnhanceType.setVisibility(View.VISIBLE);
+        textEnhanceType.setText(getString(R.string.option_item_satur));
     }
 
     @OnClick(R.id.layout_vignette_option_item)
     void onVignetteLayoutClick() {
-        Filter filter = new Filter("Vignette", GPUImageFilterTools.FilterType.VIGNETTE, false);
+        Filter filter = new Filter(getString(R.string.option_item_vignette), GPUImageFilterTools.FilterType.VIGNETTE, false);
         boolean isFilterApplied = mCanvas.isFilterApplied(filter);
         if (!isFilterApplied) {
             mCanvas.setFilter(filter);
@@ -254,11 +265,13 @@ public class EnhanceImageFragment extends BaseFragment {
         mFilterAdjuster = new GPUImageFilterTools.FilterAdjuster(gpuImageFilter);
         optionSeekBarVignette.setProgress(isFilterApplied ? optionSeekBarVignette.getProgress() : defaultVignetteLevel);
         showLayout(layoutVignette);
+        textEnhanceType.setVisibility(View.VISIBLE);
+        textEnhanceType.setText(getString(R.string.option_item_vignette));
     }
 
     @OnClick(R.id.layout_rotate_option_item)
     void onRotateLayoutClick() {
-        Filter filter = new Filter("Transform (2-D, false))", GPUImageFilterTools.FilterType.TRANSFORM2D, false);
+        Filter filter = new Filter(getString(R.string.text_rotate), GPUImageFilterTools.FilterType.TRANSFORM2D, false);
         boolean isFilterApplied = mCanvas.isFilterApplied(filter);
         if (!isFilterApplied) {
             mCanvas.setFilter(filter);
@@ -267,6 +280,8 @@ public class EnhanceImageFragment extends BaseFragment {
         mFilterAdjuster = new GPUImageFilterTools.FilterAdjuster(gpuImageFilter);
         optionSeekBarRotate.setProgress(isFilterApplied ? optionSeekBarRotate.getProgress() : defaultRotateLevel);
         showLayout(layoutRotate);
+        textEnhanceType.setVisibility(View.VISIBLE);
+        textEnhanceType.setText(getString(R.string.text_rotate));
     }
 
     void showLayout(ViewGroup view) {
@@ -378,6 +393,7 @@ public class EnhanceImageFragment extends BaseFragment {
     private onFilterItemClickListener mOnFilterItemClickListener = new onFilterItemClickListener() {
         @Override
         public void onItemClick(Filter filter) {
+            textEnhanceType.setVisibility(View.GONE);
             setActiveFilter(filter);
             mCanvas.setFilter(filter);
             GPUImageFilter gpuImageFilter = mCanvas.getFilterByType(filter);
@@ -385,28 +401,6 @@ public class EnhanceImageFragment extends BaseFragment {
             filterAdjuster.setVisibility(mFilterAdjuster.canAdjust() ? View.VISIBLE : View.INVISIBLE);
         }
     };
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        /*
-        * Below code is to detect the back press event in fragment
-        * *
-        getView().setFocusableInTouchMode(true);
-        getView().requestFocus();
-
-        getView().setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                    if (keyCode == KeyEvent.KEYCODE_BACK) {
-                        return isApplyingFilter ? true : false;
-                    }
-                }
-                return false;
-            }
-        });*/
-    }
 
     public void adjustFilter(int progress) {
         if (mFilterAdjuster != null) {

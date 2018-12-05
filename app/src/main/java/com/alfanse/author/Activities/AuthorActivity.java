@@ -15,6 +15,7 @@ package com.alfanse.author.Activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -40,6 +41,7 @@ import com.alfanse.author.Utilities.CommonView;
 import com.alfanse.author.Utilities.Constants;
 import com.alfanse.author.Utilities.SharedManagement;
 import com.alfanse.author.Utilities.Utils;
+import com.alfanse.author.Utilities.ZoomImage;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
@@ -53,11 +55,14 @@ import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.alfanse.author.Utilities.Constants.BUNDLE_KEY_AUTHOR_ID;
 
 public class AuthorActivity extends BaseActivity {
 
+    @BindView(R.id.container)
+    View container;
     @BindView(R.id.toolbar_author)
     Toolbar mToolbar;
     @BindView(R.id.toolbar_layout_author)
@@ -65,7 +70,9 @@ public class AuthorActivity extends BaseActivity {
     @BindView(R.id.image_view_cover_image_author)
     ImageView imageCover;
     @BindView(R.id.image_view_profile_image_author)
-    ImageView imageProfile;
+    CircleImageView imageProfile;
+    @BindView(R.id.image_view_full_profile_image_author)
+    ImageView fullImageProfile;
     @BindView(R.id.text_author_name_author)
     TextView textAuthorName;
     @BindView(R.id.text_author_status_author)
@@ -97,6 +104,7 @@ public class AuthorActivity extends BaseActivity {
     private Author mAuthor;
     private String mAuthorId;
     private Author mLoggedAuthor;
+    private Bitmap mFullBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -203,6 +211,12 @@ public class AuthorActivity extends BaseActivity {
 
     private void initListener() {
 
+        imageProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ZoomImage.zoom(mContext, imageProfile, fullImageProfile, container, mFullBitmap);
+            }
+        });
 
         layoutTotalQuotes.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -334,21 +348,22 @@ public class AuthorActivity extends BaseActivity {
 
         RequestOptions profileImageOptions = new RequestOptions()
                 .error(Utils.getInstance(mContext).getDrawable(R.drawable.ic_gallery_grey_24dp))
-                .fitCenter()
-                .circleCrop();
+                .centerCrop();
 
-        Glide.with(mActivity)
+        Glide.with(mContext)
+                .asBitmap()
                 .load(mAuthor.getProfileImage())
                 .apply(profileImageOptions)
-                .listener(new RequestListener<Drawable>() {
+                .listener(new RequestListener<Bitmap>() {
                     @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
                         progressBarProfileImage.setVisibility(View.GONE);
                         return false;
                     }
 
                     @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                    public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+                        mFullBitmap = resource;
                         progressBarProfileImage.setVisibility(View.GONE);
                         return false;
                     }

@@ -117,8 +117,7 @@ public class QuotesFragment extends BaseFragment implements UpdatableFragment {
             Intent quoteIntent = new Intent(mActivity, QuoteActivity.class);
             Pair<View, String> p1 = Pair.create((View) quoteImage, getString(R.string.quote_image_shared_element_name));
             Pair<View, String> p2 = Pair.create((View) authorImage, getString(R.string.author_image_shared_element_name));
-            ActivityOptionsCompat options = ActivityOptionsCompat.
-                    makeSceneTransitionAnimation(mActivity, p1, p2);
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity, p1, p2);
             quoteIntent.putExtra(BUNDLE_KEY_QUOTE_ID, quote.getId());
             startActivity(quoteIntent, options.toBundle());
         }
@@ -505,6 +504,7 @@ public class QuotesFragment extends BaseFragment implements UpdatableFragment {
                     @Override
                     public void onFailureCallBack(Exception e) {
                         layoutSwipeRefresh.setRefreshing(false);
+                        handleError(e);
                     }
                 });
 
@@ -649,6 +649,20 @@ public class QuotesFragment extends BaseFragment implements UpdatableFragment {
         mListQuotes.clear();
         mQuotesAdapter.notifyDataSetChanged();
         loadQuotes(mFirstPage);
+    }
+
+    private void handleError(Exception e) {
+        CommonView.getInstance(mContext).showExceptionErrorDialog(mActivity, Utils.getInstance(mContext).getErrorMessage(e), new ExceptionDialogButtonListener() {
+            @Override
+            public void onRetryClick() {
+                loadQuotes(mFirstPage);
+            }
+
+            @Override
+            public void onCancelClick() {
+                mActivity.onBackPressed();
+            }
+        });
     }
 
     /**

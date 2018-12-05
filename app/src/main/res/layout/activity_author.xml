@@ -9,227 +9,244 @@
   ~ either express or implied. See the License for the specific language governing permissions
   ~ and limitations under the License.
   -->
-
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="com.alfanse.author.Activities.AuthorActivity">
+    android:layout_height="match_parent">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/app_bar_author"
+    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorWhite">
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        tools:context="com.alfanse.author.Activities.AuthorActivity">
 
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/toolbar_layout_author"
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/app_bar_author"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
-            app:collapsedTitleTextAppearance="@style/CollapsedAppBar"
-            app:contentScrim="?attr/colorPrimary"
-            app:expandedTitleTextAppearance="@style/ExpandedAppBar"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
+            android:layout_height="wrap_content"
+            android:background="@color/colorWhite">
 
-            <LinearLayout
+            <android.support.design.widget.CollapsingToolbarLayout
+                android:id="@+id/toolbar_layout_author"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/app_bar_accounts_user_height">
-
-                    <ProgressBar
-                        android:id="@+id/progress_bar_cover_image_author"
-                        style="?android:progressBarStyleSmall"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center" />
-
-                    <ImageView
-                        android:id="@+id/image_view_cover_image_author"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/app_bar_accounts_user_height"
-                        android:scaleType="centerCrop" />
-
-                </FrameLayout>
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true"
+                app:collapsedTitleTextAppearance="@style/CollapsedAppBar"
+                app:contentScrim="?attr/colorPrimary"
+                app:expandedTitleTextAppearance="@style/ExpandedAppBar"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/app_bar_accounts_user_height">
+
+                        <ProgressBar
+                            android:id="@+id/progress_bar_cover_image_author"
+                            style="?android:progressBarStyleSmall"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center" />
+
+                        <ImageView
+                            android:id="@+id/image_view_cover_image_author"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/app_bar_accounts_user_height"
+                            android:scaleType="centerCrop" />
+
+                    </FrameLayout>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="@dimen/spacing_small">
-
-                        <FrameLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:padding="@dimen/spacing_small">
-
-                            <ProgressBar
-                                android:id="@+id/progress_bar_profile_image_author"
-                                style="?android:progressBarStyleSmall"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center" />
-
-                            <ImageView
-                                android:id="@+id/image_view_profile_image_author"
-                                android:layout_width="@dimen/profile_image_width"
-                                android:layout_height="@dimen/profile_image_height"
-                                android:layout_marginTop="@dimen/spacing_small" />
-
-                        </FrameLayout>
+                        android:orientation="vertical">
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:orientation="vertical"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
                             android:padding="@dimen/spacing_small">
 
-                            <TextView
-                                android:id="@+id/text_author_name_author"
+                            <FrameLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textSize="@dimen/font_xxlarge" />
+                                android:layout_gravity="center"
+                                android:padding="@dimen/spacing_small">
 
-                            <TextView
-                                android:id="@+id/text_author_status_author"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:maxLength="@integer/author_status_max_length"
-                                android:textSize="@dimen/font_small" />
+                                <ProgressBar
+                                    android:id="@+id/progress_bar_profile_image_author"
+                                    style="?android:progressBarStyleSmall"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center" />
 
-                        </LinearLayout>
+                                <de.hdodenhof.circleimageview.CircleImageView
+                                    android:id="@+id/image_view_profile_image_author"
+                                    android:layout_width="@dimen/profile_image_width"
+                                    android:layout_height="@dimen/profile_image_height"
+                                    android:layout_marginTop="@dimen/spacing_small" />
 
-                    </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="@dimen/spacing_normal">
+                            </FrameLayout>
 
-                        <LinearLayout
-                            android:id="@+id/layout_total_quote_author"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="10"
-                            android:gravity="center"
-                            android:orientation="vertical">
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                android:padding="@dimen/spacing_small">
 
-                            <TextView
-                                android:id="@+id/text_total_quotes_author"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textColor="@color/colorPrimaryDark"
-                                android:textSize="@dimen/font_xlarge"
-                                android:textStyle="bold" />
+                                <TextView
+                                    android:id="@+id/text_author_name_author"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="@dimen/font_xxlarge" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/text_quotes"
-                                android:textSize="@dimen/font_small" />
-                        </LinearLayout>
+                                <TextView
+                                    android:id="@+id/text_author_status_author"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:maxLength="@integer/author_status_max_length"
+                                    android:textSize="@dimen/font_small" />
 
-                        <LinearLayout
-                            android:id="@+id/layout_total_followers_author"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="10"
-                            android:gravity="center"
-                            android:orientation="vertical">
+                            </LinearLayout>
 
-                            <TextView
-                                android:id="@+id/text_total_followers_author"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textColor="@color/colorPrimaryDark"
-                                android:textSize="@dimen/font_xlarge"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/text_followers"
-                                android:textSize="@dimen/font_small" />
                         </LinearLayout>
 
                         <LinearLayout
-                            android:id="@+id/layout_total_following_author"
-                            android:layout_width="0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="10"
-                            android:gravity="center"
-                            android:orientation="vertical">
+                            android:baselineAligned="false"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/spacing_normal">
 
-                            <TextView
-                                android:id="@+id/text_total_following_author"
-                                android:layout_width="wrap_content"
+                            <LinearLayout
+                                android:id="@+id/layout_total_quote_author"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:textColor="@color/colorPrimaryDark"
-                                android:textSize="@dimen/font_xlarge"
-                                android:textStyle="bold" />
+                                android:layout_weight="10"
+                                android:gravity="center"
+                                android:orientation="vertical">
 
-                            <TextView
-                                android:layout_width="wrap_content"
+                                <TextView
+                                    android:id="@+id/text_total_quotes_author"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/colorPrimaryDark"
+                                    android:textSize="@dimen/font_xlarge"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/text_quotes"
+                                    android:textSize="@dimen/font_small" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/layout_total_followers_author"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:text="@string/text_following"
-                                android:textSize="@dimen/font_small" />
+                                android:layout_weight="10"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/text_total_followers_author"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/colorPrimaryDark"
+                                    android:textSize="@dimen/font_xlarge"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/text_followers"
+                                    android:textSize="@dimen/font_small" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/layout_total_following_author"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="10"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/text_total_following_author"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/colorPrimaryDark"
+                                    android:textSize="@dimen/font_xlarge"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/text_following"
+                                    android:textSize="@dimen/font_small" />
+                            </LinearLayout>
+
                         </LinearLayout>
 
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="@dimen/spacing_normal">
-
-                        <TextView
-                            android:id="@+id/text_follow_author"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/round_border_accent"
-                            android:clickable="true"
                             android:gravity="center"
-                            android:paddingBottom="@dimen/spacing_small"
-                            android:paddingLeft="@dimen/spacing_huge"
-                            android:paddingRight="@dimen/spacing_huge"
-                            android:paddingTop="@dimen/spacing_small"
-                            android:textColor="@color/colorWhite"
-                            android:textStyle="bold" />
+                            android:orientation="vertical"
+                            android:padding="@dimen/spacing_normal">
+
+                            <TextView
+                                android:id="@+id/text_follow_author"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/round_border_accent"
+                                android:clickable="true"
+                                android:gravity="center"
+                                android:paddingLeft="@dimen/spacing_huge"
+                                android:paddingTop="@dimen/spacing_small"
+                                android:paddingRight="@dimen/spacing_huge"
+                                android:paddingBottom="@dimen/spacing_small"
+                                android:textColor="@color/colorWhite"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
                     </LinearLayout>
 
                 </LinearLayout>
 
-            </LinearLayout>
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar_author"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar_author"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:layout_collapseMode="pin"
+                    app:popupTheme="@style/AppTheme.PopupOverlay" />
 
 
-        </android.support.design.widget.CollapsingToolbarLayout>
+            </android.support.design.widget.CollapsingToolbarLayout>
 
-    </android.support.design.widget.AppBarLayout>
+        </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_author" />
+        <include layout="@layout/content_author" />
 
 
-</android.support.design.widget.CoordinatorLayout>
+    </android.support.design.widget.CoordinatorLayout>
+
+    <ImageView
+        android:id="@+id/image_view_full_profile_image_author"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:visibility="invisible" />
+
+</FrameLayout>

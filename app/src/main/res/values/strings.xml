@@ -172,11 +172,11 @@
     <string name="option_item_format">Format</string>
     <string name="option_item_text_size">Text Size</string>
     <string name="option_item_font">Font</string>
-    <string name="option_item_bright">Bright</string>
+    <string name="option_item_bright">Brightness</string>
     <string name="option_item_contrast">Contrast</string>
     <string name="option_item_hue">Hue</string>
-    <string name="option_item_satur">Satur</string>
-    <string name="option_item_temp">Temp</string>
+    <string name="option_item_satur">Saturation</string>
+    <string name="option_item_temp">Temperature</string>
     <string name="option_item_tint">Tint</string>
     <string name="option_item_vignette">Vignette</string>
     <string name="option_item_enhance">Enhance</string>

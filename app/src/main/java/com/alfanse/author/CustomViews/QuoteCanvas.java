@@ -221,7 +221,7 @@ public class QuoteCanvas extends SquareFrameLayout {
                 .error(Utils.getInstance(mContext).getDrawable(R.drawable.ic_gallery_grey_24dp))
                 .centerCrop();
 
-        Glide.with(mContext)
+        Glide.with(mContext.getApplicationContext())
                 .asBitmap()
                 .load(imageUrl)
                 .apply(canvasImageOptions)
