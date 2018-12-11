@@ -55,8 +55,8 @@ android {
         applicationId "com.alfanse.author"
         minSdkVersion 17
         targetSdkVersion 27
-        versionCode 11
-        versionName "2.4"
+        versionCode 12
+        versionName "2.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 
