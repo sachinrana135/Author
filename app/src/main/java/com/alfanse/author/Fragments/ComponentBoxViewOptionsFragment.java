@@ -114,7 +114,8 @@ public class ComponentBoxViewOptionsFragment extends BaseFragment implements Col
 
                 componentBoxView.setBackgroundColor(mComponentBoxView.getBackgroundColor());
 
-                FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(mCanvas.getWidth() / 2, mCanvas.getWidth() / 2);
+                FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(mComponentBoxView.getWidth(), mComponentBoxView.getHeight());
+
 
                 mCanvas.addView(componentBoxView, layoutParams);
 

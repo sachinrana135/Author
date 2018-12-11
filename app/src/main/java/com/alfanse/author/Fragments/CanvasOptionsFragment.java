@@ -366,29 +366,33 @@ public class CanvasOptionsFragment extends BaseFragment implements ColorPickerDi
                         requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, CropImage.PICK_IMAGE_PERMISSIONS_REQUEST_CODE);
                     } else {
                         // no permissions required or already grunted, can start crop image activity
-                        startCropImageActivity(imageUri);
+                        if (imageUri != null) {
+                            startCropImageActivity(imageUri);
+                        }
                     }
                 }
                 break;
             }
 
             case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE: {
-                CropImage.ActivityResult result = CropImage.getActivityResult(data);
-                if (resultCode == Activity.RESULT_OK) {
+                if (data != null) {
+                    CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                    if (resultCode == Activity.RESULT_OK && result != null) {
 
-                    if (imageRequiredFor.equalsIgnoreCase(IMAGE_REQUIRED_FOR_CANVAS)) {
-                        Uri croppedImageUri = result.getUri();
-                        try {
-                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), croppedImageUri);
-                            mCanvas.setBackground(bitmap);
-                        } catch (IOException e) {
-                            Log.d(CanvasOptionsFragment.this.getClass().getSimpleName(), e.getMessage());
+                        if (imageRequiredFor.equalsIgnoreCase(IMAGE_REQUIRED_FOR_CANVAS)) {
+                            Uri croppedImageUri = result.getUri();
+                            try {
+                                Bitmap bitmap = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), croppedImageUri);
+                                mCanvas.setBackground(bitmap);
+                            } catch (IOException e) {
+                                Log.d(CanvasOptionsFragment.this.getClass().getSimpleName(), e.getMessage());
+                            }
+                        } else if (imageRequiredFor.equalsIgnoreCase(IMAGE_REQUIRED_FOR_COMPONENT_IMAGEVIEW)) {
+                            addComponentImageView(result.getUri());
                         }
-                    } else if (imageRequiredFor.equalsIgnoreCase(IMAGE_REQUIRED_FOR_COMPONENT_IMAGEVIEW)) {
-                        addComponentImageView(result.getUri());
+                    } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                        CommonView.showToast(mActivity, "Cropping failed: " + result.getError(), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
                     }
-                } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                    CommonView.showToast(mActivity, "Cropping failed: " + result.getError(), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
                 }
                 break;
             }

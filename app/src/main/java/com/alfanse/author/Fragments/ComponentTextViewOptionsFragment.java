@@ -178,7 +178,10 @@ public class ComponentTextViewOptionsFragment extends BaseFragment implements Co
         optionText.setTextColor(primaryDarkColor);
 
         optionSeekBarTextSize.setOnSeekBarChangeListener(textSizeSeekBarListener);
-        int mTextSize = Math.round(mComponentTextView.getTextSize());
+        int mTextSize = 20;
+        if (mComponentTextView != null) {
+            mTextSize = Math.round(mComponentTextView.getTextSize());
+        }
         optionSeekBarTextSize.setProgress(mTextSize);
         optionSeekBarTextSizeValue.setText(mTextSize + " " + UNIT_TEXT_SIZE);
 

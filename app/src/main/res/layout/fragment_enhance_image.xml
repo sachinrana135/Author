@@ -53,7 +53,8 @@
                     android:tag="@string/option_item_text_tag"
                     android:text="@string/option_item_back"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/font_xsmall" />
+                    android:textSize="@dimen/font_xsmall"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
@@ -80,7 +81,8 @@
                     android:tag="@string/option_item_text_tag"
                     android:text="@string/option_item_canvas_filter"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/font_xsmall" />
+                    android:textSize="@dimen/font_xsmall"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
@@ -107,7 +109,8 @@
                     android:tag="@string/option_item_bright"
                     android:text="@string/option_item_bright"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/font_xsmall" />
+                    android:textSize="@dimen/font_xsmall"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
@@ -132,7 +135,8 @@
                     android:layout_height="wrap_content"
                     android:text="@string/option_item_contrast"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/font_xsmall" />
+                    android:textSize="@dimen/font_xsmall"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
@@ -157,7 +161,8 @@
                     android:layout_height="wrap_content"
                     android:text="@string/option_item_hue"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/font_xsmall" />
+                    android:textSize="@dimen/font_xsmall"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
@@ -182,7 +187,8 @@
                     android:layout_height="wrap_content"
                     android:text="@string/option_item_satur"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/font_xsmall" />
+                    android:textSize="@dimen/font_xsmall"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
@@ -207,7 +213,8 @@
                     android:layout_height="wrap_content"
                     android:text="@string/option_item_vignette"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/font_xsmall" />
+                    android:textSize="@dimen/font_xsmall"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
@@ -232,12 +239,22 @@
                     android:layout_height="wrap_content"
                     android:text="@string/text_rotate"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/font_xsmall" />
+                    android:textSize="@dimen/font_xsmall"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
 
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/text_enhance_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:textColor="@color/colorWhite"
+            android:gravity="center_horizontal"
+            android:textSize="@dimen/font_large" />
 
         <LinearLayout
             android:layout_width="match_parent"

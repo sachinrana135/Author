@@ -571,17 +571,7 @@ public class SignInActivity extends BaseActivity implements
 
                     @Override
                     public void onFailureCallBack(Exception e) {
-                        CommonView.getInstance(mContext).showExceptionErrorDialog(mActivity, Utils.getInstance(mContext).getErrorMessage(e), new ExceptionDialogButtonListener() {
-                            @Override
-                            public void onRetryClick() {
-                                addOrUpdateAuthor();
-                            }
-
-                            @Override
-                            public void onCancelClick() {
-                                onBackPressed();
-                            }
-                        });
+                        handleError(e);
                     }
                 });
 
@@ -594,24 +584,45 @@ public class SignInActivity extends BaseActivity implements
         //mLoggedAuthor = new Gson().fromJson(Utils.getInstance(mContext).getJsonResponse(ASSETS_FILE_AUTHOR), Author.class);
         mLoggedAuthor = new Gson().fromJson(stringResponse, Author.class);
 
-        SharedManagement.getInstance(mContext).setLoggedUser(mLoggedAuthor);
+        if (mLoggedAuthor != null) {
 
-        if (mLoggedAuthor.getCountry() == null) {
-            Intent chooseCountryIntent = new Intent(mActivity, ChooseCountryActivity.class);
-            startActivity(chooseCountryIntent);
-            finish();
-        } else {
-            if (mFirebaseMessageData != null) {
-                Intent intent = Utils.getInstance(mContext).getFirebaseMessageTargetIntent(mFirebaseMessageData);
-                startActivity(intent);
+            SharedManagement.getInstance(mContext).setLoggedUser(mLoggedAuthor);
+
+            if (mLoggedAuthor.getCountry() == null) {
+                Intent chooseCountryIntent = new Intent(mActivity, ChooseCountryActivity.class);
+                startActivity(chooseCountryIntent);
                 finish();
-
             } else {
-                Intent homeIntent = new Intent(mActivity, HomeActivity.class);
-                startActivity(homeIntent);
-                finish();
+                if (mFirebaseMessageData != null) {
+                    Intent intent = Utils.getInstance(mContext).getFirebaseMessageTargetIntent(mFirebaseMessageData);
+                    startActivity(intent);
+                    finish();
+
+                } else {
+                    Intent homeIntent = new Intent(mActivity, HomeActivity.class);
+                    startActivity(homeIntent);
+                    finish();
+                }
             }
+        } else {
+            Exception e = new Exception("Error while updating Author| SignInActivity | parseAddOrUpdateAuthorResponse");
+            Utils.getInstance(mContext).logException(e);
+            handleError(e);
         }
+    }
+
+    private void handleError(Exception e) {
+        CommonView.getInstance(mContext).showExceptionErrorDialog(mActivity, Utils.getInstance(mContext).getErrorMessage(e), new ExceptionDialogButtonListener() {
+            @Override
+            public void onRetryClick() {
+                addOrUpdateAuthor();
+            }
+
+            @Override
+            public void onCancelClick() {
+                onBackPressed();
+            }
+        });
     }
 
     private void sendVerificationEmail() {

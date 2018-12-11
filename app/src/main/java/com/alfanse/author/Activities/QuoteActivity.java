@@ -467,17 +467,7 @@ public class QuoteActivity extends BaseActivity {
 
                     @Override
                     public void onFailureCallBack(Exception e) {
-                        CommonView.getInstance(mContext).showExceptionErrorDialog(mActivity, Utils.getInstance(mContext).getErrorMessage(e), new ExceptionDialogButtonListener() {
-                            @Override
-                            public void onRetryClick() {
-                                getQuote();
-                            }
-
-                            @Override
-                            public void onCancelClick() {
-                                onBackPressed();
-                            }
-                        });
+                        handleError(e);
                     }
                 });
 
@@ -486,9 +476,29 @@ public class QuoteActivity extends BaseActivity {
 
     }
 
+    private void handleError(Exception e) {
+        CommonView.getInstance(mContext).showExceptionErrorDialog(mActivity, Utils.getInstance(mContext).getErrorMessage(e), new ExceptionDialogButtonListener() {
+            @Override
+            public void onRetryClick() {
+                getQuote();
+            }
+
+            @Override
+            public void onCancelClick() {
+                onBackPressed();
+            }
+        });
+    }
+
     private void parseGetQuoteResponse(String stringResponse) {
         mQuote = new Gson().fromJson(stringResponse, Quote.class);
-        renderView();
+        if (mQuote != null) {
+            renderView();
+        } else {
+            Exception e = new Exception("Error while fetching quote| QuoteActivity | parseGetQuoteResponse");
+            Utils.getInstance(mContext).logException(e);
+            handleError(e);
+        }
     }
 
     private void renderView() {
