@@ -63,8 +63,6 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.theartofdev.edmodo.cropper.CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE;
-
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -278,7 +276,7 @@ public class CanvasOptionsFragment extends BaseFragment implements ColorPickerDi
             // request permissions and handle the result in onRequestPermissionsResult()
             requestPermissions(PERMISSIONS, ALL_PERMISSIONS_REQUEST_CODE);
         } else {
-            startActivityForResult(CropImage.getPickImageChooserIntent(mContext), PICK_IMAGE_CHOOSER_REQUEST_CODE);
+            CropImage.startPickImageActivity(mActivity);
         }
 
     }
@@ -331,7 +329,7 @@ public class CanvasOptionsFragment extends BaseFragment implements ColorPickerDi
         switch (requestCode) {
             case ALL_PERMISSIONS_REQUEST_CODE: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    startActivityForResult(CropImage.getPickImageChooserIntent(mContext), PICK_IMAGE_CHOOSER_REQUEST_CODE);
+                    CropImage.startPickImageActivity(mActivity);
                 } else {
                     CommonView.showToast(mActivity, getString(R.string.warning_permission_denied), Toast.LENGTH_LONG, CommonView.ToastType.WARNING);
                 }
@@ -356,43 +354,44 @@ public class CanvasOptionsFragment extends BaseFragment implements ColorPickerDi
         switch (requestCode) {
 
             case CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE: {
-                if (resultCode == Activity.RESULT_OK) {
-                    Uri imageUri = CropImage.getPickImageResultUri(mActivity, data);
-
-                    // For API >= 23 we need to check specifically that we have permissions to read external storage.
-                    if (CropImage.isReadExternalStoragePermissionsRequired(mActivity, imageUri)) {
-                        // request permissions and handle the result in onRequestPermissionsResult()
-                        mCropImageUri = imageUri;
-                        requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, CropImage.PICK_IMAGE_PERMISSIONS_REQUEST_CODE);
-                    } else {
-                        // no permissions required or already grunted, can start crop image activity
+                try {
+                    if (resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
+                        Uri imageUri = CropImage.getPickImageResultUri(mActivity, data);
                         if (imageUri != null) {
                             startCropImageActivity(imageUri);
                         }
                     }
+                } catch (Exception e) {
+                    Utils.getInstance(mContext).logException(e);
                 }
                 break;
             }
 
             case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE: {
-                if (data != null) {
-                    CropImage.ActivityResult result = CropImage.getActivityResult(data);
-                    if (resultCode == Activity.RESULT_OK && result != null) {
+                try {
+                    if (data != null) {
 
-                        if (imageRequiredFor.equalsIgnoreCase(IMAGE_REQUIRED_FOR_CANVAS)) {
-                            Uri croppedImageUri = result.getUri();
-                            try {
-                                Bitmap bitmap = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), croppedImageUri);
-                                mCanvas.setBackground(bitmap);
-                            } catch (IOException e) {
-                                Log.d(CanvasOptionsFragment.this.getClass().getSimpleName(), e.getMessage());
+                        CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                        if (resultCode == Activity.RESULT_OK && result != null) {
+
+                            if (imageRequiredFor.equalsIgnoreCase(IMAGE_REQUIRED_FOR_CANVAS)) {
+                                Uri croppedImageUri = result.getUri();
+                                try {
+                                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), croppedImageUri);
+                                    mCanvas.setBackground(bitmap);
+                                } catch (IOException e) {
+                                    Log.d(CanvasOptionsFragment.this.getClass().getSimpleName(), e.getMessage());
+                                }
+                            } else if (imageRequiredFor.equalsIgnoreCase(IMAGE_REQUIRED_FOR_COMPONENT_IMAGEVIEW)) {
+                                addComponentImageView(result.getUri());
                             }
-                        } else if (imageRequiredFor.equalsIgnoreCase(IMAGE_REQUIRED_FOR_COMPONENT_IMAGEVIEW)) {
-                            addComponentImageView(result.getUri());
+                        } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                            CommonView.showToast(mActivity, "Cropping failed: " + result.getError(), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
                         }
-                    } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                        CommonView.showToast(mActivity, "Cropping failed: " + result.getError(), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
                     }
+                } catch (Exception e) {
+                    CommonView.showToast(mActivity, getString(R.string.error_exception), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
+                    Utils.getInstance(mContext).logException(e);
                 }
                 break;
             }
