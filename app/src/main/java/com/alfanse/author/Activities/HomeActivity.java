@@ -77,7 +77,7 @@ public class HomeActivity extends BaseActivity implements
                     break;
                 case R.id.bottom_nav_item_new_quote_home:
 
-                    Intent newQuoteIntent = new Intent(mActivity, NewQuoteActivity.class);
+                    Intent newQuoteIntent = new Intent(mActivity, NewHtmlActivity.class);
                     startActivity(newQuoteIntent);
 
                     break;
