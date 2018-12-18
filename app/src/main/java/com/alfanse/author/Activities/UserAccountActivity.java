@@ -71,8 +71,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.theartofdev.edmodo.cropper.CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE;
-
 public class UserAccountActivity extends BaseActivity {
 
     private static final String IMAGE_REQUIRED_FOR_COVER = "IMAGE_REQUIRED_FOR_COVER";
@@ -352,7 +350,7 @@ public class UserAccountActivity extends BaseActivity {
             // request permissions and handle the result in onRequestPermissionsResult()
             requestPermissions(PERMISSIONS, ALL_PERMISSIONS_REQUEST_CODE);
         } else {
-            startActivityForResult(CropImage.getPickImageChooserIntent(mContext), PICK_IMAGE_CHOOSER_REQUEST_CODE);
+            CropImage.startPickImageActivity(mActivity);
         }
 
     }
@@ -370,7 +368,7 @@ public class UserAccountActivity extends BaseActivity {
         switch (requestCode) {
             case ALL_PERMISSIONS_REQUEST_CODE: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    startActivityForResult(CropImage.getPickImageChooserIntent(mContext), PICK_IMAGE_CHOOSER_REQUEST_CODE);
+                    CropImage.startPickImageActivity(mActivity);
                 } else {
                     CommonView.showToast(mActivity, getString(R.string.warning_permission_denied), Toast.LENGTH_LONG, CommonView.ToastType.WARNING);
                 }
@@ -395,47 +393,48 @@ public class UserAccountActivity extends BaseActivity {
         switch (requestCode) {
 
             case CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE: {
-                if (resultCode == Activity.RESULT_OK) {
-                    Uri imageUri = CropImage.getPickImageResultUri(mActivity, data);
-                    mCropImageUri = imageUri;
-                    // For API >= 23 we need to check specifically that we have permissions to read external storage.
-                    if (CropImage.isReadExternalStoragePermissionsRequired(mActivity, imageUri)) {
-                        // request permissions and handle the result in onRequestPermissionsResult()
-
-                        requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, CropImage.PICK_IMAGE_PERMISSIONS_REQUEST_CODE);
-                    } else {
-                        // no permissions required or already grunted, can start crop image activity
+                try {
+                    if (resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
+                        Uri imageUri = CropImage.getPickImageResultUri(mActivity, data);
+                        mCropImageUri = imageUri;
                         if (imageUri != null) {
                             startCropImageActivity(imageUri);
                         }
                     }
+                } catch (Exception e) {
+                    Utils.getInstance(mContext).logException(e);
                 }
                 break;
             }
 
             case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE: {
-                if (data != null) {
-                    CropImage.ActivityResult result = CropImage.getActivityResult(data);
-                    if (resultCode == Activity.RESULT_OK && result != null) {
-                        mCroppedImageUri = result.getUri();
-                        Bitmap imageBitmap = null;
-                        try {
-                            imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), mCroppedImageUri);
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                try {
+                    if (data != null) {
+                        CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                        if (resultCode == Activity.RESULT_OK && result != null) {
+                            mCroppedImageUri = result.getUri();
+                            Bitmap imageBitmap = null;
+                            try {
+                                imageBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), mCroppedImageUri);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            if (imageRequiredFor.equalsIgnoreCase(IMAGE_REQUIRED_FOR_COVER)) {
+
+                                imageCover.setImageBitmap(imageBitmap);
+
+                                new saveImageTask().execute();
+
+                            } else if (imageRequiredFor.equalsIgnoreCase(IMAGE_REQUIRED_FOR_PROFILE)) {
+                                new saveImageTask().execute();
+                            }
+                        } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                            CommonView.showToast(mActivity, "Cropping failed: " + result.getError(), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
                         }
-                        if (imageRequiredFor.equalsIgnoreCase(IMAGE_REQUIRED_FOR_COVER)) {
-
-                            imageCover.setImageBitmap(imageBitmap);
-
-                            new saveImageTask().execute();
-
-                        } else if (imageRequiredFor.equalsIgnoreCase(IMAGE_REQUIRED_FOR_PROFILE)) {
-                            new saveImageTask().execute();
-                        }
-                    } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                        CommonView.showToast(mActivity, "Cropping failed: " + result.getError(), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
                     }
+                } catch (Exception e) {
+                    CommonView.showToast(mActivity, getString(R.string.error_exception), Toast.LENGTH_LONG, CommonView.ToastType.ERROR);
+                    Utils.getInstance(mContext).logException(e);
                 }
                 break;
             }
