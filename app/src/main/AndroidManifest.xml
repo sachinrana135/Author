@@ -129,6 +129,7 @@
         <activity android:name=".Activities.NoInternetConnectionActivity" />
         <activity android:name=".Activities.AppUpgradeActivity"></activity>
         <activity android:name=".Activities.NewHtmlActivity"></activity>
+        <activity android:name=".Activities.RenderTestActivity"></activity>
     </application>
 
 </manifest>

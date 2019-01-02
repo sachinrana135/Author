@@ -34,7 +34,6 @@ import android.widget.Toast;
 import com.alfanse.author.R;
 import com.github.irshulx.Editor;
 import com.github.irshulx.EditorListener;
-import com.github.irshulx.models.EditorContent;
 import com.github.irshulx.models.EditorTextStyle;
 import com.jrummyapps.android.colorpicker.ColorPickerDialog;
 import com.jrummyapps.android.colorpicker.ColorPickerDialogListener;
@@ -175,8 +174,8 @@ public class NewHtmlActivity extends BaseActivity implements ColorPickerDialogLi
         //editor.setFontFace(R.string.fontFamily__serif);
         Map<Integer, String> headingTypeface = getHeadingTypeface();
         Map<Integer, String> contentTypeface = getContentface();
-        editor.setHeadingTypeface(headingTypeface);
-        editor.setContentTypeface(contentTypeface);
+        //editor.setHeadingTypeface(headingTypeface);
+        //editor.setContentTypeface(contentTypeface);
         editor.setDividerLayout(R.layout.tmpl_divider_layout);
         editor.setEditorImageLayout(R.layout.tmpl_image_view);
         editor.setListItemLayout(R.layout.tmpl_list_item);
@@ -209,7 +208,7 @@ public class NewHtmlActivity extends BaseActivity implements ColorPickerDialogLi
         /*String serialized = "{\"nodes\":[{\"content\":[\"\\u003cp dir\\u003d\\\"ltr\\\"\\u003e\\u003cspan style\\u003d\\\"color:#000000;\\\"\\u003e\\u003cspan style\\u003d\\\"color:#000000;\\\"\\u003eit is not available beyond that statue in a few days and then we could\\u003c/span\\u003e\\u003c/span\\u003e\\u003c/p\\u003e\\n\"],\"contentStyles\":[\"H1\"],\"textSettings\":{\"textColor\":\"#000000\"},\"type\":\"INPUT\"},{\"content\":[],\"type\":\"hr\"},{\"content\":[\"author-tag\"],\"macroSettings\":{\"data-author-name\":\"Alex Wong\",\"data-tag\":\"macro\",\"data-date\":\"12 July 2018\"},\"type\":\"macro\"},{\"content\":[\"\\u003cp dir\\u003d\\\"ltr\\\"\\u003eit is a free trial to get a great weekend a good day to you u can do that for.\\u003c/p\\u003e\\n\"],\"contentStyles\":[],\"textSettings\":{\"textColor\":\"#000000\"},\"type\":\"INPUT\"},{\"content\":[\"\\u003cp dir\\u003d\\\"ltr\\\"\\u003eit is that I have to do the needful as early in life is not available beyond my imagination to be a good.\\u003c/p\\u003e\\n\"],\"contentStyles\":[],\"textSettings\":{\"textColor\":\"#000000\"},\"type\":\"INPUT\"},{\"childs\":[{\"content\":[\"\\u003cp dir\\u003d\\\"ltr\\\"\\u003e\\u003cb\\u003eit is not available in the next week or two and I have a place where I\\u003c/b\\u003e\\u003c/p\\u003e\\n\"],\"contentStyles\":[],\"textSettings\":{\"textColor\":\"#006AFF\"},\"type\":\"IMG_SUB\"}],\"content\":[\"http://www.videogamesblogger.com/wp-content/uploads/2015/08/metal-gear-solid-5-the-phantom-pain-cheats-640x325.jpg\"],\"type\":\"img\"},{\"content\":[\"\\u003cp dir\\u003d\\\"ltr\\\"\\u003eit is not available in the next week to see you tomorrow morning to see you then.\\u003c/p\\u003e\\n\"],\"contentStyles\":[],\"textSettings\":{\"textColor\":\"#000000\"},\"type\":\"INPUT\"},{\"content\":[],\"type\":\"hr\"},{\"content\":[\"\\u003cp dir\\u003d\\\"ltr\\\"\\u003eit is not available in the next day delivery to you soon with it and.\\u003c/p\\u003e\\n\"],\"contentStyles\":[],\"textSettings\":{\"textColor\":\"#000000\"},\"type\":\"INPUT\"}]}";
         EditorContent des = editor.getContentDeserialized(serialized);
         editor.render(des);*/
-        editor.render();
+        //editor.render();
 
 
 //        Intent intent = new Intent(getApplicationContext(), RenderTestActivity.class);
@@ -222,19 +221,19 @@ public class NewHtmlActivity extends BaseActivity implements ColorPickerDialogLi
          */
         //render();
         //editor.render();  // this method must be called to start the editor
-        String text = "<h1 data-tag=\"input\" style=\"color:#000000;\"><span style=\"color:#000000;\">it is not available beyond that statue in a few days and then we could</span></h1><hr data-tag=\"hr\"/><author-tag data-tag=\"macro\"  data-date=\"12 July 2018\" data-author-name=\"Alex Wong\"></author-tag><p data-tag=\"input\" style=\"color:#000000;\">it is a free trial to get a great weekend a good day to you u can do that for.</p><p data-tag=\"input\" style=\"color:#000000;\">it is that I have to do the needful as early in life is not available beyond my imagination to be a good.</p><div data-tag=\"img\"><img src=\"http://www.videogamesblogger.com/wp-content/uploads/2015/08/metal-gear-solid-5-the-phantom-pain-cheats-640x325.jpg\" /><p data-tag=\"img-sub\" style=\"color:#006AFF;\" class=\"editor-image-subtitle\"><b>it is not available in the next week or two and I have a place where I</b></p></div><p data-tag=\"input\" style=\"color:#000000;\">it is not available in the next week to see you tomorrow morning to see you then.</p><hr data-tag=\"hr\"/><p data-tag=\"input\" style=\"color:#000000;\">it is not available in the next day delivery to you soon with it and.</p>";
+        String text = "<h1 data-tag=\"input\" style=\"color:#000000;\"><span style=\"color:#000000;\"><b>it is not available beyond that statue in a few days and then we could</b></span></h1><hr data-tag=\"hr\"/><author-tag data-tag=\"macro\"  data-date=\"12 July 2018\" data-author-name=\"Alex Wong\"></author-tag><p data-tag=\"input\" style=\"color:#000000;\">it is a free trial to get a great weekend a good day to you u can do that for.</p><p data-tag=\"input\" style=\"color:#000000;\">it is that I have to do the needful as early in life is not available beyond my imagination to be a good.</p><div data-tag=\"img\"><img src=\"http://www.videogamesblogger.com/wp-content/uploads/2015/08/metal-gear-solid-5-the-phantom-pain-cheats-640x325.jpg\" /><p data-tag=\"img-sub\" style=\"color:#006AFF;\" class=\"editor-image-subtitle\"><b>it is not available in the next week or two and I have a place where I</b></p></div><p data-tag=\"input\" style=\"color:#000000;\">it is not available in the next week to see you tomorrow morning to see you then.</p><hr data-tag=\"hr\"/><p data-tag=\"input\" style=\"color:#000000;\">it is not available in the next day delivery to you soon with it and.</p>";
         //editor.render("<p>Hello man, whats up!</p>");
-        // editor.render(text);
+        editor.render(text);
         findViewById(R.id.btnRender).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 /*
                 Retrieve the content as serialized, you could also say getContentAsHTML();
                 */
-                /*String text = editor.getContentAsSerialized();
+                String text = editor.getContentAsSerialized();
                 Intent intent = new Intent(getApplicationContext(), RenderTestActivity.class);
                 intent.putExtra("content", text);
-                startActivity(intent);*/
+                startActivity(intent);
             }
         });
 
@@ -366,7 +365,7 @@ public class NewHtmlActivity extends BaseActivity implements ColorPickerDialogLi
 
     @Override
     public void onColorSelected(int dialogId, int color) {
-
+        editor.updateTextColor(colorHex(color));
     }
 
     @Override
