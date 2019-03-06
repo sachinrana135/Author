@@ -115,7 +115,9 @@ public class ComponentTextViewOptionsFragment extends BaseFragment implements Co
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
             optionSeekBarTextSizeValue.setText(progress + " " + UNIT_TEXT_SIZE);
-            mComponentTextView.setTextSize((float) progress);
+            if (mComponentTextView != null) {
+                mComponentTextView.setTextSize((float) progress);
+            }
         }
 
         @Override

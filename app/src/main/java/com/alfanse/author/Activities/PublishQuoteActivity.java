@@ -154,7 +154,7 @@ public class PublishQuoteActivity extends BaseActivity {
                     quoteTag.setBackground(mRoundBorderDrawable);
                     quoteTag.setGravity(Gravity.CENTER_VERTICAL);
                     quoteTag.setPadding((int) getResources().getDimension(R.dimen.spacing_mini), (int) getResources().getDimension(R.dimen.spacing_xsmall), (int) getResources().getDimension(R.dimen.spacing_xsmall), (int) getResources().getDimension(R.dimen.spacing_xsmall));
-                    quoteTag.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_delete_white_16dp, 0);
+                    quoteTag.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.baseline_highlight_off_white_18, 0);
                     quoteTag.setCompoundDrawablePadding((int) getResources().getDimension(R.dimen.spacing_xsmall));
                     quoteTag.setOnClickListener(quoteTagOnClickListener);
                     editTextTags.setText("");
@@ -186,7 +186,7 @@ public class PublishQuoteActivity extends BaseActivity {
                 quoteTag.setBackground(mRoundBorderDrawable);
                 quoteTag.setGravity(Gravity.CENTER_VERTICAL);
                 quoteTag.setPadding((int) getResources().getDimension(R.dimen.spacing_mini), (int) getResources().getDimension(R.dimen.spacing_xsmall), (int) getResources().getDimension(R.dimen.spacing_xsmall), (int) getResources().getDimension(R.dimen.spacing_xsmall));
-                quoteTag.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_delete_white_16dp, 0);
+                quoteTag.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.baseline_highlight_off_white_18, 0);
                 quoteTag.setCompoundDrawablePadding((int) getResources().getDimension(R.dimen.spacing_xsmall));
                 quoteTag.setOnClickListener(quoteTagOnClickListener);
                 editTextTags.setText("");
@@ -447,7 +447,7 @@ public class PublishQuoteActivity extends BaseActivity {
             categoryTag.setTextColor(Utils.getInstance(mContext).getColor(R.color.colorWhite));
             categoryTag.setBackground(mRoundBorderDrawable);
             categoryTag.setPadding((int) getResources().getDimension(R.dimen.spacing_mini), (int) getResources().getDimension(R.dimen.spacing_xsmall), (int) getResources().getDimension(R.dimen.spacing_xsmall), (int) getResources().getDimension(R.dimen.spacing_xsmall));
-            categoryTag.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_delete_white_16dp, 0);
+            categoryTag.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.baseline_highlight_off_white_18, 0);
             categoryTag.setCompoundDrawablePadding((int) getResources().getDimension(R.dimen.spacing_xsmall));
             categoryTag.setOnClickListener(categoryTagOnClickListener);
 
