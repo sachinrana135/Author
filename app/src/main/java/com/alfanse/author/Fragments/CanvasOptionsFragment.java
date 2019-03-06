@@ -63,6 +63,8 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.theartofdev.edmodo.cropper.CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE;
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -276,7 +278,7 @@ public class CanvasOptionsFragment extends BaseFragment implements ColorPickerDi
             // request permissions and handle the result in onRequestPermissionsResult()
             requestPermissions(PERMISSIONS, ALL_PERMISSIONS_REQUEST_CODE);
         } else {
-            CropImage.startPickImageActivity(mActivity);
+            startActivityForResult(CropImage.getPickImageChooserIntent(mContext), PICK_IMAGE_CHOOSER_REQUEST_CODE);
         }
 
     }
@@ -329,7 +331,7 @@ public class CanvasOptionsFragment extends BaseFragment implements ColorPickerDi
         switch (requestCode) {
             case ALL_PERMISSIONS_REQUEST_CODE: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    CropImage.startPickImageActivity(mActivity);
+                    startActivityForResult(CropImage.getPickImageChooserIntent(mContext), PICK_IMAGE_CHOOSER_REQUEST_CODE);
                 } else {
                     CommonView.showToast(mActivity, getString(R.string.warning_permission_denied), Toast.LENGTH_LONG, CommonView.ToastType.WARNING);
                 }
@@ -353,7 +355,7 @@ public class CanvasOptionsFragment extends BaseFragment implements ColorPickerDi
 
         switch (requestCode) {
 
-            case CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE: {
+            case PICK_IMAGE_CHOOSER_REQUEST_CODE: {
                 try {
                     if (resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
                         Uri imageUri = CropImage.getPickImageResultUri(mActivity, data);
