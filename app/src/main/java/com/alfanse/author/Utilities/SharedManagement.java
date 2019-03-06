@@ -88,8 +88,9 @@ public class SharedManagement {
     }
 
     public Author getLoggedUser() {
-        if (getString(LOGGED_USER) != null) {
-            return new Gson().fromJson(getString(LOGGED_USER), Author.class);
+        Author author = new Gson().fromJson(getString(LOGGED_USER), Author.class);
+        if (author != null && author.getId() != null) {
+            return author;
         } else {
             logoutUser();
         }
