@@ -17,26 +17,52 @@
     android:fitsSystemWindows="true">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar_new_quote"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
-
-        <include
-            layout="@layout/toolbar_editor"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_new_post"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary" />
-
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:background="@color/white"
+        android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize"
-        android:layout_height="match_parent">
+        android:background="@color/white">
 
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="40dp"
+            android:scrollbars="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="20dp">
+
+
+                <com.github.irshulx.Editor
+                    android:id="@+id/editor"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingBottom="100dp"
+                    app:placeholder="Start writing here..."
+                    app:render_type="Editor"></com.github.irshulx.Editor>
+
+            </LinearLayout>
+        </ScrollView>
 
         <!-- Begin Editor toolbar -->
 
@@ -44,8 +70,8 @@
             android:id="@+id/tools"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#e6e6e6"
             android:layout_alignParentBottom="true"
+            android:background="#e6e6e6"
             android:scrollbars="none">
 
             <include layout="@layout/editor_toolbar_linearlayout_horizontal" />
@@ -53,24 +79,6 @@
 
         </HorizontalScrollView>
         <!--End of Editor toolbar -->
-        <ScrollView
-            android:layout_width="match_parent"
-            android:scrollbars="vertical"
-            android:layout_marginBottom="40dp"
-            android:layout_alignParentTop="true"
-            android:layout_height="match_parent">
-
-            <com.github.irshulx.Editor
-                android:layout_width="match_parent"
-                android:id="@+id/editor"
-                app:render_type="Editor"
-                app:placeholder="Start writing here..."
-                android:paddingTop="10dp"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:layout_height="match_parent"
-                android:paddingBottom="100dp"></com.github.irshulx.Editor>
-        </ScrollView>
     </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

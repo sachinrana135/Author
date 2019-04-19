@@ -115,6 +115,7 @@ public class Constants {
     public static final String API_URL_UPDATE_PROFILE_IMAGE = API_BASE_URL + "updateProfileImage";
     public static final String API_URL_UPDATE_USER_COUNTRY = API_BASE_URL + "updateUserCountry";
     public static final String API_URL_GET_USER_FEED = API_BASE_URL + "getUserFeed";
+    public static final String API_URL_UPLOAD_IMAGE = API_BASE_URL + "saveImage";
     public static final String API_URL_MAP_FCM_ID = API_BASE_URL + "mapFcmIdToUser";
     public static final String API_URL_GET_STARTUP_CONFIG = API_BASE_URL + "getStartUpConfig";
 
@@ -138,6 +139,7 @@ public class Constants {
     public static final String API_PARAM_KEY_QUOTE_ID = "quoteId";
     public static final String API_PARAM_KEY_FCM_ID = "fcmId";
     public static final String API_PARAM_KEY_LOGGED_AUTHOR_ID = "loggedAuthorId";
+    public static final String API_PARAM_KEY_IMAGE = "image";
     public static final String API_HEADER_PARAM_KEY_DEVICE_ID = "deviceId";
     public static final String API_HEADER_PARAM_KEY_CORRELATION_ID = "correlationId";
     public static final String API_HEADER_PARAM_KEY_API_TOKEN = "apiToken";

@@ -443,6 +443,14 @@ public class Utils {
         return encodedImage;
     }
 
+    public String getStringImage(Bitmap bm) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.JPEG, 70, baos); //bm is the bitmap object
+        byte[] byteArrayImage = baos.toByteArray();
+        String encodedImage = Base64.encodeToString(byteArrayImage, Base64.DEFAULT);
+        return encodedImage;
+    }
+
     public long downloadImageToDisk(String url) {
 
         Uri uri = Uri.parse(url);

@@ -22,6 +22,7 @@
     <!-- Activity Title -->
     <string name="title_home">Home</string>
     <string name="title_new_quote">New Quote</string>
+    <string name="title_new_post">New Post</string>
     <string name="title_choose_category">Category</string>
     <string name="title_publish_quote">Publish</string>
     <string name="title_my_account">My Account</string>
@@ -151,6 +152,8 @@
     <string name="hint_enter_quote_source">Enter original source name</string>
     <string name="hint_enter_comment">Enter comment..</string>
     <string name="hint_search">Search Quotes..</string>
+    <string name="hint_title">Title..</string>
+    <string name="hint_post_writing">Start writing here...</string>
 
     <!-- Options-->
     <string name="option_item_default_tag">option_tag_default</string>
@@ -207,6 +210,7 @@
     <string name="msg_reset_confirm">Do you want to reset? All changes will be lost.</string>
     <string name="msg_quote_delete_confirm">Are you sure? Action can not be undone.</string>
     <string name="msg_reset_password_email_sent_success">An email to reset password has been successfully sent to your email. Kindly check the email and reset password.</string>
+    <string name="msg_exit_html_editor">Are you sure you want to exit the editor?</string>
     <string name="msg_signup_success">An account verification email has been sent to you. Kindly verify your account before login.</string>
     <string name="msg_unverified_email">This email is not verified.</string>
     <string name="msg_post_quote_report_submit">Thanks for the reporting. We will review this quote and take necessary action accordingly.</string>
